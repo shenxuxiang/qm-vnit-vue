@@ -3,6 +3,7 @@ const path = require('path');
 const env = require('../env.json');
 const { DefinePlugin } = require('webpack');
 const HtmlPlugin = require('html-webpack-plugin');
+const { VueLoaderPlugin } = require('vue-loader');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 // const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 // const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
@@ -22,7 +23,7 @@ module.exports = {
     chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
   },
   resolve: {
-    extensions: [ '.vue', '.tsx', '.ts', '.jsx', '.js' ],
+    extensions: [ '.tsx', '.ts', '.jsx', '.js', '.vue' ],
     modules: [ path.resolve('node_modules') ],
     alias: {
       '@': path.resolve('src'),
@@ -39,8 +40,8 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        oneOf: [
+      // {
+      //   oneOf: [
           {
             test: /\.(vue)$/,
             loader: 'vue-loader',
@@ -48,6 +49,7 @@ module.exports = {
           {
             test: /\.(tsx?|jsx?)$/,
             loader: 'babel-loader',
+            exclude: path.resolve('node_modules'),
             options: {
               babelrc: false,
               compact: false,
@@ -193,8 +195,8 @@ module.exports = {
               }
             ]
           },
-        ]
-      }
+      //   ]
+      // }
     ]
   },
   plugins: [
@@ -210,6 +212,7 @@ module.exports = {
         }
       }
     }),
+    new VueLoaderPlugin(),
     new DefinePlugin({
       'process.env': Object.keys(env).reduce((memo, key) => {
         memo[key] = JSON.stringify(env[key]);

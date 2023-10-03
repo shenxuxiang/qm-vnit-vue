@@ -54,6 +54,11 @@ router.beforeEach(async (...args: any) => {
   const { fullPath, meta } = to;
   // 获取路由的元数据, requiresAuth 表示是否需要用户登录凭证才能访问
   const { requiresAuth } = meta;
+
+  
+  return next();
+
+
   // 需要用户登录凭证访问的路由
   if (requiresAuth) {
     const token = getToken();

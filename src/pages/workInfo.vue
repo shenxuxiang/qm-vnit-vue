@@ -103,6 +103,7 @@ function handleNavigateToDetail(id: string) {
 function handlePaginationChange(pageNum: number, pageSize: number) {
   Object.assign(state, { pageNum, pageSize });
 }
+
 </script>
 
 <template>
