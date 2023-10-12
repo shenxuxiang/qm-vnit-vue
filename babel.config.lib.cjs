@@ -1,7 +1,7 @@
 module.exports = {
   presets: [
     ['@babel/preset-env', { useBuiltIns: 'usage', debug: false, modules: 'commonjs', corejs: '3.30' }],
-    ['@babel/preset-typescript', { allExtensions: true }],
+    '@babel/preset-typescript',
   ],
   plugins: [
     ['babel-plugin-import', { libraryName: 'ant-design-vue', libraryDirectory: 'lib', style: false }],

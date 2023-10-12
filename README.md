@@ -1,18 +1,84 @@
-# Vue 3 + TypeScript + Vite
+# qm-vnit-vue
+qm-vnit-vue 是一款基于 ant-design-vue 研发的 Vue 业务组件库 [document](http://ait-web.top/qm-vnit-vue)
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## ✨ 特性
+- 🌈 提炼自企业级中后台产品的交互语言和视觉风格。
+>
+- 📦 开箱即用的高质量 Vue 组件。
+>
+- 🛡 使用 TypeScript 开发，提供完整的类型定义文件。
+>
+- 🌍 支持 ant-design-vue 所有的国际化语言支持。
+>
+- 🎨 支持 ant-design-vue 主题定制能力。
+>
 
-## Recommended IDE Setup
+## 安装
+使用 npm 或 yarn 或 pnpm 安装
+>
+我们推荐使用 npm 或 yarn 或 pnpm 的方式进行开发，不仅可在开发环境轻松调试，也可放心地在生产环境打包部署使用，享受整个生态圈和工具链带来的诸多好处。
+```bash
+  yarn add qm-vnit-vue
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+  npm install --save qm-vnit-vue
+```
 
-## Type Support For `.vue` Imports in TS
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+## 依赖
+- qm-vnit-vue 开发依赖于 ant-design-vue @ant-design/icons-vue、vue 这些库。
+>
+- 生产构建时需要 @babel/runtime-corejs3、以及 core-js 这些标准的 js 库来完成代码的转换。
+>
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+
+## 主题设置
+qm-vnit-vue 安全支持 ant-design-vue 的主题设置功能。
+
+```vue
+<script setup lang="ts">
+  // 入口文件
+  import zhCN from 'antd/es/locale/zh_CN';
+  import { ConfigProvider } from 'ant-design-vue';
+  import dayjs from 'dayjs';
+  import 'dayjs/locale/zh-cn';
+
+  dayjs.locale('zh-cn');
+
+  const theme = { token: { colorPrimary: '#00b96b' } };
+</script>
+<template>
+  <ConfigProvider :theme="theme">
+    <!-- 嵌入的内容 -->
+  </ConfigProvider>
+</template>
+```
+
+
+## 语言设置
+qm-vnit-vue 安全支持 ant-design-vue 的所有国际化语言设置。
+
+```vue
+<script setup lang="ts">
+  // 入口文件
+  import zhCN from 'antd/es/locale/zh_CN';
+  import { ConfigProvider } from 'ant-design-vue';
+  import dayjs from 'dayjs';
+  import 'dayjs/locale/zh-cn';
+
+  dayjs.locale('zh-cn');
+
+  const theme = { token: { colorPrimary: '#00b96b' } };
+</script>
+<template>
+  <ConfigProvider :locale="zhCN">
+    <!-- 嵌入的内容 -->
+  </ConfigProvider>
+</template>
+```
+
+## 按需加载
+qm-vnit-vue 默认支持基于 ES modules 的 tree shaking。
+
+## TypeScript
+qm-vnit-vue 使用 TypeScript 进行书写并提供了完整的定义文件。（不要引用 @types/qm-vnit-vue）

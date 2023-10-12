@@ -1,11 +1,10 @@
-import { defineConfig, loadEnv, splitVendorChunkPlugin } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import vueJsx from '@vitejs/plugin-vue-jsx';
-import legacy from '@vitejs/plugin-legacy';
-import process from 'process';
 import path from 'path';
-import postcssPresetEnv from 'postcss-preset-env';
+import process from 'process';
 import { fileURLToPath } from 'url';
+import vue from '@vitejs/plugin-vue';
+import legacy from '@vitejs/plugin-legacy';
+import vueJsx from '@vitejs/plugin-vue-jsx';
+import { defineConfig, loadEnv } from 'vite';
 
 const __dirname = fileURLToPath(new URL('./', import.meta.url));
 
@@ -23,7 +22,6 @@ export default defineConfig(({ mode }) => {
       vue(),
       vueJsx(),
       legacy(),
-      splitVendorChunkPlugin(),
     ],
     resolve: {
       extensions: [ '.vue', '.tsx', '.jsx', '.ts', '.js' ],
@@ -32,9 +30,6 @@ export default defineConfig(({ mode }) => {
       }
     },
     css: {
-      postcss: {
-        plugins: [ postcssPresetEnv ],
-      },
       preprocessorOptions: {
         less: {
           globalVars: {},
@@ -44,6 +39,7 @@ export default defineConfig(({ mode }) => {
         }
       },
     },
+    clearScreen: false,
     build: {
       outDir: path.resolve(__dirname, 'build'),
       copyPublicDir: true,
@@ -60,7 +56,7 @@ export default defineConfig(({ mode }) => {
           },
           enterFileNames: 'static/js/[name].[hash].js',
           chunkFileNames: 'static/js/[name].[hash].chunk.js',
-          assetFileNames: (chunkInfo) => {
+          assetFileNames: (chunkInfo: any) => {
             const { name } = chunkInfo;
             if (/\.(jpg|jpeg|png|webp|bmp|gif|svg)$/.test(name)) {
               return 'static/image/[name].[hash][extname]';

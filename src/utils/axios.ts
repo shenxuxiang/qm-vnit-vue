@@ -42,7 +42,7 @@ function cancelRequest() {
   } else {
     abortController = new AbortController();
   }
-} 
+}
 
 const defaultConfigOptions: AxiosRequestConfig = {
   baseURL: "",
@@ -60,12 +60,12 @@ class Request {
 
     this.instance.interceptors.request.use(
       this.onRequestFulfull.bind(this),
-      this.onRequestReject.bind(this),
+      this.onRequestReject.bind(this)
     );
 
     this.instance.interceptors.response.use(
       this.onResponseFulFull.bind(this),
-      this.onResponseReject.bind(this),
+      this.onResponseReject.bind(this)
     );
   }
 
@@ -94,7 +94,7 @@ class Request {
     // 下载文件处理
     if (responseType === "blob") {
       const matched = /^attachment;\s*filename\*?=(?:utf-8'')?([^,]+)/.exec(
-        headers["content-disposition"] ?? "",
+        headers["content-disposition"] ?? ""
       );
       let fileName = "default_";
       if (matched) fileName = decodeURIComponent(matched[1]);

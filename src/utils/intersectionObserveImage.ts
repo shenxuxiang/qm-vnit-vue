@@ -1,11 +1,7 @@
 class IntersectionObserveImage {
   public nodeMap = new Map<Element, string>();
-  public instance: IntersectionObserver;
-  constructor() {
-    this.instance = new IntersectionObserver(
-      this.intersectionCallback.bind(this),
-    );
-  }
+  public instance!: IntersectionObserver;
+  constructor() {}
 
   intersectionCallback(entries: IntersectionObserverEntry[]) {
     entries.forEach((item) => {
@@ -20,18 +16,25 @@ class IntersectionObserveImage {
     });
   }
 
+  init() {
+    this.instance = new window.IntersectionObserver(
+      this.intersectionCallback.bind(this)
+    );
+  }
+
   addElement(node: Element, src: string) {
-    this.instance.observe(node);
+    if (!this.instance) this.init();
+    this.instance!.observe(node);
     this.nodeMap.set(node, src);
   }
 
   removeElement(node: Element) {
-    this.instance.unobserve(node);
+    this.instance!.unobserve(node);
     this.nodeMap.delete(node);
   }
 
   disconnect() {
-    this.instance.disconnect();
+    this.instance!.disconnect();
   }
 }
 

@@ -1,8 +1,6 @@
 function getPattern(name: string) {
   return new RegExp(
-    "(?:^|;\\s*)" +
-      name.replace(/[\-\[\](){}^$?*+|\/\\]/g, "\\$&") +
-      "=([^;]+)",
+    "(?:^|;\\s*)" + name.replace(/[\-\[\](){}^$?*+|\/\\]/g, "\\$&") + "=([^;]+)"
   );
 }
 

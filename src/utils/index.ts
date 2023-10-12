@@ -1,9 +1,3 @@
-export { default as axios } from "./axios";
-export { default as matchPath } from "./matchPath";
-export { getCookie, setCookie } from "./cookies";
-export { default as encrypto } from "./encrypto";
-export { default as getTransformProperties } from "./getTransformProperties";
-
 export function getType(data: any) {
   return Object.prototype.toString.call(data).slice(8, -1);
 }
@@ -228,7 +222,7 @@ export function getViewportSize() {
  * 延迟
  * @param time 延迟的时间
  * @param value 需要返回的内容
-*/
+ */
 export function delay(time: number, value?: any) {
   return new Promise((resolve) => {
     setTimeout(() => resolve(value), time);
