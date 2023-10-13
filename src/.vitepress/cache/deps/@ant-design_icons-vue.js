@@ -791,7 +791,7 @@ import {
   ZoomOutOutlined_default,
   create,
   getTwoToneColor,
-  setTwoToneColor,
+  setTwoToneColor
 } from "./chunk-BRL37Y24.js";
 import "./chunk-V634PGSD.js";
 import "./chunk-5WWUZCGV.js";
@@ -1588,6 +1588,6 @@ export {
   create as createFromIconfontCN,
   Icon_default as default,
   getTwoToneColor,
-  setTwoToneColor,
+  setTwoToneColor
 };
 //# sourceMappingURL=@ant-design_icons-vue.js.map

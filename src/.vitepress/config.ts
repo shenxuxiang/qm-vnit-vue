@@ -1,7 +1,6 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { defineConfig } from "vitepress";
-import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 
 const __dirname = fileURLToPath(new URL("./", import.meta.url));
@@ -10,15 +9,19 @@ export default defineConfig({
   title: "qm-vnit-vue",
   description: "This is a vue ui library",
   // 设置访问的路由前缀
-  base: "/",
+  base: "/qm-vnit-vue",
   // 可调节夜间模式、白昼模式
-  appearance: true,
+  appearance: false,
   markdown: {
     // 高亮 
-    theme: "vitesse-light", 
-    // 是否显示对应的行数
+    theme: {
+      light: "vitesse-light",
+      dark: "vitesse-dark",
+    },    // 是否显示对应的行数
     lineNumbers: true,
   },
+  // 是否显示最近一次的更新时间
+  lastUpdated: true,
   vite: {
     plugins: [vueJsx()],
     resolve: {
@@ -55,7 +58,7 @@ export default defineConfig({
     siteTitle: "qm-vnit-vue",
     // 网站logo
     logo: "/vue.svg",
-    lastUpdatedText: "Updated Date",
+    lastUpdatedText: "更新时间",
     // 可以定义此选项以在导航中展示带有图标的社交帐户链接
     socialLinks: [
       {
@@ -87,6 +90,7 @@ export default defineConfig({
     // 导航栏
     nav: [
       { text: "介绍", link: "/" },
+      { text: "安装", link: "/install" },
       { text: "组件", link: "/docs/image" },
     ],
     // 侧边栏
@@ -145,6 +149,7 @@ export default defineConfig({
         },
       ],
     },
+    docFooter: { prev: '上一篇', next: '下一篇' },
     // 页脚
     footer: {
       message: "Released under the MIT License.",
