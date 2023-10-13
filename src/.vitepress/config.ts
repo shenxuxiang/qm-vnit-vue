@@ -29,6 +29,9 @@ export default defineConfig({
         "@": path.resolve(__dirname, "../../src"),
       },
     },
+    build: {
+      emptyOutDir: true,
+    },
     server: {
       port: 3000,
       host: "0.0.0.0",
@@ -48,7 +51,7 @@ export default defineConfig({
     },
   },
   // 站点的构建输出位置，相对于项目根目录
-  outDir: path.resolve(__dirname, "../../dist"),
+  outDir: path.resolve(__dirname, "../../build"),
   // 定义引入 markdown 时的路径别名，例如： <<< @/demo/Image/demo.vue
   srcDir: path.resolve(__dirname, "../../src"),
   lang: "zh_CN",

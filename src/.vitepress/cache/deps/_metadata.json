@@ -1,66 +1,57 @@
 {
-  "hash": "15dd4769",
-  "browserHash": "3e265a51",
+  "hash": "00791656",
+  "browserHash": "14777e5b",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "fa681fe0",
+      "fileHash": "7278e1ef",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/@vue/devtools-api/lib/esm/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "aa6fae84",
+      "fileHash": "bb3cd682",
       "needsInterop": false
     },
     "vitepress > @vueuse/integrations/useFocusTrap": {
       "src": "../../../../node_modules/@vueuse/integrations/useFocusTrap.mjs",
       "file": "vitepress___@vueuse_integrations_useFocusTrap.js",
-      "fileHash": "658c8d0a",
+      "fileHash": "0963e39b",
       "needsInterop": false
     },
     "vitepress > mark.js/src/vanilla.js": {
       "src": "../../../../node_modules/mark.js/src/vanilla.js",
       "file": "vitepress___mark__js_src_vanilla__js.js",
-      "fileHash": "f75706f6",
+      "fileHash": "02716f78",
       "needsInterop": false
     },
     "vitepress > minisearch": {
       "src": "../../../../node_modules/minisearch/dist/es/index.js",
       "file": "vitepress___minisearch.js",
-      "fileHash": "58f2753f",
+      "fileHash": "2b3c49c2",
       "needsInterop": false
     },
     "dayjs/locale/zh-cn": {
       "src": "../../../../node_modules/dayjs/locale/zh-cn.js",
       "file": "dayjs_locale_zh-cn.js",
-      "fileHash": "6bbe7a0f",
+      "fileHash": "d7190126",
       "needsInterop": true
     },
     "ant-design-vue": {
       "src": "../../../../node_modules/ant-design-vue/es/index.js",
       "file": "ant-design-vue.js",
-      "fileHash": "4ab427f6",
+      "fileHash": "986ed121",
       "needsInterop": false
     },
     "ant-design-vue/lib/locale/zh_CN": {
       "src": "../../../../node_modules/ant-design-vue/lib/locale/zh_CN.js",
       "file": "ant-design-vue_lib_locale_zh_CN.js",
-      "fileHash": "b5005a18",
+      "fileHash": "669b8f4c",
       "needsInterop": true
-    },
-    "@ant-design/icons-vue": {
-      "src": "../../../../node_modules/@ant-design/icons-vue/es/index.js",
-      "file": "@ant-design_icons-vue.js",
-      "fileHash": "fc3b1fc0",
-      "needsInterop": false
     }
   },
   "chunks": {
-    "chunk-BRL37Y24": {
-      "file": "chunk-BRL37Y24.js"
-    },
     "chunk-V634PGSD": {
       "file": "chunk-V634PGSD.js"
     },

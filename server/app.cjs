@@ -5,12 +5,12 @@ const Router = require('./koa-router/index.cjs');
 const renderStatic = require('./koa-static/index.cjs');
 const chalk = require('chalk');
 
-// const router = new Router({ prefix: '/qm-vnit' });
+const router = new Router();
 
-// router.get(['/home', '/library/:id+'], function(ctx) {
-//   ctx.type = 'html';
-//   ctx.body = fs.createReadStream(path.resolve(__dirname, '../build/index.html'));
-// });
+router.get(['/qm-vnit-vue/:id+'], function(ctx) {
+  console.log(ctx.url);
+  ctx.redirect(ctx.url.slice(12));
+});
 
 // router.get('/static/:id+', function(ctx) {
 //   const url = ctx.url;
@@ -22,7 +22,7 @@ const app = new Koa();
 
 app.use(renderStatic(path.resolve(__dirname, '../dist')));
 
-// app.use(router.routes());
+app.use(router.routes());
 
 app.listen(3333, function() {
   process.stdout.write(chalk.keyword('green')('   Local Server Successfully Started\n'));
