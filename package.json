@@ -23,7 +23,7 @@
   "scripts": {
     "dev": "vite",
     "build:lib": "npx gulp",
-    "prepear": "husky install",
+    "prepare": "husky install",
     "docs:dev": "vitepress dev src",
     "docs:build": "vitepress build src",
     "docs:preview": "node ./server/app.cjs",
