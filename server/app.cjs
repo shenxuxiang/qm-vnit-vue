@@ -20,7 +20,7 @@ router.get(['/qm-vnit-vue/:id+'], function(ctx) {
 
 const app = new Koa();
 
-app.use(renderStatic(path.resolve(__dirname, '../dist')));
+app.use(renderStatic(path.resolve(__dirname, '../build')));
 
 app.use(router.routes());
 

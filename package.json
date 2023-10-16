@@ -20,6 +20,7 @@
   ],
   "repository": "https://github.com/shenxuxiang/qm-vnit-vue",
   "description": "Vue Ui Library",
+  "sideEffects": false,
   "scripts": {
     "dev": "vite",
     "build:lib": "npx gulp",
