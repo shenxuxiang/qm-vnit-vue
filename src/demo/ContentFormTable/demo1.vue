@@ -20,7 +20,7 @@ const columns = ref([
 
 function handleQueryTableList(query: any) {
   console.log(query);
-  return new Promise((resolve) => {
+  return new Promise((resolve) => { 
     setTimeout(() => {
       return resolve({
         data: {

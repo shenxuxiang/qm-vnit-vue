@@ -29,12 +29,12 @@
 :::
 
 [查看案例](/preview/contentFormTable/demo3){target="blank"}
-::: info 案例三（支持导出表格数据，支持表单数据验证，关闭自动查询数据功能）
-<<< @/demo/ContentFormTable/demo3.vue{24-33,59-62,64-77}
+::: info 案例三（支持导出表格数据，支持表单数据验证和初始值设置，关闭自动查询数据功能）
+<<< @/demo/ContentFormTable/demo3.vue{11,21,29-38,64-67,79-80}
 :::
 
 [查看案例](/preview/contentFormTable/demo4){target="blank"}
-::: info 案例三（支持导出表格数据，支持表单数据验证，关闭自动查询数据功能）
+::: info 案例四（支持导出表格数据，支持表单数据验证，关闭自动查询数据功能）
 <<< @/demo/ContentFormTable/demo4.vue{5-19}
 :::
 

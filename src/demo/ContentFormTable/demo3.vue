@@ -8,6 +8,7 @@ const columns = ref([
     dataIndex: "userName",
     title: "查询名称",
     formType: "input",
+    initialValue: '小沈',
   },
   {
     dataIndex: "sex",
@@ -17,6 +18,7 @@ const columns = ref([
       { value: "man", label: "男" },
       { value: "woman", label: "女" },
     ],
+    initialValue: 'man',
   },
   {
     dataIndex: "age",
@@ -27,8 +29,8 @@ const columns = ref([
 // 提供验证表单的机会，返回 true 表示表示验证通过
 function handleBefore(query: any) {
   console.log(query);
-  if (!query.sex) {
-    message.warning("性别不能为空");
+  if (!query.userName) {
+    message.warning("查询名称不能为空");
     return false;
   }
 
@@ -60,8 +62,8 @@ function handleQueryTableList(query: any) {
 }
 
 // 对后端接口返回的内容进行格式化，满足组件需要的格式
-function handleCustomResponse(data: any) {
-  return { tableList: data.list, total: data.total };
+function handleCustomResponse(response: any) {
+  return { tableList: response?.data?.list ?? [], total: response?.data?.total ?? 0 };
 }
 
 function handleExportTableList(query: any) {

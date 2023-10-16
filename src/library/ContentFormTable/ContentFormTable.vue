@@ -63,7 +63,7 @@ const props = withDefaults(defineProps<ContentFormTableProps>(), {
   bordered: true,
   immediate: true,
   showTotal: (total: number) => `共${total}条数据`,
-  customResponse: (data: any) => ({ tableList: data.list, total: data.total }),
+  customResponse: ({ data }: any) => ({ tableList: data.list, total: data.total }),
 });
 const emit = defineEmits<ContentFormTableEvents>();
 defineOptions({ inheritAttrs: false, name: "ContentFormTable" });
@@ -158,7 +158,7 @@ function getTableList() {
     props
       .queryTableList(params)
       .then((res: any) =>
-        Object.assign(tableResource, props.customResponse(res.data))
+        Object.assign(tableResource, props.customResponse(res))
       )
       .finally(() => (loading.value = false));
   }
