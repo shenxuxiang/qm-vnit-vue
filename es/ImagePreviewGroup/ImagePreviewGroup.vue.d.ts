@@ -1,5 +1,5 @@
 import './ImagePreviewGroup.less';
-import { CSSProperties, VNode } from 'vue';
+import type { CSSProperties, VNode } from 'vue';
 export type ImageGroupSlots = {
     default: () => Array<VNode>;
 };

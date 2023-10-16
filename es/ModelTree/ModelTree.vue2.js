@@ -4,7 +4,7 @@ import { isEmpty } from '../utils/index.js';
 import './ModelTree.css';
 
 var script = /*#__PURE__*/ defineComponent({
-    ...{ inheritAttrs: false, name: 'ModelTree' },
+    ...{ name: 'ModelTree', inheritAttrs: false },
     __name: 'ModelTree',
     props: {
         treeData: { type: Array, required: true },

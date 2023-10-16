@@ -51,7 +51,7 @@ var script = /*#__PURE__*/ defineComponent({
             if (typeof props.cols === 'undefined')
                 computedColSpan();
         });
-        watch(() => props.cols, function () {
+        watch(() => props.cols, () => {
             if (props.cols) {
                 colsNumber.value = props.cols;
                 colSpan.value = 24 / props.cols;

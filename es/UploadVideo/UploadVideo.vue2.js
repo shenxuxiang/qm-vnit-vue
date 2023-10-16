@@ -80,6 +80,8 @@ var script = /*#__PURE__*/ defineComponent({
         return (_ctx, _cache) => {
             return (openBlock(), createElementBlock(Fragment, null, [
                 createVNode(unref(script$1), {
+                    fileList: videoList.value,
+                    "onUpdate:fileList": _cache[0] || (_cache[0] = ($event) => ((videoList).value = $event)),
                     action: _ctx.action,
                     method: _ctx.method,
                     accept: _ctx.accept,
@@ -89,18 +91,16 @@ var script = /*#__PURE__*/ defineComponent({
                     maxCount: _ctx.maxCount,
                     disabled: _ctx.disabled,
                     previewFile: handlePreviewFile,
-                    fileList: videoList.value,
-                    "onUpdate:fileList": _cache[0] || (_cache[0] = ($event) => ((videoList).value = $event)),
                     onError: _cache[1] || (_cache[1] = ($event) => (_ctx.$emit('error', $event)))
                 }, {
                     itemRender: withCtx(({ src }) => [
                         src
                             ? (openBlock(), createElementBlock("video", {
                                 key: 0,
-                                class: "qm-vnit-upload-video",
-                                muted: "",
                                 ref_key: "videoRef",
                                 ref: videoRef,
+                                class: "qm-vnit-upload-video",
+                                muted: "",
                                 preload: "auto"
                             }, [
                                 createElementVNode("source", { src: src }, null, 8 /* PROPS */, _hoisted_1)
@@ -108,7 +108,7 @@ var script = /*#__PURE__*/ defineComponent({
                             : createCommentVNode("v-if", true)
                     ]),
                     _: 1 /* STABLE */
-                }, 8 /* PROPS */, ["action", "method", "accept", "headers", "maxSize", "multiple", "maxCount", "disabled", "fileList"]),
+                }, 8 /* PROPS */, ["fileList", "action", "method", "accept", "headers", "maxSize", "multiple", "maxCount", "disabled"]),
                 (openBlock(), createBlock(Teleport, { to: "body" }, [
                     createVNode(Transition, { name: "uploadVidePreview" }, {
                         default: withCtx(() => [
@@ -119,11 +119,11 @@ var script = /*#__PURE__*/ defineComponent({
                                     onClick: handleClosePreview
                                 }, [
                                     createElementVNode("video", {
-                                        controls: "",
-                                        onCanplay: handleCanPlay,
                                         ref_key: "videoPreviewRef",
                                         ref: videoPreviewRef,
-                                        class: "qm-vnit-upload-video-preview-content"
+                                        controls: "",
+                                        class: "qm-vnit-upload-video-preview-content",
+                                        onCanplay: handleCanPlay
                                     }, [
                                         createElementVNode("source", { src: videoURL.value }, null, 8 /* PROPS */, _hoisted_2)
                                     ], 544 /* HYDRATE_EVENTS, NEED_PATCH */),

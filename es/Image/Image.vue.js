@@ -11,6 +11,7 @@ var script = /*#__PURE__*/ defineComponent({
     },
     setup(__props) {
         const props = __props;
+        // eslint-disable-next-line
         const imgSrc = ref(img);
         const imgRef = ref();
         onMounted(() => {
@@ -18,9 +19,9 @@ var script = /*#__PURE__*/ defineComponent({
         });
         return (_ctx, _cache) => {
             return (openBlock(), createElementBlock("img", {
-                src: imgSrc.value,
                 ref_key: "imgRef",
-                ref: imgRef
+                ref: imgRef,
+                src: imgSrc.value
             }, null, 8 /* PROPS */, _hoisted_1));
         };
     }

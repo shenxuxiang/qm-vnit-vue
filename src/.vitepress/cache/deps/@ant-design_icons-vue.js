@@ -791,10 +791,10 @@ import {
   ZoomOutOutlined_default,
   create,
   getTwoToneColor,
-  setTwoToneColor,
-} from './chunk-BRL37Y24.js';
-import './chunk-V634PGSD.js';
-import './chunk-5WWUZCGV.js';
+  setTwoToneColor
+} from "./chunk-BRL37Y24.js";
+import "./chunk-V634PGSD.js";
+import "./chunk-5WWUZCGV.js";
 export {
   AccountBookFilled_default as AccountBookFilled,
   AccountBookOutlined_default as AccountBookOutlined,
@@ -1588,6 +1588,6 @@ export {
   create as createFromIconfontCN,
   Icon_default as default,
   getTwoToneColor,
-  setTwoToneColor,
+  setTwoToneColor
 };
 //# sourceMappingURL=@ant-design_icons-vue.js.map

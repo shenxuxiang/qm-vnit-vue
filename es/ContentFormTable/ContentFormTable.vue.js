@@ -10,7 +10,7 @@ const _hoisted_1 = { class: "qm-content-form-table-body" };
 const _hoisted_2 = { class: "qm-content-form-table-body-head" };
 const _hoisted_3 = /*#__PURE__*/ createElementVNode("p", { style: { "margin-left": "16px" } }, "查询表格", -1 /* HOISTED */);
 var script = /*#__PURE__*/ defineComponent({
-    ...{ inheritAttrs: false, name: 'ContentFormTable' },
+    ...{ name: 'ContentFormTable', inheritAttrs: false },
     __name: 'ContentFormTable',
     props: {
         cols: { type: null, required: false },

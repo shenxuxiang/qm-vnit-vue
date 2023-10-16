@@ -39,7 +39,7 @@ var script = /*#__PURE__*/ defineComponent({
         const previewIdx = ref(0);
         const previewImgs = ref([]);
         const showPreviewImage = ref(false);
-        watch(() => props.fileList, function () {
+        watch(() => props.fileList, () => {
             if (props.fileList === _fileList.value)
                 return;
             _fileList.value = props.fileList;
@@ -157,9 +157,9 @@ var script = /*#__PURE__*/ defineComponent({
                                 ])
                             ]),
                             createElementVNode("input", {
-                                type: "file",
                                 ref_key: "inputRef",
                                 ref: inputRef,
+                                type: "file",
                                 style: { "display": "none" },
                                 accept: _ctx.accept,
                                 disabled: _ctx.disabled,

@@ -30,6 +30,15 @@ var script = /*#__PURE__*/ defineComponent({
     emits: ["remove", "preview", "error", "success"],
     setup(__props, { emit }) {
         const props = __props;
+        /**
+         * 动画效果函数
+         * @params t { number } 动画已执行次数
+         * @params b { number } 当前位置
+         * @params c { number } 变化量 目标位置 - 当前位置
+         * @params d { number } 动画共需要执行多少次
+         * @return { number }
+         * @author shenxuxiang
+         */
         const easeIn = (t, b, c, d) => (t === 0 ? b : c * 2 ** (10 * (t / d - 1)) + b);
         const imgURL = ref('');
         const itemRef = ref();
@@ -72,7 +81,7 @@ var script = /*#__PURE__*/ defineComponent({
                 const upload = new Upload({ headers: props.headers });
                 let isUploadStart = true;
                 // 更新上传进度
-                upload.onProgress(function (progress) {
+                upload.onProgress((progress) => {
                     // 如果一开始上传的时候，progress 就大于等于 1，说明网速足够快上传图片瞬间就完成了，
                     // 此时，我们使用动画完成进度条，否则就是每次 onProgress 事件触发 updateProgressBar
                     if (isUploadStart && progress >= 1) {
@@ -84,13 +93,13 @@ var script = /*#__PURE__*/ defineComponent({
                     isUploadStart = false;
                 });
                 // 上传成功
-                upload.onSuccess(async function (res) {
+                upload.onSuccess(async (res) => {
                     fadeInAnimation();
                     emit('success', props.uid, res);
                     uploadInstance.value = null;
                 });
                 // 上传失败
-                upload.onError(function (err) {
+                upload.onError((err) => {
                     emit('error', props.uid, err);
                     uploadInstance.value = null;
                 });
@@ -102,7 +111,8 @@ var script = /*#__PURE__*/ defineComponent({
         function initialCanvas() {
             cvsRef.value.width = 84;
             cvsRef.value.height = 84;
-            const ctx = (ctxRef.value = cvsRef.value?.getContext('2d'));
+            const ctx = cvsRef.value.getContext('2d');
+            ctxRef.value = ctx;
             ctx.save();
             ctx.translate(42, 42);
         }

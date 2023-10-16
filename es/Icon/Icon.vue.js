@@ -2,7 +2,7 @@ import { defineComponent, toRef, openBlock, createElementBlock, mergeProps } fro
 import './font/iconfont.css';
 
 var script = /*#__PURE__*/ defineComponent({
-    ...{ inheritAttrs: false, name: 'Icon' },
+    ...{ name: 'Icon', inheritAttrs: false },
     __name: 'Icon',
     props: {
         name: { type: String, required: true },

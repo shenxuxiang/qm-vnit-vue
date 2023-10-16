@@ -1,7 +1,6 @@
 declare class IntersectionObserveImage {
     nodeMap: Map<Element, string>;
     instance: IntersectionObserver;
-    constructor();
     intersectionCallback(entries: IntersectionObserverEntry[]): void;
     init(): void;
     addElement(node: Element, src: string): void;
