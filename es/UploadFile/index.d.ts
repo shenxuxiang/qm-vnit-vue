@@ -1,2 +1,2 @@
 import UploadFile from './UploadFile.vue';
-export default UploadFile;
+export { UploadFile as default };

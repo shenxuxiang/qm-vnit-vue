@@ -7,4 +7,4 @@ ModelTree.install = (app: App) => {
   return app;
 };
 
-export default ModelTree;
+export { ModelTree as default };

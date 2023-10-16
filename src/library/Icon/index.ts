@@ -6,4 +6,4 @@ Icon.install = (app: App) => {
   return app;
 };
 
-export default Icon;
+export { Icon as default };
