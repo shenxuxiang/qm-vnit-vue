@@ -10,6 +10,4 @@ PreviewImage.install = (app: App) => {
   return app;
 };
 
-export default PreviewImage;
-
-export { SuperPreviewImage };
+export { PreviewImage as default, SuperPreviewImage };

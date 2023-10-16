@@ -7,4 +7,4 @@ UploadImage.install = (app: App) => {
   return app;
 };
 
-export default UploadImage;
+export { UploadImage as default };

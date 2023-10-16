@@ -1,2 +1,2 @@
 import Image from './Image.vue';
-export default Image;
+export { Image as default };

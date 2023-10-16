@@ -7,4 +7,4 @@ UploadVideo.install = (app: App) => {
   return app;
 };
 
-export default UploadVideo;
+export { UploadVideo as default };

@@ -6,4 +6,4 @@ UploadFile.install = (app: App) => {
   return app;
 };
 
-export default UploadFile;
+export { UploadFile as default };

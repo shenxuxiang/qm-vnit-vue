@@ -7,4 +7,4 @@ Image.install = (app: App) => {
   return app;
 };
 
-export default Image;
+export { Image as default };

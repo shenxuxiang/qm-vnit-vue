@@ -1,3 +1,3 @@
 import ModelTree from './ModelTree.vue';
 export type { TreeData } from './ModelTree.vue';
-export default ModelTree;
+export { ModelTree as default };
