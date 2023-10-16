@@ -1,6 +1,6 @@
 import { defineComponent, ref, onMounted, openBlock, createElementBlock } from 'vue';
 import intersectionObserveImage from '../utils/intersectionObserveImage.js';
-import img from '../assets/defaultImage.svg.js';
+import defaultImage from '../assets/defaultImage.svg.js';
 
 const _hoisted_1 = ["src"];
 var script = /*#__PURE__*/ defineComponent({
@@ -12,7 +12,7 @@ var script = /*#__PURE__*/ defineComponent({
     setup(__props) {
         const props = __props;
         // eslint-disable-next-line
-        const imgSrc = ref(img);
+        const imgSrc = ref(defaultImage);
         const imgRef = ref();
         onMounted(() => {
             intersectionObserveImage.addElement(imgRef.value, props.src);

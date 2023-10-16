@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, openBlock, createBlock, Transition, withCtx, withDirectives, createElementVNode, createVNode, createCommentVNode, unref, createElementBlock, withModifiers, normalizeClass, vShow } from 'vue';
 import getTransformProperties from '../utils/getTransformProperties.js';
-import img from '../assets/defaultImage.svg.js';
+import defaultImage from '../assets/defaultImage.svg.js';
 import { throttle, getViewportSize } from '../utils/index.js';
 import './Loading.vue.js';
 import './ToolBar.vue.js';
@@ -42,7 +42,7 @@ var script = /*#__PURE__*/ defineComponent({
         const showLoading = ref(false);
         // 图片预加载器
         const imagePreloader = ref();
-        const currentPreviewImageUrl = ref(img);
+        const currentPreviewImageUrl = ref(defaultImage);
         // 当组件展示时，不让页面滚动。
         watch(() => props.open, () => {
             if (props.open) {
@@ -62,7 +62,7 @@ var script = /*#__PURE__*/ defineComponent({
         watch([hdImgs, indicator, () => props.open], function () {
             // 展示 lading，给用户一个反馈
             showLoading.value = true;
-            currentPreviewImageUrl.value = img;
+            currentPreviewImageUrl.value = defaultImage;
             const onCleanup = arguments[2];
             // 在执行监听函数之前，先取消绑定在 imagePreloader 上的 onload 事件。
             onCleanup(() => (imagePreloader.value.onload = null));
