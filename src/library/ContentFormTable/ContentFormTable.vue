@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import type { QueryList, Cols } from "../ContentFormHeader";
-import { reactive, ref, watch, computed, toRef } from "vue";
-import ContentFormHeader from "../ContentFormHeader";
-import { Table, Pagination } from "ant-design-vue";
-import type { TableProps } from "ant-design-vue";
-import { downloadFile, isArray } from "@/utils";
-import type { VNode, CSSProperties } from "vue";
-import "./ContentFormTable.less";
+import type { QueryList, Cols } from '../ContentFormHeader';
+import { reactive, ref, watch, computed, toRef } from 'vue';
+import ContentFormHeader from '../ContentFormHeader';
+import { Table, Pagination } from 'ant-design-vue';
+import type { TableProps } from 'ant-design-vue';
+import { downloadFile, isArray } from '@/utils';
+import type { VNode, CSSProperties } from 'vue';
+import './ContentFormTable.less';
 
 // 获取数组项的类型
 type ReturnColumn<T> = T extends Array<infer E> ? E : never;
 
-type TableColumns = TableProps["columns"];
+type TableColumns = TableProps['columns'];
 
 type TableColumn = ReturnColumn<TableColumns>;
 
@@ -36,11 +36,11 @@ type ContentFormTableProps = {
   showExport?: boolean;
   exportFileName?: string;
   submitButtonText?: string;
-  scroll?: TableProps["scroll"];
+  scroll?: TableProps['scroll'];
   style?: CSSProperties | string;
-  paginationSize?: "default" | "small";
-  tableSize?: "small" | "middle" | "large";
-  rowSelection?: TableProps["rowSelection"];
+  paginationSize?: 'default' | 'small';
+  tableSize?: 'small' | 'middle' | 'large';
+  rowSelection?: TableProps['rowSelection'];
   // 在正式请求表格数据之前，会触发 beforeQueryAction 行为，返回 false 将中断请求。
   beforeQueryAction?: (query: any) => boolean;
   // 获取表格数据
@@ -53,11 +53,7 @@ type ContentFormTableProps = {
   customResponse?: (data: any) => { total: number; tableList: any[] };
 };
 
-type ContentFormTableEvents = (
-  e: "paginationChange",
-  pageNum: number,
-  pageSize: number
-) => void;
+type ContentFormTableEvents = (e: 'paginationChange', pageNum: number, pageSize: number) => void;
 
 const props = withDefaults(defineProps<ContentFormTableProps>(), {
   bordered: true,
@@ -66,8 +62,8 @@ const props = withDefaults(defineProps<ContentFormTableProps>(), {
   customResponse: ({ data }: any) => ({ tableList: data.list, total: data.total }),
 });
 const emit = defineEmits<ContentFormTableEvents>();
-defineOptions({ inheritAttrs: false, name: "ContentFormTable" });
-const className = toRef(props, "class");
+defineOptions({ name: 'ContentFormTable', inheritAttrs: false });
+const className = toRef(props, 'class');
 // 合成 columns: { queryList, tableColumns }
 const combinationColumns = computed(computedColumns);
 // 查询条件
@@ -83,16 +79,9 @@ const loading = ref(false);
 let sorter = ref<Sorter>([]);
 
 // eslint-disable-next-line
-watch(
-  [
-    () => tableResource.pageNum,
-    () => tableResource.pageSize,
-    sorter,
-    searchCondition,
-  ],
-  getTableList,
-  { immediate: props.immediate }
-);
+watch([() => tableResource.pageNum, () => tableResource.pageSize, sorter, searchCondition], getTableList, {
+  immediate: props.immediate,
+});
 
 // 计算 queryList、tableColumns
 function computedColumns() {
@@ -132,7 +121,7 @@ function computedInitialSearchCondition() {
   combinationColumns.value.queryList.forEach((item) => {
     const { dataIndex, name = dataIndex, dataFormat, initialValue } = item;
     if (initialValue) {
-      if (typeof dataFormat === "function") {
+      if (typeof dataFormat === 'function') {
         delete result[name!];
         Object.assign(result, dataFormat(initialValue));
       } else {
@@ -157,9 +146,7 @@ function getTableList() {
     loading.value = true;
     props
       .queryTableList(params)
-      .then((res: any) =>
-        Object.assign(tableResource, props.customResponse(res))
-      )
+      .then((res: any) => Object.assign(tableResource, props.customResponse(res)))
       .finally(() => (loading.value = false));
   }
 }
@@ -180,14 +167,14 @@ function handleReset(values: any) {
 function handleExport(values: any) {
   props?.exportTableList?.(values)?.then((res: any) => {
     const { data } = res;
-    downloadFile(props?.exportFileName ?? "_default_file", data);
+    downloadFile(props?.exportFileName ?? '_default_file', data);
   });
 }
 
 // 分页
 function handlePaginationChange(pageNum: number, pageSize: number) {
   Object.assign(tableResource, { pageSize, pageNum });
-  emit("paginationChange", pageNum, pageSize);
+  emit('paginationChange', pageNum, pageSize);
 }
 
 // 表格排序
@@ -197,11 +184,10 @@ function handleTableChange() {
   if (isArray(sort)) {
     sort.forEach((item: any) => {
       const { field, order } = item;
-      order && result.push({ field, direction: order === "ascend" });
+      order && result.push({ field, direction: order === 'ascend' });
     });
   } else {
-    sort.order &&
-      result.push({ field: sort.field, direction: sort.order === "ascend" });
+    sort.order && result.push({ field: sort.field, direction: sort.order === 'ascend' });
   }
 
   sorter.value = result;

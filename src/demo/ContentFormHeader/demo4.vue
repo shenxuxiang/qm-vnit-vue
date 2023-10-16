@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { Button } from "ant-design-vue";
-import { ContentFormHeader } from "@/library";
+import { ref } from 'vue';
+import { Button } from 'ant-design-vue';
+import { ContentFormHeader } from '@/library';
 
 const queryList = ref([
   {
-    name: "name",
-    title: "查询名称",
-    formType: "input",
+    name: 'name',
+    title: '查询名称',
+    formType: 'input',
   },
 ]);
 
@@ -21,12 +21,7 @@ function handleReset(values: any) {
 </script>
 
 <template>
-  <ContentFormHeader
-    :queryList="queryList"
-    hideResetButton
-    @submit="handleSubmit"
-    @reset="handleReset"
-  >
+  <ContentFormHeader :queryList="queryList" hideResetButton @submit="handleSubmit" @reset="handleReset">
     <template #insertNode>
       <Button style="margin-left: 8px">自定义按钮</Button>
     </template>

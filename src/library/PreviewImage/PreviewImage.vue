@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { throttle, getViewportSize } from "@/utils";
-import getTransformProperties from "@/utils/getTransformProperties";
-import ToolBar from "./ToolBar.vue";
-import Slider from "./Slider.vue";
-import { ref, watch } from "vue";
-import Icon from "../Icon";
-import "./PreviewImage.less";
+import { throttle, getViewportSize } from '@/utils';
+import getTransformProperties from '@/utils/getTransformProperties';
+import ToolBar from './ToolBar.vue';
+import Slider from './Slider.vue';
+import { ref, watch } from 'vue';
+import Icon from '../Icon';
+import './PreviewImage.less';
 
 export type PreviewImageProps = {
   imgs: Array<string>;
@@ -15,17 +15,19 @@ export type PreviewImageProps = {
 };
 
 type PreviewImageEvents = {
-  (e: "update:index", index: number): void;
-  (e: "close"): void;
+  (e: 'update:index', index: number): void;
+  (e: 'close'): void;
 };
-
-defineOptions({ name: "PreviewImage", inheritAttrs: false });
 
 const props = withDefaults(defineProps<PreviewImageProps>(), {
   pageSize: 9,
   index: 0,
 });
+
 const emit = defineEmits<PreviewImageEvents>();
+
+defineOptions({ name: 'PreviewImage', inheritAttrs: false });
+
 // 开关，表示用户正在拖拽图片（当为true时，图片将跟随用户鼠标进行移动）
 let _isMoveing = false;
 // 鼠标指针起始位置
@@ -43,11 +45,11 @@ watch(
   () => props.open,
   () => {
     if (props.open) {
-      document.documentElement.style.overflow = "hidden";
+      document.documentElement.style.overflow = 'hidden';
     } else {
-      document.documentElement.style.overflow = "";
+      document.documentElement.style.overflow = '';
     }
-  }
+  },
 );
 
 watch(
@@ -56,7 +58,7 @@ watch(
     if (props.index === indicator.value) return;
     indicator.value = props.index!;
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 // 监听 mousewheel 事件，对图片进行缩放
@@ -144,9 +146,7 @@ function handleMouseMove(event: any) {
   // 并且，每次移动都是相对 dragStart 事件开始时的 _originPoint 点位进行计算，
   // 偏移量则是相对 dragStart 事件的 clientX、clientY 进行计算
   imgXRef.value!.style.cssText = `
-      transform: translate3D(${_originPoint.x + distanceX}px, ${
-    _originPoint.y + distanceY
-  }px, 0px);
+      transform: translate3D(${_originPoint.x + distanceX}px, ${_originPoint.y + distanceY}px, 0px);
     `;
 }
 // 鼠标滚轮事件
@@ -173,16 +173,14 @@ function handleShrink() {
 // 放大
 function handleEnlarge() {
   const { scaleX, scaleY, rotate } = getTransformProperties(imgRef.value!);
-  imgRef.value!.style.cssText = `transform: scale(${scaleX * 1.25}, ${
-    scaleY * 1.25
-  }) rotate(${rotate}deg);`;
+  imgRef.value!.style.cssText = `transform: scale(${scaleX * 1.25}, ${scaleY * 1.25}) rotate(${rotate}deg);`;
 }
 
 function handleChangeIndicator(index: number) {
   indicator.value = index;
-  emit("update:index", index);
-  imgRef.value!.style.cssText = "";
-  imgXRef.value!.style.cssText = "";
+  emit('update:index', index);
+  imgRef.value!.style.cssText = '';
+  imgXRef.value!.style.cssText = '';
 }
 
 // 上一张
@@ -199,10 +197,10 @@ function handleNextItem() {
 // 关闭 PreviewImage 组件
 function handleClosePreview(event: any) {
   if (event.target === event.currentTarget) {
-    emit("close");
+    emit('close');
     setTimeout(() => {
-      if (imgRef.value) imgRef.value.style.cssText = "";
-      if (imgXRef.value) imgXRef.value.style.cssText = "";
+      if (imgRef.value) imgRef.value.style.cssText = '';
+      if (imgXRef.value) imgXRef.value.style.cssText = '';
     }, 300);
   }
 }
@@ -219,29 +217,15 @@ function handleClosePreview(event: any) {
         @mousemove="onMouseMove"
         @click="handleClosePreview"
       >
-        <img
-          ref="imgRef"
-          :src="imgs[indicator]"
-          @dragstart.stop="handleDragStart"
-          @mouseup.stop="handleMouseUp"
-        />
+        <img ref="imgRef" :src="imgs[indicator]" @dragstart.stop="handleDragStart" @mouseup.stop="handleMouseUp" />
       </div>
       <!-- 顶部工具栏 -->
       <ToolBar :imageElement="imgRef!" @close="handleClosePreview" />
-      <div
-        :class="[
-          'qm-vnit-preview-image-prev-buttton',
-          { disabled: indicator <= 0 },
-        ]"
-        @click="handlePrevItem"
-      >
+      <div :class="['qm-vnit-preview-image-prev-buttton', { disabled: indicator <= 0 }]" @click="handlePrevItem">
         <Icon name="arrow-left-bold" style="font-size: 60px" />
       </div>
       <div
-        :class="[
-          'qm-vnit-preview-image-next-buttton',
-          { disabled: indicator >= imgs.length - 1 },
-        ]"
+        :class="['qm-vnit-preview-image-next-buttton', { disabled: indicator >= imgs.length - 1 }]"
         @click="handleNextItem"
       >
         <Icon name="arrow-right-bold" style="font-size: 60px" />

@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import "./Loading.less";
+import { computed } from 'vue';
+import './Loading.less';
 
 type LoadingProps = {
   open: boolean;
-  theme?: "light" | "dark" | string;
-  size?: "default" | "large" | "small";
+  theme?: 'light' | 'dark' | string;
+  size?: 'default' | 'large' | 'small';
 };
 
 const props = withDefaults(defineProps<LoadingProps>(), {
-  theme: "light",
-  size: "default",
+  theme: 'light',
+  size: 'default',
 });
 
 const dotColor = computed(() => {
   switch (props.theme) {
-    case "light":
-      return "#f2f2f2";
-    case "dark":
-      return "#b3b3b3";
+    case 'light':
+      return '#f2f2f2';
+    case 'dark':
+      return '#b3b3b3';
     default:
       return props.theme;
   }

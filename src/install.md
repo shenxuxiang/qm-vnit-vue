@@ -1,6 +1,5 @@
 # 使用方法
 
-
 ## 安装
 
 > 我们推荐使用 npm 或 yarn 或 pnpm 的方式进行开发，不仅可在开发环境轻松调试，也可放心地在生产环境打包部署使用，享受整个生态圈和工具链带来的诸多好处。
@@ -13,31 +12,28 @@ $ npm install qm-vnit-vue@next --save
 $ yarn add qm-vnit-vue@next
 ```
 
-
 ## 示例
 
 ```vue
 <script>
-  import { Image } from "qm-vnit-vue";
-  app.use(Image);
+import { Image } from 'qm-vnit-vue';
+app.use(Image);
 </script>
 ```
 
 > 组合式 API 中直接引入即可，不需要注册
+
 ```vue
 <script setup>
-  
-  import { Image } from "qm-vnit-vue";
+import { Image } from 'qm-vnit-vue';
 </script>
 ```
-
 
 ## 依赖
 
 - qm-vnit-vue 开发依赖于 ant-design-vue，vue
 
 - 为能够正常使用，开发者还需要安装 @babel/runtime-corejs3、以及 core-js 这些标准的 js 库来完成代码的转换。
-
 
 ## 主题设置
 
@@ -46,14 +42,14 @@ $ yarn add qm-vnit-vue@next
 ```vue
 <script setup lang="ts">
 // 入口文件
-import zhCN from "antd/es/locale/zh_CN";
-import { ConfigProvider } from "ant-design-vue";
-import dayjs from "dayjs";
-import "dayjs/locale/zh-cn";
+import zhCN from 'antd/es/locale/zh_CN';
+import { ConfigProvider } from 'ant-design-vue';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
 
-dayjs.locale("zh-cn");
+dayjs.locale('zh-cn');
 
-const theme = { token: { colorPrimary: "#00b96b" } };
+const theme = { token: { colorPrimary: '#00b96b' } };
 </script>
 <template>
   <ConfigProvider :theme="theme">
@@ -69,14 +65,14 @@ const theme = { token: { colorPrimary: "#00b96b" } };
 ```vue
 <script setup lang="ts">
 // 入口文件
-import zhCN from "antd/es/locale/zh_CN";
-import { ConfigProvider } from "ant-design-vue";
-import dayjs from "dayjs";
-import "dayjs/locale/zh-cn";
+import zhCN from 'antd/es/locale/zh_CN';
+import { ConfigProvider } from 'ant-design-vue';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
 
-dayjs.locale("zh-cn");
+dayjs.locale('zh-cn');
 
-const theme = { token: { colorPrimary: "#00b96b" } };
+const theme = { token: { colorPrimary: '#00b96b' } };
 </script>
 <template>
   <ConfigProvider :locale="zhCN">

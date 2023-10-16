@@ -1,5 +1,5 @@
-import type { App } from "vue";
-import Image from "./Image.vue";
+import type { App } from 'vue';
+import Image from './Image.vue';
 
 Image.install = (app: App) => {
   console.log(1111);

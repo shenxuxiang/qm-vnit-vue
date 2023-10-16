@@ -3,23 +3,23 @@ export function getType(data: any) {
 }
 
 export function isObject(data: any): data is object {
-  return getType(data) === "Object";
+  return getType(data) === 'Object';
 }
 
 export function isArray(data: any): data is Array<any> {
-  return getType(data) === "Array";
+  return getType(data) === 'Array';
 }
 
 export function isMap(data: any): data is Map<any, any> {
-  return getType(data) === "Map";
+  return getType(data) === 'Map';
 }
 
 export function isWeakMap(data: any): data is WeakMap<any, any> {
-  return getType(data) === "Map";
+  return getType(data) === 'Map';
 }
 
 export function isSet(data: any): data is Set<any> {
-  return getType(data) === "Set";
+  return getType(data) === 'Set';
 }
 
 export function isEmpty(data: any): data is null | undefined {
@@ -28,28 +28,25 @@ export function isEmpty(data: any): data is null | undefined {
   const type = getType(data);
 
   switch (type) {
-    case "Map":
-    case "Set":
+    case 'Map':
+    case 'Set':
       return data.size <= 0;
-    case "Array":
+    case 'Array':
       return data.length <= 0;
-    case "Object":
-      return (
-        Object.keys(data).concat(Object.getOwnPropertySymbols(data) as any)
-          .length <= 0
-      );
+    case 'Object':
+      return Object.keys(data).concat(Object.getOwnPropertySymbols(data) as any).length <= 0;
     default:
       return false;
   }
 }
 
 export function getToken() {
-  const token = localStorage.getItem("_TOKEN");
-  return token ? "Bearer " + token : null;
+  const token = localStorage.getItem('_TOKEN');
+  return token ? 'Bearer ' + token : null;
 }
 
 export function setToken(token: string) {
-  localStorage.setItem("_TOKEN", token);
+  localStorage.setItem('_TOKEN', token);
 }
 
 /**
@@ -60,7 +57,7 @@ export function setToken(token: string) {
  * @returns
  */
 export function toFixed(value: string | number, divisor = 10000, float = 2) {
-  if (!value) return "0.00";
+  if (!value) return '0.00';
   return ((value as number) / divisor).toFixed(float);
 }
 
@@ -103,14 +100,12 @@ export function formatRegionCode(regionCode: string) {
  * @param data     文件资源（blob）
  * @param extName  文件后缀
  */
-export function downloadFile(fileName: string, data: any, extName = ".xlsx") {
+export function downloadFile(fileName: string, data: any, extName = '.xlsx') {
   const blob = data instanceof Blob ? data : new Blob([data]);
-  const eLink = document.createElement("a");
+  const eLink = document.createElement('a');
   // <a/> 上的 download 属性用于重命名一个需要下载的文件
-  eLink.download = /\.([a-zA-Z]+)$/i.test(fileName)
-    ? fileName
-    : fileName + extName;
-  eLink.style.display = "none";
+  eLink.download = /\.([a-zA-Z]+)$/i.test(fileName) ? fileName : fileName + extName;
+  eLink.style.display = 'none';
   eLink.href = URL.createObjectURL(blob);
   document.body.appendChild(eLink);
   eLink.click();
@@ -135,13 +130,7 @@ export function shallowEqual(obj1: any, obj2: any): boolean {
 
   // 如果 obj1、obj2 有一个不是 object 类型，则返回 false
   // 注意：typeof null === 'object'
-  if (
-    typeof obj1 !== "object" ||
-    obj1 === null ||
-    typeof obj2 !== "object" ||
-    obj2 === null
-  )
-    return false;
+  if (typeof obj1 !== 'object' || obj1 === null || typeof obj2 !== 'object' || obj2 === null) return false;
 
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
@@ -150,11 +139,7 @@ export function shallowEqual(obj1: any, obj2: any): boolean {
 
   for (let i = 0; i < keys1.length; i++) {
     const key = keys1[i];
-    if (
-      !Object.prototype.hasOwnProperty.call(obj2, key) ||
-      !objectIs(obj1[key], obj2[key])
-    )
-      return false;
+    if (!Object.prototype.hasOwnProperty.call(obj2, key) || !objectIs(obj1[key], obj2[key])) return false;
   }
 
   return true;
@@ -208,14 +193,8 @@ export function throttle(func: Function, delay: number, immediately = false) {
 
 // 获取视口尺寸
 export function getViewportSize() {
-  const width =
-    window.innerWidth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth;
-  const height =
-    window.innerHeight ||
-    document.documentElement.clientHeight ||
-    document.body.clientHeight;
+  const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+  const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
   return { width, height };
 }
 /**

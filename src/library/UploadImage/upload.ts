@@ -20,7 +20,7 @@ export default class Upload {
     this.opts = { ...defaultOptions, ...options };
     this.headers = {};
 
-    if (typeof this.opts.headers === "function") {
+    if (typeof this.opts.headers === 'function') {
       const headers = this.opts.headers();
 
       const keys = Object.keys(headers);
@@ -50,7 +50,7 @@ export default class Upload {
     keys.forEach((key) => xhr.setRequestHeader(key, this.headers[key]));
 
     this.handleProgress &&
-      xhr.upload.addEventListener("progress", (event: any) => {
+      xhr.upload.addEventListener('progress', (event: any) => {
         const { lengthComputable, loaded, total } = event;
         if (lengthComputable) {
           this.handleProgress(Number((loaded / total).toFixed(2)));
@@ -58,7 +58,7 @@ export default class Upload {
       });
 
     this.handleSuccess &&
-      xhr.addEventListener("load", () => {
+      xhr.addEventListener('load', () => {
         const response = JSON.parse(xhr.response);
         if (xhr.status >= 200 && xhr.status < 300) {
           this.handleSuccess(response);
@@ -72,7 +72,7 @@ export default class Upload {
       });
 
     this.handleError &&
-      xhr.addEventListener("error", () => {
+      xhr.addEventListener('error', () => {
         this.handleError({
           status: xhr.status,
           statusText: xhr.statusText,
@@ -81,8 +81,8 @@ export default class Upload {
       });
 
     this.handleError &&
-      xhr.addEventListener("timeout", () => {
-        this.handleError(new Error("请求超时！"));
+      xhr.addEventListener('timeout', () => {
+        this.handleError(new Error('请求超时！'));
       });
 
     xhr.send(query);

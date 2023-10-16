@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import getTransformProperties from "@/utils/getTransformProperties";
-import defaultImage from "@/assets/defaultImage.svg";
-import { throttle, getViewportSize } from "@/utils";
-import { ref, watch, computed } from "vue";
-import Loading from "./Loading.vue";
-import ToolBar from "./ToolBar.vue";
-import Slider from "./Slider.vue";
-import Icon from "../Icon";
-import "./PreviewImage.less";
+import getTransformProperties from '@/utils/getTransformProperties';
+import defaultImage from '@/assets/defaultImage.svg';
+import { throttle, getViewportSize } from '@/utils';
+import { ref, watch, computed } from 'vue';
+import Loading from './Loading.vue';
+import ToolBar from './ToolBar.vue';
+import Slider from './Slider.vue';
+import Icon from '../Icon';
+import './PreviewImage.less';
 
 type SuperPreviewImageProps = {
   pageSize?: number;
@@ -17,17 +17,19 @@ type SuperPreviewImageProps = {
 };
 
 type SuperPreviewImageEvents = {
-  (e: "update:index", index: number): void;
-  (e: "close"): void;
+  (e: 'update:index', index: number): void;
+  (e: 'close'): void;
 };
-
-defineOptions({ name: "SuperPreviewImage" });
 
 const props = withDefaults(defineProps<SuperPreviewImageProps>(), {
   pageSize: 9,
   index: 0,
 });
+
 const emit = defineEmits<SuperPreviewImageEvents>();
+
+defineOptions({ name: 'SuperPreviewImage' });
+
 // 开关，表示用户正在拖拽图片（当为true时，图片将跟随用户鼠标进行移动）
 let _isMoveing = false;
 // 鼠标指针起始位置
@@ -52,11 +54,11 @@ watch(
   () => props.open,
   () => {
     if (props.open) {
-      document.documentElement.style.overflow = "hidden";
+      document.documentElement.style.overflow = 'hidden';
     } else {
-      document.documentElement.style.overflow = "";
+      document.documentElement.style.overflow = '';
     }
-  }
+  },
 );
 
 // 当 props.index 更新时，判断是否需要更新内容的 indicator
@@ -66,7 +68,7 @@ watch(
     if (props.index === indicator.value) return;
     indicator.value = props.index!;
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 // 每当图片切换时，重新设置 imagePreloader,这样就会展示一个 loading 状态，说明图片正在加载。
@@ -90,7 +92,7 @@ watch(
     };
 
     imagePreloader.value.src = hdImgs.value[indicator.value];
-  }
+  },
   // { immediate: true },
 );
 
@@ -179,9 +181,7 @@ function handleMouseMove(event: any) {
   // 并且，每次移动都是相对 dragStart 事件开始时的 _originPoint 点位进行计算，
   // 偏移量则是相对 dragStart 事件的 clientX、clientY 进行计算
   imgXRef.value!.style.cssText = `
-      transform: translate3D(${_originPoint.x + distanceX}px, ${
-    _originPoint.y + distanceY
-  }px, 0px);
+      transform: translate3D(${_originPoint.x + distanceX}px, ${_originPoint.y + distanceY}px, 0px);
     `;
 }
 // 鼠标滚轮事件
@@ -208,16 +208,14 @@ function handleShrink() {
 // 放大
 function handleEnlarge() {
   const { scaleX, scaleY, rotate } = getTransformProperties(imgRef.value!);
-  imgRef.value!.style.cssText = `transform: scale(${scaleX * 1.25}, ${
-    scaleY * 1.25
-  }) rotate(${rotate}deg);`;
+  imgRef.value!.style.cssText = `transform: scale(${scaleX * 1.25}, ${scaleY * 1.25}) rotate(${rotate}deg);`;
 }
 
 function handleChangeIndicator(index: number) {
   indicator.value = index;
-  emit("update:index", index);
-  imgRef.value!.style.cssText = "";
-  imgXRef.value!.style.cssText = "";
+  emit('update:index', index);
+  imgRef.value!.style.cssText = '';
+  imgXRef.value!.style.cssText = '';
 }
 
 // 上一张
@@ -234,10 +232,10 @@ function handleNextItem() {
 // 关闭 PreviewImage 组件
 function handleClosePreview(event: any) {
   if (event.target === event.currentTarget) {
-    emit("close");
+    emit('close');
     setTimeout(() => {
-      if (imgRef.value) imgRef.value.style.cssText = "";
-      if (imgXRef.value) imgXRef.value.style.cssText = "";
+      if (imgRef.value) imgRef.value.style.cssText = '';
+      if (imgXRef.value) imgXRef.value.style.cssText = '';
     }, 300);
   }
 }
@@ -265,20 +263,11 @@ function handleClosePreview(event: any) {
       </div>
       <!-- 顶部工具栏 -->
       <ToolBar :imageElement="imgRef!" @close="handleClosePreview" />
-      <div
-        :class="[
-          'qm-vnit-preview-image-prev-buttton',
-          { disabled: indicator <= 0 },
-        ]"
-        @click="handlePrevItem"
-      >
+      <div :class="['qm-vnit-preview-image-prev-buttton', { disabled: indicator <= 0 }]" @click="handlePrevItem">
         <Icon name="arrow-left-bold" style="font-size: 60px" />
       </div>
       <div
-        :class="[
-          'qm-vnit-preview-image-next-buttton',
-          { disabled: indicator >= _imgs.length - 1 },
-        ]"
+        :class="['qm-vnit-preview-image-next-buttton', { disabled: indicator >= _imgs.length - 1 }]"
         @click="handleNextItem"
       >
         <Icon name="arrow-right-bold" style="font-size: 60px" />

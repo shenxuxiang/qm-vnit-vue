@@ -1,7 +1,6 @@
 class IntersectionObserveImage {
   public nodeMap = new Map<Element, string>();
   public instance!: IntersectionObserver;
-  constructor() {}
 
   intersectionCallback(entries: IntersectionObserverEntry[]) {
     entries.forEach((item) => {
@@ -17,9 +16,7 @@ class IntersectionObserveImage {
   }
 
   init() {
-    this.instance = new window.IntersectionObserver(
-      this.intersectionCallback.bind(this)
-    );
+    this.instance = new window.IntersectionObserver(this.intersectionCallback.bind(this));
   }
 
   addElement(node: Element, src: string) {

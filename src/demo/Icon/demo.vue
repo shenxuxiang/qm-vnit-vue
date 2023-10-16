@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Icon } from "@/library";
+import { Icon } from '@/library';
 </script>
 
 <template>

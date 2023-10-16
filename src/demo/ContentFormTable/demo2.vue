@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { ContentFormTable } from "@/library";
+import { ref } from 'vue';
+import { ContentFormTable } from '@/library';
 
 const columns = ref([
   {
-    dataIndex: "userName",
-    title: "查询名称",
-    formType: "input",
+    dataIndex: 'userName',
+    title: '查询名称',
+    formType: 'input',
   },
   {
-    dataIndex: "sex",
-    title: "性别",
+    dataIndex: 'sex',
+    title: '性别',
     sorter: {
       compare: (a: any, b: any) => a.sex - b.sex,
       multiple: 1,
     },
   },
   {
-    dataIndex: "age",
-    title: "年龄",
+    dataIndex: 'age',
+    title: '年龄',
     sorter: {
       compare: (a: any, b: any) => a.age - b.age,
       multiple: 2,
@@ -33,9 +33,9 @@ function handleQueryTableList(query: any) {
       return resolve({
         data: {
           list: [
-            { userName: "小沈", sex: "man", age: 32, id: "1" },
-            { userName: "小梁", sex: "man", age: 33, id: "2" },
-            { userName: "小饶", sex: "woman", age: 30, id: "3" },
+            { userName: '小沈', sex: 'man', age: 32, id: '1' },
+            { userName: '小梁', sex: 'man', age: 33, id: '2' },
+            { userName: '小饶', sex: 'woman', age: 30, id: '3' },
           ],
           total: 3,
         },

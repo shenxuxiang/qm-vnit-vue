@@ -3,8 +3,7 @@ const transformScaleReg = /scale\((-?[0-9.]+),\s?(-?[0-9.]+)\)/;
 // 获取 transform 属性的 rotate 值
 const transformRotateReg = /rotate\((-?[0-9.]+)deg\)/;
 // 获取 transform 属性的 translate 值： translateX、translateY、translateZ
-const transformTranslateReg =
-  /translate3d\((-?[0-9.]+)px,\s?(-?[0-9.]+)px,\s?(-?[0-9.]+)px\)/;
+const transformTranslateReg = /translate3d\((-?[0-9.]+)px,\s?(-?[0-9.]+)px,\s?(-?[0-9.]+)px\)/;
 
 /**
  * 获取元素的 transform 相关属性值。

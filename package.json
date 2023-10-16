@@ -27,7 +27,7 @@
     "docs:dev": "vitepress dev src",
     "docs:build": "vitepress build src",
     "docs:preview": "node ./server/app.cjs",
-    "prettier": "npx prettier -w ./src",
+    "prettier": "npx prettier ./src -w",
     "lint": "npx eslint ./src --config ./.eslintrc.yml --ext .vue,.ts,.tsx --fix"
   },
   "lint-staged": {

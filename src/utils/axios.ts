@@ -1,14 +1,8 @@
-import type {
-  AxiosRequestConfig,
-  AxiosInstance,
-  InternalAxiosRequestConfig,
-  AxiosResponse,
-  AxiosError,
-} from "axios";
-import axios from "axios";
-import { getToken, matchPath } from "@/utils";
-import { message } from "ant-design-vue";
-import router from "@/router";
+import type { AxiosRequestConfig, AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios from 'axios';
+import { getToken, matchPath } from '@/utils';
+import { message } from 'ant-design-vue';
+import router from '@/router';
 
 enum ResponseCode {
   successCode = 0,
@@ -16,21 +10,21 @@ enum ResponseCode {
 }
 
 const statusCode = {
-  200: "200 OK",
-  400: "400 Bad Request",
-  401: "401 Unauthorized",
-  403: "403 Forbidden",
-  404: "404 Not Found",
-  405: "405 Method Not Allowed",
-  408: "408 Request Timeout",
-  500: "500 Internal Server Error",
-  501: "501 Not Implemented",
-  502: "502 Bad Gateway",
-  503: "503 Service Unavailable",
-  504: "504 Gateway Timeout",
-  505: "505 HTTP Version Not Supported",
-  510: "510 Not Extended",
-  511: "511 Network Authentication Required",
+  200: '200 OK',
+  400: '400 Bad Request',
+  401: '401 Unauthorized',
+  403: '403 Forbidden',
+  404: '404 Not Found',
+  405: '405 Method Not Allowed',
+  408: '408 Request Timeout',
+  500: '500 Internal Server Error',
+  501: '501 Not Implemented',
+  502: '502 Bad Gateway',
+  503: '503 Service Unavailable',
+  504: '504 Gateway Timeout',
+  505: '505 HTTP Version Not Supported',
+  510: '510 Not Extended',
+  511: '511 Network Authentication Required',
 };
 
 let abortController = new AbortController();
@@ -45,7 +39,7 @@ function cancelRequest() {
 }
 
 const defaultConfigOptions: AxiosRequestConfig = {
-  baseURL: "",
+  baseURL: '',
   timeout: 60000,
   withCredentials: true,
 };
@@ -58,15 +52,9 @@ class Request {
 
     this.instance = axios.create(this.configOptions);
 
-    this.instance.interceptors.request.use(
-      this.onRequestFulfull.bind(this),
-      this.onRequestReject.bind(this)
-    );
+    this.instance.interceptors.request.use(this.onRequestFulfull.bind(this), this.onRequestReject.bind(this));
 
-    this.instance.interceptors.response.use(
-      this.onResponseFulFull.bind(this),
-      this.onResponseReject.bind(this)
-    );
+    this.instance.interceptors.response.use(this.onResponseFulFull.bind(this), this.onResponseReject.bind(this));
   }
 
   onRequestFulfull(config: InternalAxiosRequestConfig) {
@@ -92,18 +80,16 @@ class Request {
     } = response;
 
     // 下载文件处理
-    if (responseType === "blob") {
-      const matched = /^attachment;\s*filename\*?=(?:utf-8'')?([^,]+)/.exec(
-        headers["content-disposition"] ?? ""
-      );
-      let fileName = "default_";
+    if (responseType === 'blob') {
+      const matched = /^attachment;\s*filename\*?=(?:utf-8'')?([^,]+)/.exec(headers['content-disposition'] ?? '');
+      let fileName = 'default_';
       if (matched) fileName = decodeURIComponent(matched[1]);
 
       return Promise.resolve({ fileName, data });
     }
 
     // 接口异常处理（非登陆凭证失效场景）
-    if (typeof code !== "undefined" && code !== ResponseCode.successCode) {
+    if (typeof code !== 'undefined' && code !== ResponseCode.successCode) {
       message.error(data.message);
       return Promise.reject(data);
     }
@@ -121,12 +107,12 @@ class Request {
     const { response, code, request } = error;
     if (response) {
       this.checkStatus(response!.status);
-    } else if (code === "ERR_CANCELED") {
+    } else if (code === 'ERR_CANCELED') {
       console.log(`${request.url}：请求已取消！`);
     } else if (!window.navigator.onLine) {
-      message.error("网络连接失败！");
+      message.error('网络连接失败！');
     } else {
-      message.error("请求失败，请联系管理员！");
+      message.error('请求失败，请联系管理员！');
     }
 
     return Promise.reject(error);
@@ -137,11 +123,11 @@ class Request {
     cancelRequest();
     // 清楚所有缓存数据。
     window.localStorage.clear();
-    message.warning("用户登录失效，请重新登录！");
+    message.warning('用户登录失效，请重新登录！');
 
     const { push, currentRoute } = router;
-    if (matchPath("/login", currentRoute.value.fullPath)) return;
-    push("/login");
+    if (matchPath('/login', currentRoute.value.fullPath)) return;
+    push('/login');
   }
 
   checkStatus(status: number) {
@@ -164,7 +150,7 @@ class Request {
   }
 
   getBlob(url: string, params?: any, config?: AxiosRequestConfig) {
-    return this.instance.get(url, { ...config, params, responseType: "blob" });
+    return this.instance.get(url, { ...config, params, responseType: 'blob' });
   }
 
   put(url: string, data?: any, config?: AxiosRequestConfig) {

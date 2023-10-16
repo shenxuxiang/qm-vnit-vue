@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { ContentFormTable } from "@/library";
+import { ref } from 'vue';
+import { ContentFormTable } from '@/library';
 
 // 当 Columns 中既没有指定 formType、也没有指定 component 时，则只展示表格数据
 const columns = ref([
   {
-    dataIndex: "userName",
-    title: "查询名称",
+    dataIndex: 'userName',
+    title: '查询名称',
   },
   {
-    dataIndex: "sex",
-    title: "性别",
+    dataIndex: 'sex',
+    title: '性别',
   },
   {
-    dataIndex: "age",
-    title: "年龄",
+    dataIndex: 'age',
+    title: '年龄',
   },
 ]);
 
@@ -25,9 +25,9 @@ function handleQueryTableList(query: any) {
       return resolve({
         data: {
           list: [
-            { userName: "小沈", sex: "man", age: 32, id: "1" },
-            { userName: "小梁", sex: "man", age: 33, id: "2" },
-            { userName: "小饶", sex: "woman", age: 30, id: "3" },
+            { userName: '小沈', sex: 'man', age: 32, id: '1' },
+            { userName: '小梁', sex: 'man', age: 33, id: '2' },
+            { userName: '小饶', sex: 'woman', age: 30, id: '3' },
           ],
           total: 3,
         },
@@ -38,9 +38,5 @@ function handleQueryTableList(query: any) {
 </script>
 
 <template>
-  <ContentFormTable
-    rowKey="id"
-    :columns="columns"
-    :queryTableList="handleQueryTableList"
-  />
+  <ContentFormTable rowKey="id" :columns="columns" :queryTableList="handleQueryTableList" />
 </template>

@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import {
-  EyeOutlined,
-  DeleteOutlined,
-  PictureOutlined,
-} from "@ant-design/icons-vue";
-import { ref, onMounted, onUnmounted } from "vue";
-import Upload from "./upload";
+import { EyeOutlined, DeleteOutlined, PictureOutlined } from '@ant-design/icons-vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+import Upload from './upload';
+
+const props = withDefaults(defineProps<RenderItemProps>(), {
+  percent: 100,
+  status: 'done',
+  method: 'POST',
+});
+
+const emit = defineEmits<RenderItemEmits>();
 
 /**
  * 动画效果函数
@@ -16,8 +20,7 @@ import Upload from "./upload";
  * @return { number }
  * @author shenxuxiang
  */
-const easeIn = (t: number, b: number, c: number, d: number) =>
-  t === 0 ? b : c * 2 ** (10 * (t / d - 1)) + b;
+const easeIn = (t: number, b: number, c: number, d: number) => (t === 0 ? b : c * 2 ** (10 * (t / d - 1)) + b);
 
 type RenderItemProps = {
   uid: string;
@@ -30,24 +33,17 @@ type RenderItemProps = {
   percent?: number;
   disabled?: boolean;
   headers?: () => { [key: string]: any };
-  status?: "loading" | "done" | "error" | "remove";
+  status?: 'loading' | 'done' | 'error' | 'remove';
 };
 
 type RenderItemEmits = {
-  (e: "remove", uid: string): void;
-  (e: "preview", uid: string): void;
-  (e: "error", uid: string, err: any): void;
-  (e: "success", uid: string, res: any): void;
+  (e: 'remove', uid: string): void;
+  (e: 'preview', uid: string): void;
+  (e: 'error', uid: string, err: any): void;
+  (e: 'success', uid: string, res: any): void;
 };
 
-const emit = defineEmits<RenderItemEmits>();
-const props = withDefaults(defineProps<RenderItemProps>(), {
-  percent: 100,
-  status: "done",
-  method: "POST",
-});
-
-const imgURL = ref("");
+const imgURL = ref('');
 const itemRef = ref<HTMLLIElement>();
 const cvsRef = ref<HTMLCanvasElement>();
 const ctxRef = ref<CanvasRenderingContext2D | null>();
@@ -56,8 +52,8 @@ const uploadInstance = ref<XMLHttpRequest | null>();
 // canvas 初始化
 onMounted(() => {
   // 在元素刚刚挂载到 DOM 节点时，添加一个渐入式的动画。
-  itemRef.value?.classList.add("enter-from");
-  requestAnimationFrame(() => itemRef.value?.classList.remove("enter-from"));
+  itemRef.value?.classList.add('enter-from');
+  requestAnimationFrame(() => itemRef.value?.classList.remove('enter-from'));
 
   if (props.url) {
     imgURL.value = props.url;
@@ -70,7 +66,7 @@ onMounted(() => {
     };
   }
 
-  if (!props.url && props.status === "loading") {
+  if (!props.url && props.status === 'loading') {
     initialCanvas();
     uploadFile();
   }
@@ -85,16 +81,16 @@ onUnmounted(() => {
 
 // 开始上传图片
 function uploadFile() {
-  if (props.uid && props.status === "loading" && props.rowSource) {
+  if (props.uid && props.status === 'loading' && props.rowSource) {
     const formData = new FormData();
-    formData.append("file", props.rowSource);
+    formData.append('file', props.rowSource);
 
     const upload = new Upload({ headers: props.headers });
 
     let isUploadStart = true;
 
     // 更新上传进度
-    upload.onProgress(function (progress: number) {
+    upload.onProgress((progress: number) => {
       // 如果一开始上传的时候，progress 就大于等于 1，说明网速足够快上传图片瞬间就完成了，
       // 此时，我们使用动画完成进度条，否则就是每次 onProgress 事件触发 updateProgressBar
       if (isUploadStart && progress >= 1) {
@@ -107,15 +103,15 @@ function uploadFile() {
     });
 
     // 上传成功
-    upload.onSuccess(async function (res: any) {
+    upload.onSuccess(async (res: any) => {
       fadeInAnimation();
-      emit("success", props.uid, res);
+      emit('success', props.uid, res);
       uploadInstance.value = null;
     });
 
     // 上传失败
-    upload.onError(function (err: any) {
-      emit("error", props.uid, err);
+    upload.onError((err: any) => {
+      emit('error', props.uid, err);
       uploadInstance.value = null;
     });
 
@@ -128,8 +124,8 @@ function uploadFile() {
 function initialCanvas() {
   cvsRef.value!.width = 84;
   cvsRef.value!.height = 84;
-  const ctx = (ctxRef.value = cvsRef.value?.getContext("2d")!);
-
+  const ctx = cvsRef.value!.getContext('2d')!;
+  ctxRef.value = ctx;
   ctx.save();
   ctx.translate(42, 42);
 }
@@ -155,47 +151,40 @@ function updateProgressBar(progress: number) {
   ctx.clearRect(-42, -42, 84, 84);
 
   ctx.beginPath();
-  ctx.fillStyle = "#fff";
+  ctx.fillStyle = '#fff';
   ctx.fillRect(-42, -42, 84, 84);
 
   ctx.lineWidth = 4;
-  ctx.lineCap = "round";
+  ctx.lineCap = 'round';
 
   ctx.beginPath();
-  ctx.strokeStyle = "rgba(0, 0, 0, 0.2)";
+  ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
   ctx.arc(0, 0, 32, -0.5 * Math.PI, Math.PI * 1.5, false);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.strokeStyle = "#1677ff";
-  ctx.arc(
-    0,
-    0,
-    32,
-    -0.5 * Math.PI,
-    Math.PI * 2 * progress - 0.5 * Math.PI,
-    false
-  );
+  ctx.strokeStyle = '#1677ff';
+  ctx.arc(0, 0, 32, -0.5 * Math.PI, Math.PI * 2 * progress - 0.5 * Math.PI, false);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.font = "normal normal normal 14px arial";
-  ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-  ctx.fillText((progress * 100).toFixed(0) + "%", 0, 0);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = 'normal normal normal 14px arial';
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillText((progress * 100).toFixed(0) + '%', 0, 0);
 }
 
 // 图片展示（渐入动画）
 function fadeInAnimation() {
   if (cvsRef.value) {
-    cvsRef.value.style.display = "none";
+    cvsRef.value.style.display = 'none';
     // @ts-ignore
-    cvsRef.value.parentNode.classList.toggle("fade-in");
+    cvsRef.value.parentNode.classList.toggle('fade-in');
     setTimeout(() => {
       if (cvsRef.value?.parentNode) {
         // @ts-ignore
-        cvsRef.value.parentNode.style.display = "none";
+        cvsRef.value.parentNode.style.display = 'none';
       }
     }, 300);
   }
@@ -203,26 +192,20 @@ function fadeInAnimation() {
 
 function handleRemove(uid: string) {
   // 添加离开时的动画效果
-  itemRef.value?.classList.add("leave-from");
+  itemRef.value?.classList.add('leave-from');
   requestAnimationFrame(() => {
-    itemRef.value?.classList.remove("leave-from");
-    itemRef.value?.classList.add("leave-active");
+    itemRef.value?.classList.remove('leave-from');
+    itemRef.value?.classList.add('leave-active');
   });
 
-  setTimeout(() => emit("remove", uid), 300);
+  setTimeout(() => emit('remove', uid), 300);
 }
 </script>
 
 <template>
-  <li
-    ref="itemRef"
-    :class="['qm-vnit-upload-image-item', { error: status === 'error' }]"
-  >
+  <li ref="itemRef" :class="['qm-vnit-upload-image-item', { error: status === 'error' }]">
     <!-- 进度条 -->
-    <div
-      class="qm-vnit-upload-image-item-progress"
-      :style="{ display: status === 'error' ? 'none' : '' }"
-    >
+    <div class="qm-vnit-upload-image-item-progress" :style="{ display: status === 'error' ? 'none' : '' }">
       <canvas ref="cvsRef" style="width: 84px; height: 84px" />
     </div>
 
@@ -233,10 +216,7 @@ function handleRemove(uid: string) {
     </div>
 
     <!-- 图片展示 -->
-    <div
-      v-else-if="status === 'done'"
-      class="qm-vnit-upload-image-item-preview"
-    >
+    <div v-else-if="status === 'done'" class="qm-vnit-upload-image-item-preview">
       <slot name="itemRender" :src="imgURL">
         <img :src="imgURL" class="qm-vnit-upload-image-item-preview-content" />
       </slot>
@@ -245,11 +225,7 @@ function handleRemove(uid: string) {
     <!-- 可操作区域 -->
     <div class="qm-vnit-upload-image-item-mask">
       <!-- 删除按钮 -->
-      <DeleteOutlined
-        v-if="!disabled"
-        class="qm-vnit-upload-image-item-remove-icon"
-        @click="handleRemove(uid)"
-      />
+      <DeleteOutlined v-if="!disabled" class="qm-vnit-upload-image-item-remove-icon" @click="handleRemove(uid)" />
       <!-- 预览按钮 -->
       <EyeOutlined
         v-if="status === 'done'"
@@ -303,7 +279,7 @@ function handleRemove(uid: string) {
   height: 84px;
   overflow: hidden;
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -403,10 +379,9 @@ function handleRemove(uid: string) {
   transition: all 0.3s ease;
   transition-property: opacity visibility transform;
   transition-duration: 300ms 300ms 300ms;
-  transition-timing-function: cubic-bezier(0, 1, 0.69, 1)
-    cubic-bezier(0, 1, 0.69, 1) ease;
+  transition-timing-function: cubic-bezier(0, 1, 0.69, 1) cubic-bezier(0, 1, 0.69, 1) ease;
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     bottom: -5px;
     left: 42px;

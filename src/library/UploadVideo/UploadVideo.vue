@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import "./UploadVideo.less";
-import Icon from "../Icon";
-import { ref, computed } from "vue";
-import UploadImage from "../UploadImage";
-import type { FileList } from "../UploadImage";
-export type { FileList } from "../UploadImage";
+import './UploadVideo.less';
+import Icon from '../Icon';
+import { ref, computed } from 'vue';
+import UploadImage from '../UploadImage';
+import type { FileList } from '../UploadImage';
+export type { FileList } from '../UploadImage';
 
 type UploadVideoProps = {
   action: string;
@@ -19,17 +19,16 @@ type UploadVideoProps = {
 };
 
 type UploadVideoEmits = {
-  (e: "error", error: any): void;
-  (e: "update:fileList", fileList: FileList): void;
+  (e: 'error', error: any): void;
+  (e: 'update:fileList', fileList: FileList): void;
 };
 
-defineOptions({ name: "UploadVideo" });
-const emit = defineEmits<UploadVideoEmits>();
 const props = withDefaults(defineProps<UploadVideoProps>(), {
-  accept: "video/*",
+  accept: 'video/*',
 });
-
-const videoURL = ref("");
+const emit = defineEmits<UploadVideoEmits>();
+defineOptions({ name: 'UploadVideo' });
+const videoURL = ref('');
 const videoRef = ref<HTMLVideoElement>();
 const localVideos = ref<FileList>([]);
 const showPreview = ref(false);
@@ -37,7 +36,7 @@ const videoPreviewRef = ref<HTMLVideoElement>();
 
 const videoList = computed({
   get: () => props.fileList || localVideos.value,
-  set: (value: FileList) => emit("update:fileList", value),
+  set: (value: FileList) => emit('update:fileList', value),
 });
 
 function handlePreviewFile(url: string) {
@@ -81,13 +80,14 @@ function handleClosePreview(event: any) {
   if (event.target === event.currentTarget) {
     videoPreviewRef.value!.pause();
     showPreview.value = false;
-    videoURL.value = "";
+    videoURL.value = '';
   }
 }
 </script>
 
 <template>
   <UploadImage
+    v-model:fileList="videoList"
     :action="action"
     :method="method"
     :accept="accept"
@@ -97,41 +97,21 @@ function handleClosePreview(event: any) {
     :maxCount="maxCount"
     :disabled="disabled"
     :previewFile="handlePreviewFile"
-    v-model:fileList="videoList"
     @error="$emit('error', $event)"
   >
     <template #itemRender="{ src }">
-      <video
-        v-if="src"
-        class="qm-vnit-upload-video"
-        muted
-        ref="videoRef"
-        preload="auto"
-      >
+      <video v-if="src" ref="videoRef" class="qm-vnit-upload-video" muted preload="auto">
         <source :src="src" />
       </video>
     </template>
   </UploadImage>
   <Teleport to="body">
     <transition name="uploadVidePreview">
-      <div
-        v-if="showPreview"
-        class="qm-vnit-upload-video-previewe"
-        @click="handleClosePreview"
-      >
-        <video
-          controls
-          @canplay="handleCanPlay"
-          ref="videoPreviewRef"
-          class="qm-vnit-upload-video-preview-content"
-        >
+      <div v-if="showPreview" class="qm-vnit-upload-video-previewe" @click="handleClosePreview">
+        <video ref="videoPreviewRef" controls class="qm-vnit-upload-video-preview-content" @canplay="handleCanPlay">
           <source :src="videoURL" />
         </video>
-        <Icon
-          name="close"
-          class="qm-vnit-upload-video-preview-close-icon"
-          @click="handleClosePreview"
-        />
+        <Icon name="close" class="qm-vnit-upload-video-preview-close-icon" @click="handleClosePreview" />
       </div>
     </transition>
   </Teleport>

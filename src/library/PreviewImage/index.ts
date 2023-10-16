@@ -1,6 +1,6 @@
-import SuperPreviewImage from "./SuperPreviewImage.vue";
-import PreviewImage from "./PreviewImage.vue";
-import type { App } from "vue";
+import SuperPreviewImage from './SuperPreviewImage.vue';
+import PreviewImage from './PreviewImage.vue';
+import type { App } from 'vue';
 
 PreviewImage.SuperPreviewImage = SuperPreviewImage;
 

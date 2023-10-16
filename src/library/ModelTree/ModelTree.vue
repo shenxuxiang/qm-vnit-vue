@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { TreeProps } from "ant-design-vue";
-import { h, ref, watch, computed } from "vue";
-import { Tree, Input } from "ant-design-vue";
-import { isEmpty } from "@/utils";
-import "./ModelTree.less";
+import type { TreeProps } from 'ant-design-vue';
+import { h, ref, watch, computed } from 'vue';
+import { Tree, Input } from 'ant-design-vue';
+import { isEmpty } from '@/utils';
+import './ModelTree.less';
 
-type TreeDataItem = NonNullable<TreeProps["treeData"]>[0] & {
+type TreeDataItem = NonNullable<TreeProps['treeData']>[0] & {
   parentKey: number | string;
   children?: TreeDataItem[];
 };
@@ -25,19 +25,19 @@ type ModelTreeProps = {
 };
 
 type ModelTreeEmits = {
-  (e: "update:expandedKeys", value: string[] | number[]): void;
-  (e: "update:checkedKeys", value: string[] | number[]): void;
+  (e: 'update:expandedKeys', value: string[] | number[]): void;
+  (e: 'update:checkedKeys', value: string[] | number[]): void;
 };
 
 const props = withDefaults(defineProps<ModelTreeProps>(), {
   bordered: true,
   checkable: true,
   showFilter: true,
-  placeholder: "请输入关键字进行查找",
+  placeholder: '请输入关键字进行查找',
 });
 const emit = defineEmits<ModelTreeEmits>();
-defineOptions({ inheritAttrs: false, name: "ModelTree" });
-const searchValue = ref("");
+defineOptions({ name: 'ModelTree', inheritAttrs: false });
+const searchValue = ref('');
 const localExpandedKeys = ref<string[] | number[]>([]);
 const localCheckedKeys = ref<string[] | number[]>([]);
 
@@ -45,7 +45,7 @@ const expandedKeys = computed({
   get: () => props.expandedKeys || localExpandedKeys.value,
   set: (value: string[] | number[]) => {
     localExpandedKeys.value = value;
-    emit("update:expandedKeys", value);
+    emit('update:expandedKeys', value);
   },
 });
 
@@ -53,16 +53,14 @@ const checkedKeys = computed({
   get: () => props.checkedKeys || localCheckedKeys.value,
   set: (checkedKeys: any) => {
     localCheckedKeys.value = checkedKeys;
-    emit("update:checkedKeys", checkedKeys);
-  }
+    emit('update:checkedKeys', checkedKeys);
+  },
 });
 
 // 根据原始的 props.treeData 计算，将格式转换成 TreeData 类型。
 // 在没有提供 props.computedTreeData 函数的情况下，直接使用 props.treeData。
 const treeData = computed<TreeData>(() =>
-  typeof props.computedTreeData === "function"
-    ? props.computedTreeData(props.treeData)
-    : props.treeData
+  typeof props.computedTreeData === 'function' ? props.computedTreeData(props.treeData) : props.treeData,
 );
 
 // 扁平的 TreeDate
@@ -70,9 +68,7 @@ const flatTreeData = computed(() => computedFlatTreeData(treeData.value));
 
 // 筛选后的 TreeData
 const filteredTreeData = computed<TreeData>(() =>
-  searchValue.value
-    ? filterTreeData(treeData.value, searchValue.value)
-    : treeData.value
+  searchValue.value ? filterTreeData(treeData.value, searchValue.value) : treeData.value,
 );
 
 // 输入关键字筛选 TreeData 展开树。
@@ -92,10 +88,7 @@ watch(searchValue, () => {
 
 // 计算扁平的 treeData
 function computedFlatTreeData(treeData: TreeData) {
-  const result: Map<
-    string | number,
-    { title: string; key: string | number; parentKey: string | number }
-  > = new Map();
+  const result: Map<string | number, { title: string; key: string | number; parentKey: string | number }> = new Map();
 
   const stack = [...treeData];
   while (stack.length) {
@@ -145,7 +138,7 @@ function filterTreeData(treeData: TreeData, searchValue: string): TreeData {
           ary[i] && newTitle.push(ary[i]);
           if (i < length - 1) {
             // 相邻的两个元素之间才会添加
-            newTitle.push(h("span", { style: "color: #f50;" }, searchValue));
+            newTitle.push(h('span', { style: 'color: #f50;' }, searchValue));
           }
         }
 
@@ -167,13 +160,13 @@ function filterTreeData(treeData: TreeData, searchValue: string): TreeData {
   );
 }
 
-defineExpose({ 
-  getParentKeys, 
+defineExpose({
+  getParentKeys,
   getAllParentKeys: () => {
     const keys: Array<string | number> = [];
     localCheckedKeys.value.forEach((key: number | string) => keys.push(...getParentKeys(key)));
     return [...new Set(keys)];
-  }
+  },
 });
 </script>
 

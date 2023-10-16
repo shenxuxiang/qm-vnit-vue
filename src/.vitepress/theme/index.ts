@@ -1,7 +1,7 @@
-import DefaultTheme from "vitepress/theme";
-import Layout from "../../components/Layout.vue";
+import DefaultTheme from 'vitepress/theme';
+import Layout from '../../components/Layout.vue';
 // import * as vnit from '../../../es';
-import "./style/var.css";
+import './style/var.css';
 
 export default {
   ...DefaultTheme,

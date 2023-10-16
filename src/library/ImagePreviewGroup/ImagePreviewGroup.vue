@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import Image from "../Image";
-import "./ImagePreviewGroup.less";
-import PreviewImage from "../PreviewImage";
-import { ref, computed, CSSProperties, VNode } from "vue";
+import Image from '../Image';
+import './ImagePreviewGroup.less';
+import { ref, computed, toRef } from 'vue';
+import PreviewImage from '../PreviewImage';
+import type { CSSProperties, VNode } from 'vue';
 
 export type ImageGroupSlots = { default: () => Array<VNode> };
 export type ImageGroupProps = {
@@ -12,12 +13,11 @@ export type ImageGroupProps = {
   style?: string | CSSProperties;
 };
 
-const slots = defineSlots<ImageGroupSlots>();
-defineOptions({ inheritAttrs: false, name: "ImagePreviewGroup" });
 const props = withDefaults(defineProps<ImageGroupProps>(), { bordered: true });
-
+const slots = defineSlots<ImageGroupSlots>();
+defineOptions({ name: 'ImagePreviewGroup', inheritAttrs: false });
 const indicator = ref(0);
-const className = props.class;
+const className = toRef(props, 'class');
 const showPreview = ref(false);
 const children = computed(() => slots.default?.() ?? []);
 const imgs = computed(() => {
@@ -60,11 +60,6 @@ function handlePreview(index: number) {
     </template>
   </ul>
   <Teleport to="body">
-    <PreviewImage
-      :imgs="imgs"
-      :index="indicator"
-      :open="showPreview"
-      @close="showPreview = false"
-    />
+    <PreviewImage :imgs="imgs" :index="indicator" :open="showPreview" @close="showPreview = false" />
   </Teleport>
 </template>

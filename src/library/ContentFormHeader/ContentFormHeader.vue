@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { UpOutlined, DownOutlined } from "@ant-design/icons-vue";
-import { ref, reactive, onMounted, computed, watch } from "vue";
-import { Form, Button, Row, Col } from "ant-design-vue";
-import RenderFormItem from "./RenderFormItem";
-import { isEmpty } from "@/utils";
-import "./ContentFormHeader.less";
-import type { VNode } from "vue";
+import { UpOutlined, DownOutlined } from '@ant-design/icons-vue';
+import { ref, reactive, onMounted, computed, watch } from 'vue';
+import { Form, Button, Row, Col } from 'ant-design-vue';
+import RenderFormItem from './RenderFormItem';
+import { isEmpty } from '@/utils';
+import './ContentFormHeader.less';
+import type { VNode } from 'vue';
 
-defineOptions({ name: "ContentFormHeader" });
 const props = withDefaults(defineProps<ContentFormHeadProps>(), {
   showExport: false,
   defaultExpand: true,
   hideResetButton: false,
-  submitButtonText: "提交",
+  submitButtonText: '提交',
 });
-
-const emit = defineEmits(["submit", "reset", "export"]);
-
+const emit = defineEmits(['submit', 'reset', 'export']);
+defineOptions({ name: 'ContentFormHeader' });
 const { useForm, Item: FormItem } = Form;
 
 export type Cols = 2 | 3 | 4 | 6 | 8 | 12 | 24;
@@ -71,23 +69,21 @@ const form = useForm(formModel);
 const expand = ref(props.defaultExpand);
 
 onMounted(() => {
-  if (typeof props.cols === "undefined") computedColSpan();
+  if (typeof props.cols === 'undefined') computedColSpan();
 });
 
 watch(
   () => props.cols,
-  function () {
+  () => {
     if (props.cols) {
       colsNumber.value = props.cols;
       colSpan.value = 24 / props.cols;
     }
-  }
+  },
 );
 
 // 一共多少行
-const rowsNumber = computed(() =>
-  Math.ceil((props.queryList.length + 1) / colsNumber.value)
-);
+const rowsNumber = computed(() => Math.ceil((props.queryList.length + 1) / colsNumber.value));
 // 最后一列（提交、收起按钮所在的列）的 offset
 const lastFormItemOffset = computed(() => {
   const total = props.queryList.length;
@@ -103,11 +99,14 @@ const lastFormItemOffset = computed(() => {
 });
 
 function initialFormModal() {
-  return props.queryList.reduce((memo, item) => {
-    const { dataIndex, name = dataIndex, initialValue } = item;
-    memo[name!] = initialValue || null;
-    return memo;
-  }, {} as { [propName: string]: string | number | Array<any> });
+  return props.queryList.reduce(
+    (memo, item) => {
+      const { dataIndex, name = dataIndex, initialValue } = item;
+      memo[name!] = initialValue || null;
+      return memo;
+    },
+    {} as { [propName: string]: string | number | Array<any> },
+  );
 }
 
 function computedColSpan() {
@@ -137,11 +136,10 @@ function formModelsFormat() {
     // eslint-disable-next-line
     if (result[name!] == null) {
       delete result[name!];
-    } else if (typeof dataFormat === "function") {
+    } else if (typeof dataFormat === 'function') {
       delete result[name!];
       // 先判断表单项是否有值，如果有值则进行数据格式话操作。
-      !isEmpty(formModel[name!]) &&
-        Object.assign(result, dataFormat(formModel[name!]));
+      !isEmpty(formModel[name!]) && Object.assign(result, dataFormat(formModel[name!]));
     }
   });
   return result;
@@ -149,35 +147,26 @@ function formModelsFormat() {
 
 function handleSubmit() {
   form.validate().then(() => {
-    emit("submit", formModelsFormat());
+    emit('submit', formModelsFormat());
   });
 }
 
 function handleReset() {
   form.resetFields();
-  emit("reset", formModelsFormat());
+  emit('reset', formModelsFormat());
 }
 
 function handleExport() {
-  emit("export", formModelsFormat());
+  emit('export', formModelsFormat());
 }
 </script>
 
 <template>
   <div ref="containerRef" class="content-form-head">
     <Form :model="formModel">
-      <Row
-        class="content-form-head-row"
-        :style="{ height: expand ? `${56 * rowsNumber}px` : '56px' }"
-      >
-        <template
-          v-for="(item, index) in queryList"
-          :key="item.name || item.dataIndex"
-        >
-          <Col
-            v-show="expand || (!expand && index + 1 < colsNumber)"
-            :span="colSpan"
-          >
+      <Row class="content-form-head-row" :style="{ height: expand ? `${56 * rowsNumber}px` : '56px' }">
+        <template v-for="(item, index) in queryList" :key="item.name || item.dataIndex">
+          <Col v-show="expand || (!expand && index + 1 < colsNumber)" :span="colSpan">
             <FormItem :name="item.name || item.dataIndex" :label="item.title">
               <RenderFormItem
                 v-model:value="formModel[item.name || item.dataIndex!]"
@@ -196,41 +185,19 @@ function handleExport() {
 
         <Col :offset="lastFormItemOffset * colSpan" :span="colSpan">
           <FormItem>
-            <div
-              style="
-                display: flex;
-                justify-content: flex-end;
-                align-items: flex-start;
-              "
-            >
+            <div style="display: flex; justify-content: flex-end; align-items: flex-start">
               <Button type="primary" @click="handleSubmit">
                 {{ submitButtonText }}
               </Button>
 
-              <Button
-                v-if="!hideResetButton"
-                style="margin-left: 8px"
-                @click="handleReset"
-              >
-                重置
-              </Button>
+              <Button v-if="!hideResetButton" style="margin-left: 8px" @click="handleReset"> 重置 </Button>
 
-              <Button
-                v-if="showExport"
-                style="margin-left: 8px"
-                @click="handleExport"
-              >
-                导出
-              </Button>
+              <Button v-if="showExport" style="margin-left: 8px" @click="handleExport"> 导出 </Button>
 
               <slot name="insertNode" />
 
-              <Button
-                v-if="queryList.length >= colsNumber"
-                type="link"
-                @click="expand = !expand"
-              >
-                {{ expand ? "收起" : "展开" }}
+              <Button v-if="queryList.length >= colsNumber" type="link" @click="expand = !expand">
+                {{ expand ? '收起' : '展开' }}
                 <UpOutlined v-if="expand" />
                 <DownOutlined v-else />
               </Button>

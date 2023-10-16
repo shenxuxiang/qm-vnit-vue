@@ -1,14 +1,14 @@
 <script setup>
-import { watch } from "vue";
-import "dayjs/locale/zh-cn";
-import { reactive } from "vue";
-import { useRoute } from "vitepress";
-import DefaultTheme from "vitepress/theme";
-import { ConfigProvider } from "ant-design-vue";
-import zhCN from "ant-design-vue/lib/locale/zh_CN";
+import { watch } from 'vue';
+import 'dayjs/locale/zh-cn';
+import { reactive } from 'vue';
+import { useRoute } from 'vitepress';
+import DefaultTheme from 'vitepress/theme';
+import { ConfigProvider } from 'ant-design-vue';
+import zhCN from 'ant-design-vue/lib/locale/zh_CN';
 
 const theme = reactive({
-  token: { colorPrimary: "#1890ff", colorLink: "#1890ff" },
+  token: { colorPrimary: '#1890ff', colorLink: '#1890ff' },
 });
 
 const { Layout } = DefaultTheme;
@@ -16,9 +16,9 @@ const route = useRoute();
 
 watch(
   () => route.path,
-  function () {
+  () => {
     console.log(route.path);
-  }
+  },
 );
 </script>
 
@@ -48,8 +48,7 @@ watch(
   margin: 0 !important;
   padding: 10px 0 !important;
 }
-.qm-vnit-preview-image-bar-slider-item
-  + .qm-vnit-preview-image-bar-slider-item {
+.qm-vnit-preview-image-bar-slider-item + .qm-vnit-preview-image-bar-slider-item {
   margin-top: 0;
 }
 .qm-vnit-image-group-item + .qm-vnit-image-group-item {

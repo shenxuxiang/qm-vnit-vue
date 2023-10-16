@@ -1,7 +1,5 @@
 function getPattern(name: string) {
-  return new RegExp(
-    "(?:^|;\\s*)" + name.replace(/[\-\[\](){}^$?*+|\/\\]/g, "\\$&") + "=([^;]+)"
-  );
+  return new RegExp('(?:^|;\\s*)' + name.replace(/[\-\[\](){}^$?*+|\/\\]/g, '\\$&') + '=([^;]+)');
 }
 
 /**
@@ -25,7 +23,7 @@ export function getCookie(name: string) {
  * @param maxAge cookie的有效期（以秒为单位）
  */
 export function setCookie(name: string, value: string, maxAge?: number) {
-  let cookie = name + "=" + value;
-  if (maxAge) cookie = cookie + "; max-age=" + maxAge;
+  let cookie = name + '=' + value;
+  if (maxAge) cookie = cookie + '; max-age=' + maxAge;
   document.cookie = cookie;
 }

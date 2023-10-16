@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, watch, computed, watchEffect } from "vue";
-import getTransformProperties from "@/utils/getTransformProperties";
-import Image from "../Image";
-import Icon from "../Icon";
-import "./Slider.less";
+import { ref, watch, computed, watchEffect } from 'vue';
+import getTransformProperties from '@/utils/getTransformProperties';
+import Image from '../Image';
+import Icon from '../Icon';
+import './Slider.less';
 
 type PreviewImageProps = {
   open: boolean;
@@ -12,7 +12,7 @@ type PreviewImageProps = {
   indicator: number;
 };
 
-type PreviewImageEvents = (e: "update:indicator", indicator: number) => void;
+type PreviewImageEvents = (e: 'update:indicator', indicator: number) => void;
 
 const props = withDefaults(defineProps<PreviewImageProps>(), {});
 const emit = defineEmits<PreviewImageEvents>();
@@ -23,21 +23,13 @@ const isLastPage = ref(false);
 // 底部 bar 的宽度
 const foodBarWidth = computed(() => {
   if (props.imgs.length < props.pageSize) {
-    return props.imgs.length * 120 + 68 + "px";
+    return props.imgs.length * 120 + 68 + 'px';
   } else {
-    return props.pageSize * 120 + 68 + "px";
+    return props.pageSize * 120 + 68 + 'px';
   }
 });
 
-watch(
-  [
-    () => props.open,
-    () => props.imgs,
-    () => props.pageSize,
-    () => props.indicator,
-  ],
-  sliderAnimation
-);
+watch([() => props.open, () => props.imgs, () => props.pageSize, () => props.indicator], sliderAnimation);
 
 // 计算 isFirstPage、isLastPage
 watchEffect(() => {
@@ -76,15 +68,13 @@ function sliderAnimation() {
     return;
   }
 
-  let cssText = "";
+  let cssText = '';
   const half = pageSize / 2;
 
   if (idx <= half) {
     cssText = `transform: translate3d(0px, 0px, 0px); transition: transform 0.3s ease;`;
   } else if (idx > length - half) {
-    cssText = `transform: translate3d(${
-      (pageSize - length) * 120
-    }px, 0px, 0px); transition: transform 0.3s ease;`;
+    cssText = `transform: translate3d(${(pageSize - length) * 120}px, 0px, 0px); transition: transform 0.3s ease;`;
   } else {
     const distance = -(idx - half - 0.5) * 120;
     cssText = `transform: translate3d(${distance}px, 0px, 0px); transition: transform 0.3s ease;`;
@@ -94,7 +84,7 @@ function sliderAnimation() {
 }
 
 function handleChangeIndicator(index: number) {
-  emit("update:indicator", index);
+  emit('update:indicator', index);
 }
 
 // 上一页
@@ -136,26 +126,17 @@ function handleNextPage() {
 
 <template>
   <div class="qm-vnit-preview-image-bar" :style="{ width: foodBarWidth }">
-    <div
-      :class="['qm-vnit-preview-image-prevpage', { disabled: isFirstPage }]"
-      @click="handlePrevPage"
-    >
+    <div :class="['qm-vnit-preview-image-prevpage', { disabled: isFirstPage }]" @click="handlePrevPage">
       <Icon name="arrow-left-bold" style="font-size: 30px" />
     </div>
-    <div
-      :class="['qm-vnit-preview-image-nextpage', { disabled: isLastPage }]"
-      @click="handleNextPage"
-    >
+    <div :class="['qm-vnit-preview-image-nextpage', { disabled: isLastPage }]" @click="handleNextPage">
       <Icon name="arrow-right-bold" style="font-size: 30px" />
     </div>
     <div class="qm-vnit-preview-image-bar-slider-x">
       <ul ref="sliderRef" class="qm-vnit-preview-image-bar-slider">
         <template v-for="(item, index) in imgs" :key="item + index">
           <li
-            :class="[
-              'qm-vnit-preview-image-bar-slider-item',
-              { active: index === indicator },
-            ]"
+            :class="['qm-vnit-preview-image-bar-slider-item', { active: index === indicator }]"
             @click="handleChangeIndicator(index)"
           >
             <Image :src="item" alt="" />

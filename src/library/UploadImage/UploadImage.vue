@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { PlusOutlined } from "@ant-design/icons-vue";
-import PreviewImage from "../PreviewImage";
-import { ref, nextTick, watch } from "vue";
-import RenderItem from "./RenderItem.vue";
-import { message } from "ant-design-vue";
-import "./UploadImage.less";
+import { PlusOutlined } from '@ant-design/icons-vue';
+import PreviewImage from '../PreviewImage';
+import { ref, nextTick, watch } from 'vue';
+import RenderItem from './RenderItem.vue';
+import { message } from 'ant-design-vue';
+import './UploadImage.less';
 
 export type FileList = {
   uid: string;
@@ -13,7 +13,7 @@ export type FileList = {
   response?: any;
   percent?: number;
   rowSource?: File;
-  status?: "loading" | "done" | "error" | "remove";
+  status?: 'loading' | 'done' | 'error' | 'remove';
 }[];
 
 type UploadImageProps = {
@@ -30,16 +30,15 @@ type UploadImageProps = {
 };
 
 type UploadImageEmits = {
-  (e: "error", error: any): void;
-  (e: "update:fileList", fileList: FileList): void;
+  (e: 'error', error: any): void;
+  (e: 'update:fileList', fileList: FileList): void;
 };
 
-defineOptions({ name: "UploadImage" });
-const emit = defineEmits<UploadImageEmits>();
 const props = withDefaults(defineProps<UploadImageProps>(), {
-  accept: "image/*",
+  accept: 'image/*',
 });
-
+const emit = defineEmits<UploadImageEmits>();
+defineOptions({ name: 'UploadImage' });
 const _fileList = ref<FileList>([]);
 const inputRef = ref<HTMLInputElement>();
 const uploadButtonRef = ref<HTMLLIElement>();
@@ -50,18 +49,18 @@ const showPreviewImage = ref(false);
 
 watch(
   () => props.fileList,
-  function () {
+  () => {
     if (props.fileList === _fileList.value) return;
 
     _fileList.value = props.fileList!;
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 function handleFileChange(event: any) {
   let newFiles: File[] = Array.from(event.target.files);
   // 需要每次都将 input.value 给清空，这样用户再次上传时就可以选择相同的文件了。
-  inputRef.value!.value = "";
+  inputRef.value!.value = '';
 
   if (props.maxCount && _fileList.value.length >= props.maxCount) return;
 
@@ -71,7 +70,7 @@ function handleFileChange(event: any) {
       const file = newFiles[length];
       if (file.size > props.maxSize!) {
         newFiles.splice(length, 1);
-        message.warning(file.name + "文件过大无法上传！");
+        message.warning(file.name + '文件过大无法上传！');
       }
     }
 
@@ -88,19 +87,17 @@ function handleFileChange(event: any) {
     uid: Math.random().toString(32).slice(2) + Date.now(),
     name: file.name,
     rowSource: file,
-    status: "loading" as FileList[number]["status"],
+    status: 'loading' as FileList[number]['status'],
   }));
 
   _fileList.value.push(...newFileList);
   triggerUpdateFileList();
   // 需要每次都将 input.value 给清空，这样用户再次上传时就可以选择相同的文件了。
-  inputRef.value!.value = "";
+  inputRef.value!.value = '';
 
   // 每次上传时，给上传按钮一个向右移动的动效。
-  uploadButtonRef.value!.classList.add("enter-from");
-  requestAnimationFrame(() =>
-    uploadButtonRef.value!.classList.remove("enter-from")
-  );
+  uploadButtonRef.value!.classList.add('enter-from');
+  requestAnimationFrame(() => uploadButtonRef.value!.classList.remove('enter-from'));
 }
 
 function handleClick() {
@@ -111,7 +108,7 @@ function handleClick() {
 function handleUploadSuccess(uid: string, res: any) {
   const target = _fileList.value.find((file) => file.uid === uid);
   if (target) {
-    target.status = "done";
+    target.status = 'done';
     target.percent = 100;
     target.response = res;
     triggerUpdateFileList();
@@ -120,10 +117,10 @@ function handleUploadSuccess(uid: string, res: any) {
 
 // 图片上传失败
 function handleUploadError(uid: string, error: any) {
-  emit("error", error);
+  emit('error', error);
   const target = _fileList.value.find((file) => file.uid === uid);
   if (target) {
-    target.status = "error";
+    target.status = 'error';
     triggerUpdateFileList();
   }
 }
@@ -145,7 +142,7 @@ function handlePreviewImage(url: string) {
 
 // 触发 'update:fileList' 事件
 function triggerUpdateFileList() {
-  nextTick(() => emit("update:fileList", _fileList.value));
+  nextTick(() => emit('update:fileList', _fileList.value));
 }
 </script>
 
@@ -170,26 +167,20 @@ function triggerUpdateFileList() {
         </RenderItem>
       </template>
       <li
-        ref="uploadButtonRef"
         v-show="!maxCount || _fileList.length < maxCount"
+        ref="uploadButtonRef"
         :class="['qm-vnit-upload-image-label', { disabled }]"
         @click="handleClick"
       >
         <slot name="default">
           <div class="qm-vnit-upload-image-slot">
-            <PlusOutlined
-              style="
-                font-size: 16px;
-                margin-bottom: 10px;
-                color: rgba(0, 0, 0, 0.8);
-              "
-            />
+            <PlusOutlined style="font-size: 16px; margin-bottom: 10px; color: rgba(0, 0, 0, 0.8)" />
             <div>上传图片</div>
           </div>
         </slot>
         <input
-          type="file"
           ref="inputRef"
+          type="file"
           style="display: none"
           :accept="accept"
           :disabled="disabled"
