@@ -1,6 +1,6 @@
 module.exports = {
   presets: [
-    ['@babel/preset-env', { modules: false, debug: false, useBuiltIns: 'usage', corejs: '3.30' }],
+    ['@babel/preset-env', { modules: false, debug: false, useBuiltIns: 'usage', corejs: { version: "3.33", proposals: true } }],
     '@babel/preset-typescript'
   ],
   plugins: [
