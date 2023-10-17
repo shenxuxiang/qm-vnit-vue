@@ -17,7 +17,7 @@
 ::: info 案例一
 <Demo1 />
 
-<<< @/demo/ImagePreviewGroup/demo1.vue{10-12}
+<<< @/demo/ImagePreviewGroup/demo1.vue{10,15}
 :::
 
 ::: info 案例二

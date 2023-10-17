@@ -1,4 +1,4 @@
-import { defineComponent, useSlots, ref, toRef, computed, openBlock, createElementBlock, Fragment, createElementVNode, renderList, normalizeStyle, normalizeClass, createVNode, unref, createBlock, resolveDynamicComponent, normalizeProps, guardReactiveProps, createCommentVNode, Teleport } from 'vue';
+import { defineComponent, useSlots, ref, toRef, watch, computed, openBlock, createElementBlock, Fragment, createElementVNode, renderList, normalizeStyle, normalizeClass, createVNode, unref, createBlock, resolveDynamicComponent, normalizeProps, guardReactiveProps, createCommentVNode, Teleport } from 'vue';
 import '../Image/index.js';
 import './ImagePreviewGroup.css';
 import '../PreviewImage/index.js';
@@ -25,7 +25,21 @@ var script = /*#__PURE__*/ defineComponent({
         const indicator = ref(0);
         const className = toRef(props, 'class');
         const showPreview = ref(false);
-        const children = computed(() => slots.default?.() ?? []);
+        const children = ref([]);
+        watch(() => slots.default?.(), function () {
+            const newChildren = [];
+            slots.default?.().forEach((item) => {
+                // 注意，slotsDefualt 返回的是一个数组，所以需要遍历，
+                // 判断第一层的所有节点的 type 是否是文档碎片（fragment）,如果是，则说明使用的 template 模板嵌套，此时应该取它的 children。 
+                if (item.type === Symbol.for('v-fgt')) {
+                    newChildren.push(...item.children);
+                }
+                else {
+                    newChildren.push(item);
+                }
+            });
+            children.value = newChildren;
+        }, { immediate: true });
         const imgs = computed(() => {
             if (slots.default?.()) {
                 return children.value.map((item) => item.props.src);
