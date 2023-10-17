@@ -39,7 +39,6 @@ var RenderFormItem = defineComponent(function (props, _ref) {
       return createVNode(RangePicker, mergeProps(properties, {
         "onChange": onChange,
         "value": props.value,
-        "options": props.options,
         "placeholder": placeholder !== null && placeholder !== void 0 ? placeholder : ['开始时间', '结束时间']
       }), null);
     };
@@ -48,7 +47,6 @@ var RenderFormItem = defineComponent(function (props, _ref) {
       return createVNode(DatePicker, mergeProps(properties, {
         "onChange": onChange,
         "value": props.value,
-        "options": props.options,
         "placeholder": placeholder !== null && placeholder !== void 0 ? placeholder : '请选择查询时间'
       }), null);
     };

@@ -1,14 +1,18 @@
-declare const _default: (props: {
-    title: any;
-    formType: any;
-    component: any;
-    properties: any;
-    options: any;
-    watch: any;
-    placeholder: any;
-    formModel: any;
+import type { VNode } from 'vue';
+type IProps = {
     value: any;
-} & {
-    "onUpdate:value"?: ((...args: any[]) => any) | undefined;
+    title: string;
+    formModel: any;
+    options?: any[];
+    placeholder?: any;
+    formType?: string;
+    component?: () => VNode;
+    properties?: {
+        [propName: string]: any;
+    };
+    watch?: (value: string, formModel: any) => void;
+};
+declare const _default: (props: IProps & {
+    "onUpdate:value"?: ((value: any) => any) | undefined;
 }) => any;
 export default _default;

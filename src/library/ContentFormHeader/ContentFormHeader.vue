@@ -23,13 +23,13 @@ export type QueryList = Array<{
   title: string;
   name?: string;
   properties?: any;
-  watch?: Function;
   formType?: string;
-  component?: () => VNode;
   initialValue?: any;
   dataIndex?: string;
   options?: Array<any>;
+  component?: () => VNode;
   placeholder?: string | [string, string];
+  watch?: (value: any, formModel: any) => void;
   dataFormat?: (value: any) => { [propName: string]: any };
 }>;
 
