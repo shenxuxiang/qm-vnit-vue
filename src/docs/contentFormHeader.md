@@ -21,12 +21,12 @@
 
 ::: info 案例一
 <Demo1/>
-<<< @/demo/ContentFormHeader/demo1.vue{52}
+<<< @/demo/ContentFormHeader/demo1.vue{10-13,22-24,43-48}
 :::
 
 ::: info 案例二(指定列数)
 <Demo2/>
-<<< @/demo/ContentFormHeader/demo2.vue{60-67}
+<<< @/demo/ContentFormHeader/demo2.vue{65}
 :::
 
 ::: info 案例三(自定义表单项内容)

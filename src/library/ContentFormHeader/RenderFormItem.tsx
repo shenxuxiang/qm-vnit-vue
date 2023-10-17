@@ -1,7 +1,24 @@
+import type { VNode } from 'vue';
 import { defineComponent, cloneVNode } from 'vue';
 import { Input, Select, DatePicker, Cascader } from 'ant-design-vue';
 
-export default defineComponent(
+type IProps = {
+  value: any;
+  title: string;
+  formModel: any;
+  options?: any[];
+  placeholder?: any;
+  formType?: string;
+  component?: () => VNode;
+  properties?: { [propName: string]: any };
+  watch?: (value: string, formModel: any) => void;
+};
+
+type IEmits = {
+  'update:value': (value: any) => void;
+};
+
+export default defineComponent<IProps, IEmits>(
   (props, { emit }) => {
     // 对于一些需要响应式的数据，不应该使用对象解构
     const { title, watch, formType, formModel, component, properties, placeholder } = props;
@@ -33,7 +50,6 @@ export default defineComponent(
           {...properties}
           onChange={onChange}
           value={props.value}
-          options={props.options}
           placeholder={placeholder ?? ['开始时间', '结束时间']}
         />
       );
@@ -43,7 +59,6 @@ export default defineComponent(
           {...properties}
           onChange={onChange}
           value={props.value}
-          options={props.options}
           placeholder={placeholder ?? '请选择查询时间'}
         />
       );

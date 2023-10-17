@@ -19,6 +19,9 @@ const queryList = ref([
     properties: {
       style: { width: '100%' },
     },
+    dataFormat: (value: any) => {
+      return { time: value.startOf().format('YYYY-MM-DD') };
+    },
   },
   {
     name: 'type',
@@ -36,6 +39,12 @@ const queryList = ref([
     formType: 'rangePicker',
     properties: {
       style: { width: '100%' },
+    },
+    dataFormat: (value: any) => {
+      return {
+        startTime: value[0].startOf().format('YYYY-MM-DD'),
+        endTime: value[1].endOf().format('YYYY-MM-DD'),
+      };
     },
   },
 ]);
