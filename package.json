@@ -19,6 +19,7 @@
     "Vue Ui Library"
   ],
   "repository": "https://github.com/shenxuxiang/qm-vnit-vue",
+  "homepage": "http://aitweb.top/qm-vnit-vue",
   "description": "Vue Ui Library",
   "sideEffects": false,
   "scripts": {
