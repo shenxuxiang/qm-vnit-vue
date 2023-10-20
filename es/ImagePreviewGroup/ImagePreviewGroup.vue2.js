@@ -26,11 +26,11 @@ var script = /*#__PURE__*/ defineComponent({
         const className = toRef(props, 'class');
         const showPreview = ref(false);
         const children = ref([]);
-        watch(() => slots.default?.(), function () {
+        watch(() => slots.default?.(), () => {
             const newChildren = [];
             slots.default?.().forEach((item) => {
                 // 注意，slotsDefualt 返回的是一个数组，所以需要遍历，
-                // 判断第一层的所有节点的 type 是否是文档碎片（fragment）,如果是，则说明使用的 template 模板嵌套，此时应该取它的 children。 
+                // 判断第一层的所有节点的 type 是否是文档碎片（fragment）,如果是，则说明使用的 template 模板嵌套，此时应该取它的 children。
                 if (item.type === Symbol.for('v-fgt')) {
                     newChildren.push(...item.children);
                 }
