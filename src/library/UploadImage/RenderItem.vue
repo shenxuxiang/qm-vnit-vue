@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { EyeOutlined, DeleteOutlined, PictureOutlined } from '@ant-design/icons-vue';
 import { ref, onMounted, onUnmounted } from 'vue';
-import './RenderFormItem.less';
+import './RenderItem.less';
 import Ajax from './ajax';
+
 const props = withDefaults(defineProps<RenderItemProps>(), {
   percent: 100,
   status: 'done',
