@@ -1,4 +1,4 @@
-import { defineComponent, ref, watch, openBlock, createBlock, Transition, withCtx, withDirectives, createElementVNode, createCommentVNode, unref, withModifiers, createVNode, normalizeClass, vShow } from 'vue';
+import { defineComponent, ref, watch, openBlock, createBlock, Transition, withCtx, withDirectives, createElementVNode, createCommentVNode, unref, withModifiers, createVNode, createElementBlock, normalizeClass, vShow } from 'vue';
 import { throttle, getViewportSize } from '../utils/index.js';
 import getTransformProperties from '../utils/getTransformProperties.js';
 import './ToolBar.vue.js';
@@ -221,32 +221,41 @@ var script = /*#__PURE__*/ defineComponent({
                             imageElement: imgRef.value,
                             onClose: handleClosePreview
                         }, null, 8 /* PROPS */, ["imageElement"]),
-                        createElementVNode("div", {
-                            class: normalizeClass(['qm-vnit-preview-image-prev-buttton', { disabled: indicator.value <= 0 }]),
-                            onClick: handlePrevItem
-                        }, [
-                            createVNode(unref(script$2), {
-                                name: "arrow-left-bold",
-                                style: { "font-size": "60px" }
-                            })
-                        ], 2 /* CLASS */),
-                        createElementVNode("div", {
-                            class: normalizeClass(['qm-vnit-preview-image-next-buttton', { disabled: indicator.value >= _ctx.imgs.length - 1 }]),
-                            onClick: handleNextItem
-                        }, [
-                            createVNode(unref(script$2), {
-                                name: "arrow-right-bold",
-                                style: { "font-size": "60px" }
-                            })
-                        ], 2 /* CLASS */),
+                        (_ctx.imgs.length > 1)
+                            ? (openBlock(), createElementBlock("div", {
+                                key: 0,
+                                onClick: handlePrevItem,
+                                class: normalizeClass(['qm-vnit-preview-image-prev-buttton', { disabled: indicator.value <= 0 }])
+                            }, [
+                                createVNode(unref(script$2), {
+                                    name: "arrow-left-bold",
+                                    style: { "font-size": "60px" }
+                                })
+                            ], 2 /* CLASS */))
+                            : createCommentVNode("v-if", true),
+                        (_ctx.imgs.length > 1)
+                            ? (openBlock(), createElementBlock("div", {
+                                key: 1,
+                                onClick: handleNextItem,
+                                class: normalizeClass(['qm-vnit-preview-image-next-buttton', { disabled: indicator.value >= _ctx.imgs.length - 1 }])
+                            }, [
+                                createVNode(unref(script$2), {
+                                    name: "arrow-right-bold",
+                                    style: { "font-size": "60px" }
+                                })
+                            ], 2 /* CLASS */))
+                            : createCommentVNode("v-if", true),
                         createCommentVNode(" 顶部滑块 "),
-                        createVNode(script$3, {
-                            open: _ctx.open,
-                            imgs: _ctx.imgs,
-                            pageSize: _ctx.pageSize,
-                            indicator: indicator.value,
-                            "onUpdate:indicator": handleChangeIndicator
-                        }, null, 8 /* PROPS */, ["open", "imgs", "pageSize", "indicator"])
+                        (_ctx.imgs.length > 1)
+                            ? (openBlock(), createBlock(script$3, {
+                                key: 2,
+                                open: _ctx.open,
+                                imgs: _ctx.imgs,
+                                pageSize: _ctx.pageSize,
+                                indicator: indicator.value,
+                                "onUpdate:indicator": handleChangeIndicator
+                            }, null, 8 /* PROPS */, ["open", "imgs", "pageSize", "indicator"]))
+                            : createCommentVNode("v-if", true)
                     ], 512 /* NEED_PATCH */), [
                         [vShow, _ctx.open]
                     ])

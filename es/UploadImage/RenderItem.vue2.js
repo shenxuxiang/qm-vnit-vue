@@ -2,7 +2,8 @@ import { defineComponent, ref, onMounted, onUnmounted, openBlock, createElementB
 import EyeOutlined from '@ant-design/icons-vue/EyeOutlined';
 import DeleteOutlined from '@ant-design/icons-vue/DeleteOutlined';
 import PictureOutlined from '@ant-design/icons-vue/PictureOutlined';
-import Upload from './upload.js';
+import './RenderItem.css';
+import Ajax from './ajax.js';
 
 const _hoisted_1 = {
     key: 0,
@@ -21,8 +22,8 @@ var script = /*#__PURE__*/ defineComponent({
         action: { type: String, required: true },
         response: { type: null, required: false },
         method: { type: String, required: false, default: 'POST' },
-        rowSource: { type: null, required: false },
         percent: { type: Number, required: false, default: 100 },
+        rawResource: { type: null, required: false },
         disabled: { type: Boolean, required: false },
         headers: { type: Function, required: false },
         status: { type: String, required: false, default: 'done' }
@@ -53,10 +54,10 @@ var script = /*#__PURE__*/ defineComponent({
             if (props.url) {
                 imgURL.value = props.url;
             }
-            else if (props.rowSource) {
+            else if (props.rawResource) {
                 // 预先添加了一个图片预加载的功能，在网络不太流畅时可以让图片尽早的展示出来。
                 const reader = new FileReader();
-                reader.readAsDataURL(props.rowSource);
+                reader.readAsDataURL(props.rawResource);
                 reader.onload = () => {
                     imgURL.value = reader.result;
                 };
@@ -75,13 +76,13 @@ var script = /*#__PURE__*/ defineComponent({
         });
         // 开始上传图片
         function uploadFile() {
-            if (props.uid && props.status === 'loading' && props.rowSource) {
+            if (props.uid && props.status === 'loading' && props.rawResource) {
                 const formData = new FormData();
-                formData.append('file', props.rowSource);
-                const upload = new Upload({ headers: props.headers });
+                formData.append('file', props.rawResource);
+                const ajax = new Ajax({ headers: props.headers });
                 let isUploadStart = true;
                 // 更新上传进度
-                upload.onProgress((progress) => {
+                ajax.onProgress((progress) => {
                     // 如果一开始上传的时候，progress 就大于等于 1，说明网速足够快上传图片瞬间就完成了，
                     // 此时，我们使用动画完成进度条，否则就是每次 onProgress 事件触发 updateProgressBar
                     if (isUploadStart && progress >= 1) {
@@ -93,18 +94,18 @@ var script = /*#__PURE__*/ defineComponent({
                     isUploadStart = false;
                 });
                 // 上传成功
-                upload.onSuccess(async (res) => {
+                ajax.onSuccess(async (res) => {
                     fadeInAnimation();
                     emit('success', props.uid, res);
                     uploadInstance.value = null;
                 });
                 // 上传失败
-                upload.onError((err) => {
+                ajax.onError((err) => {
                     emit('error', props.uid, err);
                     uploadInstance.value = null;
                 });
                 // 将 xhr 实例对象赋值给 uploadInstance，在组件卸载时如果请求还没有完成将会取消请求。
-                uploadInstance.value = upload.create(props.action, props.method, formData);
+                uploadInstance.value = ajax.create(props.action, props.method, formData);
             }
         }
         // canvas 画布初始化

@@ -12,7 +12,7 @@ export type FileList = {
   url?: string;
   response?: any;
   percent?: number;
-  rowSource?: File;
+  rawResource?: File;
   status?: 'loading' | 'done' | 'error' | 'remove';
 }[];
 
@@ -78,16 +78,17 @@ function handleFileChange(event: any) {
   }
 
   if (props.maxCount) {
-    const surplus = props.maxCount - _fileList.value.length;
-    newFiles = newFiles.slice(0, surplus);
+    const rest = props.maxCount - _fileList.value.length;
+    rest < newFiles.length && message.warning(`最多只能上传${props.maxCount}个文件！`);
+    newFiles = newFiles.slice(0, rest);
   }
 
   const newFileList = newFiles.map((file) => ({
     percent: 0,
-    uid: Math.random().toString(32).slice(2) + Date.now(),
     name: file.name,
-    rowSource: file,
+    rawResource: file,
     status: 'loading' as FileList[number]['status'],
+    uid: Math.random().toString(32).slice(2) + Date.now(),
   }));
 
   _fileList.value.push(...newFileList);
@@ -95,9 +96,11 @@ function handleFileChange(event: any) {
   // 需要每次都将 input.value 给清空，这样用户再次上传时就可以选择相同的文件了。
   inputRef.value!.value = '';
 
-  // 每次上传时，给上传按钮一个向右移动的动效。
-  uploadButtonRef.value!.classList.add('enter-from');
-  requestAnimationFrame(() => uploadButtonRef.value!.classList.remove('enter-from'));
+  if (!props.maxCount || _fileList.value.length < props.maxCount) {
+    // 每次上传时，给上传按钮一个向右移动的动效。
+    uploadButtonRef.value!.classList.add('enter-from');
+    requestAnimationFrame(() => uploadButtonRef.value!.classList.remove('enter-from'));
+  }
 }
 
 function handleClick() {

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { EyeOutlined, DeleteOutlined, PictureOutlined } from '@ant-design/icons-vue';
 import { ref, onMounted, onUnmounted } from 'vue';
-import Upload from './upload';
-
+import './RenderFormItem.less';
+import Ajax from './ajax';
 const props = withDefaults(defineProps<RenderItemProps>(), {
   percent: 100,
   status: 'done',
@@ -29,8 +29,8 @@ type RenderItemProps = {
   action: string;
   response?: any;
   method?: string;
-  rowSource?: File;
   percent?: number;
+  rawResource?: File;
   disabled?: boolean;
   headers?: () => { [key: string]: any };
   status?: 'loading' | 'done' | 'error' | 'remove';
@@ -57,10 +57,10 @@ onMounted(() => {
 
   if (props.url) {
     imgURL.value = props.url;
-  } else if (props.rowSource) {
+  } else if (props.rawResource) {
     // 预先添加了一个图片预加载的功能，在网络不太流畅时可以让图片尽早的展示出来。
     const reader = new FileReader();
-    reader.readAsDataURL(props.rowSource);
+    reader.readAsDataURL(props.rawResource);
     reader.onload = () => {
       imgURL.value = reader.result as string;
     };
@@ -81,16 +81,16 @@ onUnmounted(() => {
 
 // 开始上传图片
 function uploadFile() {
-  if (props.uid && props.status === 'loading' && props.rowSource) {
+  if (props.uid && props.status === 'loading' && props.rawResource) {
     const formData = new FormData();
-    formData.append('file', props.rowSource);
+    formData.append('file', props.rawResource);
 
-    const upload = new Upload({ headers: props.headers });
+    const ajax = new Ajax({ headers: props.headers });
 
     let isUploadStart = true;
 
     // 更新上传进度
-    upload.onProgress((progress: number) => {
+    ajax.onProgress((progress: number) => {
       // 如果一开始上传的时候，progress 就大于等于 1，说明网速足够快上传图片瞬间就完成了，
       // 此时，我们使用动画完成进度条，否则就是每次 onProgress 事件触发 updateProgressBar
       if (isUploadStart && progress >= 1) {
@@ -103,20 +103,20 @@ function uploadFile() {
     });
 
     // 上传成功
-    upload.onSuccess(async (res: any) => {
+    ajax.onSuccess(async (res: any) => {
       fadeInAnimation();
       emit('success', props.uid, res);
       uploadInstance.value = null;
     });
 
     // 上传失败
-    upload.onError((err: any) => {
+    ajax.onError((err: any) => {
       emit('error', props.uid, err);
       uploadInstance.value = null;
     });
 
     // 将 xhr 实例对象赋值给 uploadInstance，在组件卸载时如果请求还没有完成将会取消请求。
-    uploadInstance.value = upload.create(props.action, props.method, formData);
+    uploadInstance.value = ajax.create(props.action, props.method, formData);
   }
 }
 
@@ -236,168 +236,3 @@ function handleRemove(uid: string) {
     <div class="qm-vnit-upload-image-item-tips">上传失败</div>
   </li>
 </template>
-
-<style lang="less">
-.qm-vnit-upload-image-item {
-  flex-shrink: 0;
-  position: relative;
-  width: 102px;
-  height: 102px;
-  margin: 0 8px 8px 0;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #d9d9d9;
-  box-sizing: border-box;
-  opacity: 1;
-  transition: opacity 0.3s ease 0.08s;
-  &.enter-from {
-    opacity: 0;
-    transition: none;
-  }
-  &.leave-from {
-    opacity: 0;
-    transition: none;
-  }
-  &.leave-active {
-    width: 0;
-    margin-right: 0;
-    padding: 8px 0;
-    opacity: 0;
-    transform-origin: left top;
-    transition: all 0.3s ease;
-  }
-  &.error {
-    border-color: #ff4d4f;
-  }
-}
-
-.qm-vnit-upload-image-item-progress {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  width: 84px;
-  height: 84px;
-  overflow: hidden;
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 84px;
-    height: 84px;
-    border-radius: 50%;
-    box-shadow: 0 0 0 999px #ddd;
-    visibility: hidden;
-    transform: scale(0.2);
-  }
-  &.fade-in::after {
-    visibility: visible;
-    transform: scale(1.42);
-    transition: transform 300ms ease-out;
-  }
-}
-
-.qm-vnit-upload-image-item-preview {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  & .qm-vnit-upload-image-item-preview-content {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-}
-.qm-vnit-upload-image-item-error {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  & p {
-    margin: 6px 0 0;
-    padding: 0;
-    font-size: 14px;
-    color: #ff4d4f;
-  }
-}
-
-.qm-vnit-upload-image-item-mask {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-around;
-  align-items: center;
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  width: 84px;
-  height: 84px;
-  padding: 8px;
-  background: rgba(0, 0, 0, 0.5);
-  visibility: hidden;
-  opacity: 0;
-  transition: all 0.5s ease;
-  box-sizing: border-box;
-}
-.qm-vnit-upload-image-item:hover .qm-vnit-upload-image-item-mask {
-  transition-delay: 50ms;
-  visibility: visible;
-  opacity: 1;
-}
-.qm-vnit-upload-image-item-remove-icon,
-.qm-vnit-upload-image-item-preview-icon {
-  font-size: 20px;
-  color: #fff;
-  opacity: 0.7;
-  cursor: pointer;
-  user-select: none;
-  transition: opacity 0.3s ease;
-  &:hover {
-    opacity: 1;
-  }
-}
-
-.qm-vnit-upload-image-item-tips {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  width: 100px;
-  height: 32px;
-  color: #fff;
-  text-align: center;
-  line-height: 32px;
-  border-radius: 6px;
-  background: #333;
-  opacity: 0;
-  visibility: hidden;
-  transform: scale(0.5);
-  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.3));
-  transition: all 0.3s ease;
-  transition-property: opacity visibility transform;
-  transition-duration: 300ms 300ms 300ms;
-  transition-timing-function: cubic-bezier(0, 1, 0.69, 1) cubic-bezier(0, 1, 0.69, 1) ease;
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 42px;
-    z-index: 1;
-    border-top: 8px solid #333;
-    border-right: 8px solid #333;
-    border-bottom: 8px solid transparent;
-    border-left: 8px solid transparent;
-    background: transparent;
-    transform: rotate(135deg);
-  }
-}
-.qm-vnit-upload-image-item.error:hover .qm-vnit-upload-image-item-tips {
-  opacity: 1;
-  visibility: visible;
-  transform: scale(1);
-  transition-delay: 50ms;
-}
-</style>
