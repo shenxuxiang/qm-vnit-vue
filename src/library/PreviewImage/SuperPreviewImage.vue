@@ -263,10 +263,15 @@ function handleClosePreview(event: any) {
       </div>
       <!-- 顶部工具栏 -->
       <ToolBar :imageElement="imgRef!" @close="handleClosePreview" />
-      <div :class="['qm-vnit-preview-image-prev-buttton', { disabled: indicator <= 0 }]" @click="handlePrevItem">
+      <div
+        v-if="_imgs.length > 1"
+        :class="['qm-vnit-preview-image-prev-buttton', { disabled: indicator <= 0 }]"
+        @click="handlePrevItem"
+      >
         <Icon name="arrow-left-bold" style="font-size: 60px" />
       </div>
       <div
+        v-if="_imgs.length > 1"
         :class="['qm-vnit-preview-image-next-buttton', { disabled: indicator >= _imgs.length - 1 }]"
         @click="handleNextItem"
       >
@@ -274,6 +279,7 @@ function handleClosePreview(event: any) {
       </div>
       <!-- 顶部滑块 -->
       <Slider
+        v-if="_imgs.length > 1"
         :open="open"
         :imgs="_imgs"
         :pageSize="pageSize"

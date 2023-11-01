@@ -1,3 +1,4 @@
+import './RenderItem.less';
 declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     name: {
         type: import("vue").PropType<string>;
@@ -37,7 +38,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
         type: import("vue").PropType<string>;
         default: string;
     };
-    rowSource: {
+    rawResource: {
         type: import("vue").PropType<File>;
     };
 }, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
@@ -84,7 +85,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
         type: import("vue").PropType<string>;
         default: string;
     };
-    rowSource: {
+    rawResource: {
         type: import("vue").PropType<File>;
     };
 }>> & {

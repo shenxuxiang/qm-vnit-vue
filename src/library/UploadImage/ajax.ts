@@ -1,4 +1,4 @@
-type UploadOptions = {
+type AjaxOptions = {
   timeout?: number;
   withCredentials?: boolean;
   headers?: () => { [key: string]: any };
@@ -9,14 +9,14 @@ const defaultOptions = {
   withCredentials: true,
 };
 
-export default class Upload {
-  public opts: UploadOptions;
+export default class Ajax {
+  public opts: AjaxOptions;
   public headers: { [key: string]: any };
   public handleError!: (error: any) => void;
   public handleSuccess!: (response: any) => void;
   public handleProgress!: (progress: number) => void;
 
-  constructor(options: UploadOptions = {}) {
+  constructor(options: AjaxOptions = {}) {
     this.opts = { ...defaultOptions, ...options };
     this.headers = {};
 
@@ -59,13 +59,12 @@ export default class Upload {
 
     this.handleSuccess &&
       xhr.addEventListener('load', () => {
-        const response = JSON.parse(xhr.response);
         if (xhr.status >= 200 && xhr.status < 300) {
-          this.handleSuccess(response);
+          this.handleSuccess(JSON.parse(xhr.response));
         } else {
           this.handleError?.({
-            response,
             status: xhr.status,
+            response: xhr.response,
             statusText: xhr.statusText,
           });
         }

@@ -253,32 +253,41 @@ var script = /*#__PURE__*/ defineComponent({
                             imageElement: imgRef.value,
                             onClose: handleClosePreview
                         }, null, 8 /* PROPS */, ["imageElement"]),
-                        createElementVNode("div", {
-                            class: normalizeClass(['qm-vnit-preview-image-prev-buttton', { disabled: indicator.value <= 0 }]),
-                            onClick: handlePrevItem
-                        }, [
-                            createVNode(unref(script$3), {
-                                name: "arrow-left-bold",
-                                style: { "font-size": "60px" }
-                            })
-                        ], 2 /* CLASS */),
-                        createElementVNode("div", {
-                            class: normalizeClass(['qm-vnit-preview-image-next-buttton', { disabled: indicator.value >= _imgs.value.length - 1 }]),
-                            onClick: handleNextItem
-                        }, [
-                            createVNode(unref(script$3), {
-                                name: "arrow-right-bold",
-                                style: { "font-size": "60px" }
-                            })
-                        ], 2 /* CLASS */),
+                        (_imgs.value.length > 1)
+                            ? (openBlock(), createElementBlock("div", {
+                                key: 0,
+                                class: normalizeClass(['qm-vnit-preview-image-prev-buttton', { disabled: indicator.value <= 0 }]),
+                                onClick: handlePrevItem
+                            }, [
+                                createVNode(unref(script$3), {
+                                    name: "arrow-left-bold",
+                                    style: { "font-size": "60px" }
+                                })
+                            ], 2 /* CLASS */))
+                            : createCommentVNode("v-if", true),
+                        (_imgs.value.length > 1)
+                            ? (openBlock(), createElementBlock("div", {
+                                key: 1,
+                                class: normalizeClass(['qm-vnit-preview-image-next-buttton', { disabled: indicator.value >= _imgs.value.length - 1 }]),
+                                onClick: handleNextItem
+                            }, [
+                                createVNode(unref(script$3), {
+                                    name: "arrow-right-bold",
+                                    style: { "font-size": "60px" }
+                                })
+                            ], 2 /* CLASS */))
+                            : createCommentVNode("v-if", true),
                         createCommentVNode(" 顶部滑块 "),
-                        createVNode(script$4, {
-                            open: _ctx.open,
-                            imgs: _imgs.value,
-                            pageSize: _ctx.pageSize,
-                            indicator: indicator.value,
-                            "onUpdate:indicator": handleChangeIndicator
-                        }, null, 8 /* PROPS */, ["open", "imgs", "pageSize", "indicator"])
+                        (_imgs.value.length > 1)
+                            ? (openBlock(), createBlock(script$4, {
+                                key: 2,
+                                open: _ctx.open,
+                                imgs: _imgs.value,
+                                pageSize: _ctx.pageSize,
+                                indicator: indicator.value,
+                                "onUpdate:indicator": handleChangeIndicator
+                            }, null, 8 /* PROPS */, ["open", "imgs", "pageSize", "indicator"]))
+                            : createCommentVNode("v-if", true)
                     ], 512 /* NEED_PATCH */), [
                         [vShow, _ctx.open]
                     ])

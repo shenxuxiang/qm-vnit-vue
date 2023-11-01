@@ -23,11 +23,11 @@ var defaultOptions = {
   timeout: 60000,
   withCredentials: true
 };
-var Upload = /*#__PURE__*/function () {
-  function Upload() {
+var Ajax = /*#__PURE__*/function () {
+  function Ajax() {
     var _this = this;
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    _classCallCheck(this, Upload);
+    _classCallCheck(this, Ajax);
     this.opts = _objectSpread(_objectSpread({}, defaultOptions), options);
     this.headers = {};
     if (typeof this.opts.headers === 'function') {
@@ -38,7 +38,7 @@ var Upload = /*#__PURE__*/function () {
       });
     }
   }
-  _createClass(Upload, [{
+  _createClass(Ajax, [{
     key: "onProgress",
     value: function onProgress(callback) {
       this.handleProgress = callback;
@@ -74,14 +74,13 @@ var Upload = /*#__PURE__*/function () {
         }
       });
       this.handleSuccess && xhr.addEventListener('load', function () {
-        var response = JSON.parse(xhr.response);
         if (xhr.status >= 200 && xhr.status < 300) {
-          _this2.handleSuccess(response);
+          _this2.handleSuccess(JSON.parse(xhr.response));
         } else {
           var _this2$handleError;
           (_this2$handleError = _this2.handleError) === null || _this2$handleError === void 0 || _this2$handleError.call(_this2, {
-            response: response,
             status: xhr.status,
+            response: xhr.response,
             statusText: xhr.statusText
           });
         }
@@ -100,7 +99,7 @@ var Upload = /*#__PURE__*/function () {
       return xhr;
     }
   }]);
-  return Upload;
+  return Ajax;
 }();
 
-export { Upload as default };
+export { Ajax as default };

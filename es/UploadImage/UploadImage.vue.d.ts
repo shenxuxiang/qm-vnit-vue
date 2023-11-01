@@ -5,7 +5,7 @@ export type FileList = {
     url?: string;
     response?: any;
     percent?: number;
-    rowSource?: File;
+    rawResource?: File;
     status?: 'loading' | 'done' | 'error' | 'remove';
 }[];
 declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
