@@ -224,8 +224,8 @@ var script = /*#__PURE__*/ defineComponent({
                         (_ctx.imgs.length > 1)
                             ? (openBlock(), createElementBlock("div", {
                                 key: 0,
-                                onClick: handlePrevItem,
-                                class: normalizeClass(['qm-vnit-preview-image-prev-buttton', { disabled: indicator.value <= 0 }])
+                                class: normalizeClass(['qm-vnit-preview-image-prev-buttton', { disabled: indicator.value <= 0 }]),
+                                onClick: handlePrevItem
                             }, [
                                 createVNode(unref(script$2), {
                                     name: "arrow-left-bold",
@@ -236,8 +236,8 @@ var script = /*#__PURE__*/ defineComponent({
                         (_ctx.imgs.length > 1)
                             ? (openBlock(), createElementBlock("div", {
                                 key: 1,
-                                onClick: handleNextItem,
-                                class: normalizeClass(['qm-vnit-preview-image-next-buttton', { disabled: indicator.value >= _ctx.imgs.length - 1 }])
+                                class: normalizeClass(['qm-vnit-preview-image-next-buttton', { disabled: indicator.value >= _ctx.imgs.length - 1 }]),
+                                onClick: handleNextItem
                             }, [
                                 createVNode(unref(script$2), {
                                     name: "arrow-right-bold",
