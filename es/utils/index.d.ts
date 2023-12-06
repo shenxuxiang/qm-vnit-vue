@@ -1,3 +1,4 @@
+import type { TweenAttrNames } from './tween';
 export declare function getType(data: any): string;
 export declare function isObject(data: any): data is object;
 export declare function isArray(data: any): data is Array<any>;
@@ -55,3 +56,11 @@ export declare function getViewportSize(): {
  * @param value 需要返回的内容
  */
 export declare function delay(time: number, value?: any): Promise<unknown>;
+/**
+ * 页面，元素容器（voerflow 不是 visible）的滚动（动画）
+ * @param position       终点位置
+ * @param timingFunction 动画曲线
+ * @param times          动画执行的次数
+ * @param container      目标元素
+ */
+export declare function scrollToPosition(position: number, timingFunction?: TweenAttrNames, times?: number, container?: HTMLElement): void;
