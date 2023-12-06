@@ -1,7 +1,7 @@
 {
   "name": "qm-vnit-vue",
   "private": false,
-  "version": "0.0.1",
+  "version": "0.1.7",
   "type": "module",
   "main": "./lib/index.js",
   "module": "./es/index.js",
@@ -95,7 +95,7 @@
     "vue-eslint-parser": "^9.3.2",
     "vue-tsc": "^1.8.16"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@babel/runtime-corejs3": "^7.23.1",
     "ant-design-vue": "^4.0.3",
     "core-js": "^3.33.0",
