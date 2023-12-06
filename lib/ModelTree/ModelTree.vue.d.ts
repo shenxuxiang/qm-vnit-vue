@@ -28,6 +28,9 @@ declare const _default: import("vue").DefineComponent<{
     checkedKeys: {
         type: import("vue").PropType<string[] | number[]>;
     };
+    selectedKeys: {
+        type: import("vue").PropType<string[] | number[]>;
+    };
     treeData: {
         type: import("vue").PropType<any[]>;
         required: true;
@@ -43,8 +46,9 @@ declare const _default: import("vue").DefineComponent<{
     getParentKeys: typeof getParentKeys;
     getAllParentKeys: () => (string | number)[];
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
-    "update:expandedKeys": (value: string[] | number[]) => void;
     "update:checkedKeys": (value: string[] | number[]) => void;
+    "update:expandedKeys": (value: string[] | number[]) => void;
+    "update:selectedKeys": (value: string[] | number[]) => void;
 }, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     placeholder: {
         type: import("vue").PropType<string>;
@@ -67,6 +71,9 @@ declare const _default: import("vue").DefineComponent<{
     checkedKeys: {
         type: import("vue").PropType<string[] | number[]>;
     };
+    selectedKeys: {
+        type: import("vue").PropType<string[] | number[]>;
+    };
     treeData: {
         type: import("vue").PropType<any[]>;
         required: true;
@@ -79,6 +86,7 @@ declare const _default: import("vue").DefineComponent<{
         type: import("vue").PropType<(treeData: any[]) => TreeData>;
     };
 }>> & {
+    "onUpdate:selectedKeys"?: ((value: string[] | number[]) => any) | undefined;
     "onUpdate:checkedKeys"?: ((value: string[] | number[]) => any) | undefined;
     "onUpdate:expandedKeys"?: ((value: string[] | number[]) => any) | undefined;
 }, {

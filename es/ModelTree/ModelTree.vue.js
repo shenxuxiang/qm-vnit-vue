@@ -15,14 +15,16 @@ var script = /*#__PURE__*/ defineComponent({
         showFilter: { type: Boolean, required: false, default: true },
         checkedKeys: { type: Array, required: false },
         expandedKeys: { type: Array, required: false },
+        selectedKeys: { type: Array, required: false },
         computedTreeData: { type: Function, required: false }
     },
-    emits: ["update:expandedKeys", "update:checkedKeys"],
+    emits: ["update:checkedKeys", "update:expandedKeys", "update:selectedKeys"],
     setup(__props, { expose: __expose, emit }) {
         const props = __props;
         const searchValue = ref('');
-        const localExpandedKeys = ref([]);
         const localCheckedKeys = ref([]);
+        const localExpandedKeys = ref([]);
+        const localSelectedKeys = ref([]);
         const expandedKeys = computed({
             get: () => props.expandedKeys || localExpandedKeys.value,
             set: (value) => {
@@ -35,6 +37,13 @@ var script = /*#__PURE__*/ defineComponent({
             set: (checkedKeys) => {
                 localCheckedKeys.value = checkedKeys;
                 emit('update:checkedKeys', checkedKeys);
+            },
+        });
+        const selectedKeys = computed({
+            get: () => props.selectedKeys || localSelectedKeys.value,
+            set: (selectedKeys) => {
+                localSelectedKeys.value = selectedKeys;
+                emit('update:selectedKeys', selectedKeys);
             },
         });
         // 根据原始的 props.treeData 计算，将格式转换成 TreeData 类型。
@@ -147,10 +156,12 @@ var script = /*#__PURE__*/ defineComponent({
                         "onUpdate:checkedKeys": _cache[1] || (_cache[1] = ($event) => ((checkedKeys).value = $event)),
                         expandedKeys: expandedKeys.value,
                         "onUpdate:expandedKeys": _cache[2] || (_cache[2] = ($event) => ((expandedKeys).value = $event)),
+                        selectedKeys: selectedKeys.value,
+                        "onUpdate:selectedKeys": _cache[3] || (_cache[3] = ($event) => ((selectedKeys).value = $event)),
                         treeData: filteredTreeData.value,
                         checkable: _ctx.checkable,
                         disabled: _ctx.disabled
-                    }), null, 16 /* FULL_PROPS */, ["checkedKeys", "expandedKeys", "treeData", "checkable", "disabled"])
+                    }), null, 16 /* FULL_PROPS */, ["checkedKeys", "expandedKeys", "selectedKeys", "treeData", "checkable", "disabled"])
                 ], 2 /* CLASS */)
             ]));
         };
