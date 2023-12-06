@@ -1,5 +1,5 @@
 # qm-vnit-vue
-qm-vnit-vue 是一款基于 ant-design-vue 研发的 Vue 业务组件库 [document](http://aitweb.top/qm-vnit-vue)
+qm-vnit-vue 是一款基于 ant-design-vue 研发的 Vue 业务组件库 [document](http://aitweb.top/qm-vnit-vue/)
 
 ## ✨ 特性
 - 🌈 提炼自企业级中后台产品的交互语言和视觉风格。

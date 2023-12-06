@@ -8,6 +8,9 @@ import { Icon } from '@/library';
       <Icon name="image" style="font-size: 60px; line-height: 1" />
     </div>
     <div class="icon-item">
+      <Icon name="backtop" style="font-size: 60px; line-height: 1" />
+    </div>
+    <div class="icon-item">
       <Icon name="minus-circle" style="font-size: 60px; line-height: 1" />
     </div>
     <div class="icon-item">

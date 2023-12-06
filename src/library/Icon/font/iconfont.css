@@ -14,6 +14,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.qm-vnit-icon-backtop:before {
+  content: '\e6c6';
+}
+
 .qm-vnit-icon-image:before {
   content: '\e6f5';
 }

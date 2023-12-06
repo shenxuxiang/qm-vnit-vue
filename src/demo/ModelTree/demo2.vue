@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { ModelTree } from '@/library';
 import type { TreeData } from '@/library/ModelTree';
-import { ref, watch } from 'vue';
-const checkedKeys = ref(['1-1-1-1']);
-const expandedKeys = ref(['1-1', '1-1-1']);
+import { ref, watch, onMounted } from 'vue';
+const selectedKeys = ref<string[]>([]);
+const expandedKeys = ref<string[]>([]);
 const modelTreeRef = ref<InstanceType<typeof ModelTree>>();
+
+onMounted(() => {
+  selectedKeys.value = ['1-1-1-1'];
+  expandedKeys.value = ['1-1', '1-1-1'];
+});
+
 const treeData = ref([
   {
     sid: '1-1',
@@ -89,7 +95,7 @@ function computedTreeData(sourceList: any[]): TreeData {
   );
 }
 
-watch(checkedKeys, () => {
+watch(selectedKeys, () => {
   // 打印选中的 checkedKeys 的所有祖先节点的 id （包含选中的节点本身）
   console.log(modelTreeRef.value?.getAllParentKeys());
 });
@@ -98,10 +104,12 @@ watch(checkedKeys, () => {
 <template>
   <ModelTree
     ref="modelTreeRef"
-    v-model:checkedKeys="checkedKeys"
+    v-model:selectedKeys="selectedKeys"
     v-model:expandedKeys="expandedKeys"
-    :treeData="treeData"
+    showLine
     :computedTreeData="computedTreeData"
+    :treeData="treeData"
+    :checkable="false"
     :bordered="false"
   />
 </template>

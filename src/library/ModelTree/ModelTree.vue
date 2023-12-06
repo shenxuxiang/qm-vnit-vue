@@ -21,12 +21,14 @@ type ModelTreeProps = {
   showFilter?: boolean;
   checkedKeys?: string[] | number[];
   expandedKeys?: string[] | number[];
+  selectedKeys?: string[] | number[];
   computedTreeData?: (treeData: any[]) => TreeData;
 };
 
 type ModelTreeEmits = {
-  (e: 'update:expandedKeys', value: string[] | number[]): void;
-  (e: 'update:checkedKeys', value: string[] | number[]): void;
+  'update:checkedKeys': [value: string[] | number[]];
+  'update:expandedKeys': [value: string[] | number[]];
+  'update:selectedKeys': [value: string[] | number[]];
 };
 
 const props = withDefaults(defineProps<ModelTreeProps>(), {
@@ -38,8 +40,9 @@ const props = withDefaults(defineProps<ModelTreeProps>(), {
 const emit = defineEmits<ModelTreeEmits>();
 defineOptions({ name: 'ModelTree', inheritAttrs: false });
 const searchValue = ref('');
-const localExpandedKeys = ref<string[] | number[]>([]);
 const localCheckedKeys = ref<string[] | number[]>([]);
+const localExpandedKeys = ref<string[] | number[]>([]);
+const localSelectedKeys = ref<string[] | number[]>([]);
 
 const expandedKeys = computed({
   get: () => props.expandedKeys || localExpandedKeys.value,
@@ -54,6 +57,14 @@ const checkedKeys = computed({
   set: (checkedKeys: any) => {
     localCheckedKeys.value = checkedKeys;
     emit('update:checkedKeys', checkedKeys);
+  },
+});
+
+const selectedKeys = computed({
+  get: () => props.selectedKeys || localSelectedKeys.value,
+  set: (selectedKeys: any) => {
+    localSelectedKeys.value = selectedKeys;
+    emit('update:selectedKeys', selectedKeys);
   },
 });
 
@@ -184,6 +195,7 @@ defineExpose({
         v-bind="$attrs"
         v-model:checkedKeys="checkedKeys"
         v-model:expandedKeys="expandedKeys"
+        v-model:selectedKeys="selectedKeys"
         :treeData="filteredTreeData"
         :checkable="checkable"
         :disabled="disabled"

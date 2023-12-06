@@ -32,6 +32,7 @@ import {
   FilterFilled_default,
   FolderOpenOutlined_default,
   FolderOutlined_default,
+  Icon_default,
   InfoCircleFilled_default,
   InfoCircleOutlined_default,
   LeftOutlined_default,
@@ -41,7 +42,6 @@ import {
   PictureTwoTone_default,
   PlusOutlined_default,
   PlusSquareOutlined_default,
-  QuestionCircleOutlined_default,
   ReloadOutlined_default,
   RightOutlined_default,
   RotateLeftOutlined_default,
@@ -4042,7 +4042,7 @@ var _experimental = {
 var cssinjs_default = cssinjs;
 
 // node_modules/ant-design-vue/es/version/version.js
-var version_default = "4.0.4";
+var version_default = "4.0.3";
 
 // node_modules/ant-design-vue/es/version/index.js
 var version_default2 = version_default;
@@ -5336,8 +5336,8 @@ var useConfigInject_default = (name, props4) => {
     return (_a2 = props4.getTargetContainer) !== null && _a2 !== void 0 ? _a2 : (_b = configProvider.getTargetContainer) === null || _b === void 0 ? void 0 : _b.value;
   });
   const getPopupContainer = computed(() => {
-    var _a2, _b, _c;
-    return (_b = (_a2 = props4.getContainer) !== null && _a2 !== void 0 ? _a2 : props4.getPopupContainer) !== null && _b !== void 0 ? _b : (_c = configProvider.getPopupContainer) === null || _c === void 0 ? void 0 : _c.value;
+    var _a2, _b;
+    return (_a2 = props4.getPopupContainer) !== null && _a2 !== void 0 ? _a2 : (_b = configProvider.getPopupContainer) === null || _b === void 0 ? void 0 : _b.value;
   });
   const dropdownMatchSelectWidth = computed(() => {
     var _a2, _b;
@@ -9928,19 +9928,11 @@ var Portal_default = defineComponent({
     const {
       shouldRender
     } = useInjectPortal();
-    function setContainer() {
+    onBeforeMount(() => {
+      isSSR = false;
       if (shouldRender.value) {
         container = props4.getContainer();
       }
-    }
-    onBeforeMount(() => {
-      isSSR = false;
-      setContainer();
-    });
-    onMounted(() => {
-      if (container)
-        return;
-      setContainer();
     });
     const stopWatch = watch(shouldRender, () => {
       if (shouldRender.value && !container) {
@@ -10950,9 +10942,7 @@ var SelectTrigger = defineComponent({
     direction: String,
     getTriggerDOMNode: Function,
     onPopupVisibleChange: Function,
-    onPopupMouseEnter: Function,
-    onPopupFocusin: Function,
-    onPopupFocusout: Function
+    onPopupMouseEnter: Function
   },
   setup(props4, _ref) {
     let {
@@ -10993,9 +10983,7 @@ var SelectTrigger = defineComponent({
         getPopupContainer,
         getTriggerDOMNode,
         onPopupVisibleChange,
-        onPopupMouseEnter,
-        onPopupFocusin,
-        onPopupFocusout
+        onPopupMouseEnter
       } = restProps;
       const dropdownPrefixCls = `${prefixCls}-dropdown`;
       let popupNode = popupElement;
@@ -11034,9 +11022,7 @@ var SelectTrigger = defineComponent({
         default: slots.default,
         popup: () => createVNode("div", {
           "ref": popupRef,
-          "onMouseenter": onPopupMouseEnter,
-          "onFocusin": onPopupFocusin,
-          "onFocusout": onPopupFocusout
+          "onMouseenter": onPopupMouseEnter
         }, [popupNode])
       });
     };
@@ -13229,7 +13215,6 @@ var BaseSelect_default = defineComponent({
     const triggerRef = shallowRef(null);
     const selectorRef = shallowRef(null);
     const listRef = shallowRef(null);
-    const blurRef = ref(false);
     const [mockFocused, setMockFocused, cancelSetMockFocused] = useDelayReset();
     const focus = () => {
       var _a2;
@@ -13275,10 +13260,10 @@ var BaseSelect_default = defineComponent({
     const triggerOpen = computed(() => emptyListContent.value ? false : mergedOpen.value);
     const onToggleOpen = (newOpen) => {
       const nextOpen = newOpen !== void 0 ? newOpen : !mergedOpen.value;
-      if (!props4.disabled) {
+      if (innerOpen.value !== nextOpen && !props4.disabled) {
         setInnerOpen(nextOpen);
-        if (mergedOpen.value !== nextOpen) {
-          props4.onDropdownVisibleChange && props4.onDropdownVisibleChange(nextOpen);
+        if (props4.onDropdownVisibleChange) {
+          props4.onDropdownVisibleChange(nextOpen);
         }
       }
     };
@@ -13322,9 +13307,6 @@ var BaseSelect_default = defineComponent({
     watch(() => props4.disabled, () => {
       if (innerOpen.value && !!props4.disabled) {
         setInnerOpen(false);
-      }
-      if (props4.disabled && !blurRef.value) {
-        setMockFocused(false);
       }
     }, {
       immediate: true
@@ -13402,15 +13384,9 @@ var BaseSelect_default = defineComponent({
       }
       focusRef.value = true;
     };
-    const popupFocused = ref(false);
     const onContainerBlur = function() {
-      if (popupFocused.value) {
-        return;
-      }
-      blurRef.value = true;
       setMockFocused(false, () => {
         focusRef.value = false;
-        blurRef.value = false;
         onToggleOpen(false);
       });
       if (props4.disabled) {
@@ -13431,12 +13407,6 @@ var BaseSelect_default = defineComponent({
       if (props4.onBlur) {
         props4.onBlur(...arguments);
       }
-    };
-    const onPopupFocusin = () => {
-      popupFocused.value = true;
-    };
-    const onPopupFocusout = () => {
-      popupFocused.value = false;
     };
     provide("VCSelectContainerEvent", {
       focus: onContainerFocus,
@@ -13644,9 +13614,7 @@ var BaseSelect_default = defineComponent({
         "empty": emptyOptions,
         "getTriggerDOMNode": () => selectorDomRef.current,
         "onPopupVisibleChange": onTriggerVisibleChange,
-        "onPopupMouseEnter": onPopupMouseEnter,
-        "onPopupFocusin": onPopupFocusin,
-        "onPopupFocusout": onPopupFocusout
+        "onPopupMouseEnter": onPopupMouseEnter
       }, {
         default: () => {
           return customizeRawInputElement ? isValidElement(customizeRawInputElement) && cloneElement(customizeRawInputElement, {
@@ -13944,9 +13912,9 @@ var ScrollBar_default = defineComponent({
     getSpinHeight() {
       const {
         height,
-        scrollHeight
+        count
       } = this.$props;
-      let baseHeight = height / scrollHeight * 100;
+      let baseHeight = height / count * 10;
       baseHeight = Math.max(baseHeight, MIN_SIZE);
       baseHeight = Math.min(baseHeight, height / 2);
       return Math.floor(baseHeight);
@@ -14641,10 +14609,6 @@ var List = defineComponent({
     }, {
       flush: "post"
     });
-    const delayHideScrollBar = () => {
-      var _a2;
-      (_a2 = scrollBarRef.value) === null || _a2 === void 0 ? void 0 : _a2.delayHidden();
-    };
     return {
       state,
       mergedData,
@@ -14658,8 +14622,7 @@ var List = defineComponent({
       setInstance,
       sharedConfig,
       scrollBarRef,
-      fillerInnerRef,
-      delayHideScrollBar
+      fillerInnerRef
     };
   },
   render() {
@@ -14696,8 +14659,7 @@ var List = defineComponent({
       collectHeight,
       sharedConfig,
       setInstance,
-      mergedData,
-      delayHideScrollBar
+      mergedData
     } = this;
     return createVNode("div", _objectSpread2({
       "style": _extends(_extends({}, style), {
@@ -14708,8 +14670,7 @@ var List = defineComponent({
       "class": `${prefixCls}-holder`,
       "style": componentStyle,
       "ref": "componentRef",
-      "onScroll": onFallbackScroll,
-      "onMouseenter": delayHideScrollBar
+      "onScroll": onFallbackScroll
     }, {
       default: () => [createVNode(Filler_default, {
         "prefixCls": prefixCls,
@@ -33362,8 +33323,7 @@ function PanelBody(_props) {
           [`${cellPrefixCls}-start`]: getCellText(currentDate) === 1 || picker === "year" && Number(title) % 10 === 0,
           [`${cellPrefixCls}-end`]: title === getLastDay(generateConfig2, currentDate) || picker === "year" && Number(title) % 10 === 9
         }, getCellClassName(currentDate))),
-        "onClick": (e3) => {
-          e3.stopPropagation();
+        "onClick": () => {
           if (!disabled) {
             onSelect(currentDate);
           }
@@ -52811,18 +52771,9 @@ var FormItemLabel = (props4, _ref) => {
   if (haveColon && typeof label === "string" && label.trim() !== "") {
     labelChildren = label.replace(/[:|：]\s*$/, "");
   }
-  if (props4.tooltip || slots.tooltip) {
-    const tooltipNode = createVNode("span", {
-      "class": `${prefixCls}-item-tooltip`
-    }, [createVNode(tooltip_default, {
-      "title": props4.tooltip
-    }, {
-      default: () => [createVNode(QuestionCircleOutlined_default, null, null)]
-    })]);
-    labelChildren = createVNode(Fragment, null, [labelChildren, slots.tooltip ? (_c = slots.tooltip) === null || _c === void 0 ? void 0 : _c.call(slots, {
-      class: `${prefixCls}-item-tooltip`
-    }) : tooltipNode]);
-  }
+  labelChildren = createVNode(Fragment, null, [labelChildren, (_c = slots.tooltip) === null || _c === void 0 ? void 0 : _c.call(slots, {
+    class: `${prefixCls}-item-tooltip`
+  })]);
   if (requiredMark === "optional" && !required4) {
     labelChildren = createVNode(Fragment, null, [labelChildren, createVNode("span", {
       "class": `${prefixCls}-item-optional`
@@ -53524,8 +53475,7 @@ var formItemProps = () => ({
     type: Object
   },
   hidden: Boolean,
-  noStyle: Boolean,
-  tooltip: String
+  noStyle: Boolean
 });
 var indexGuid3 = 0;
 var defaultItemNamePrefixCls = "form_item";
@@ -53692,7 +53642,6 @@ var FormItem_default = defineComponent({
       errors.value = [];
     };
     const resetField = () => {
-      var _a2;
       validateState.value = props4.validateStatus;
       validateDisabled.value = true;
       errors.value = [];
@@ -53700,7 +53649,7 @@ var FormItem_default = defineComponent({
       const value = fieldValue.value;
       const prop = getPropByPath(model, namePath.value, true);
       if (Array.isArray(value)) {
-        prop.o[prop.k] = [].concat((_a2 = initialValue.value) !== null && _a2 !== void 0 ? _a2 : []);
+        prop.o[prop.k] = [].concat(initialValue.value);
       } else {
         prop.o[prop.k] = initialValue.value;
       }
@@ -53844,25 +53793,22 @@ var FormItem_default = defineComponent({
         "key": "row"
       }), {
         default: () => {
-          var _a3, _b2;
+          var _a3, _b2, _c, _d;
           return createVNode(Fragment, null, [createVNode(FormItemLabel_default, _objectSpread2(_objectSpread2({}, props4), {}, {
             "htmlFor": htmlFor.value,
             "required": isRequired2.value,
             "requiredMark": formContext.requiredMark.value,
             "prefixCls": prefixCls.value,
             "onClick": onLabelClick,
-            "label": props4.label
-          }), {
-            label: slots.label,
-            tooltip: slots.tooltip
-          }), createVNode(FormItemInput_default, _objectSpread2(_objectSpread2({}, props4), {}, {
+            "label": (_a3 = props4.label) !== null && _a3 !== void 0 ? _a3 : (_b2 = slots.label) === null || _b2 === void 0 ? void 0 : _b2.call(slots)
+          }), null), createVNode(FormItemInput_default, _objectSpread2(_objectSpread2({}, props4), {}, {
             "errors": help !== void 0 && help !== null ? toArray4(help) : debounceErrors.value,
             "marginBottom": marginBottom.value,
             "prefixCls": prefixCls.value,
             "status": mergedValidateStatus.value,
             "ref": inputRef,
             "help": help,
-            "extra": (_a3 = props4.extra) !== null && _a3 !== void 0 ? _a3 : (_b2 = slots.extra) === null || _b2 === void 0 ? void 0 : _b2.call(slots),
+            "extra": (_c = props4.extra) !== null && _c !== void 0 ? _c : (_d = slots.extra) === null || _d === void 0 ? void 0 : _d.call(slots),
             "onErrorVisibleChanged": onErrorVisibleChanged
           }), {
             default: slots.default
@@ -55228,7 +55174,6 @@ var Checkbox_default2 = defineComponent({
       direction,
       disabled
     } = useConfigInject_default("checkbox", props4);
-    const contextDisabled = useInjectDisabled();
     const [wrapSSR, hashId] = style_default26(prefixCls);
     const checkboxGroup = inject(CheckboxGroupContextKey, void 0);
     const uniId = Symbol("checkboxUniId");
@@ -55301,7 +55246,7 @@ var Checkbox_default2 = defineComponent({
         };
         checkboxProps3.name = checkboxGroup.name.value;
         checkboxProps3.checked = checkboxGroup.mergedValue.value.includes(props4.value);
-        checkboxProps3.disabled = mergedDisabled.value || contextDisabled.value;
+        checkboxProps3.disabled = mergedDisabled.value || checkboxGroup.disabled.value;
         checkboxProps3.indeterminate = indeterminate;
       } else {
         checkboxProps3.onChange = handleChange;
@@ -55326,7 +55271,8 @@ var Checkbox_default2 = defineComponent({
         "aria-checked": ariaChecked
       }, checkboxProps3), {}, {
         "class": checkboxClass,
-        "ref": checkboxRef
+        "ref": checkboxRef,
+        "disabled": mergedDisabled.value
       }), null), children.length ? createVNode("span", null, [children]) : null]));
     };
   }
@@ -56626,7 +56572,7 @@ var Holder = defineComponent({
     let {
       expose
     } = _ref;
-    var _a2, _b;
+    var _a2;
     const {
       getPrefixCls,
       getPopupContainer
@@ -56653,7 +56599,7 @@ var Holder = defineComponent({
     };
     const mergedCloseIcon = createVNode("span", {
       "class": `${prefixCls.value}-close-x`
-    }, [createVNode(CloseOutlined_default, {
+    }, [createVNode(Icon_default, {
       "class": `${prefixCls.value}-close-icon`
     }, null)]);
     const [api3, holder] = useNotification({
@@ -56665,7 +56611,10 @@ var Holder = defineComponent({
       closable: false,
       closeIcon: mergedCloseIcon,
       duration: (_a2 = props4.duration) !== null && _a2 !== void 0 ? _a2 : DEFAULT_DURATION,
-      getContainer: (_b = props4.staticGetContainer) !== null && _b !== void 0 ? _b : getPopupContainer.value,
+      getContainer: () => {
+        var _a3, _b;
+        return ((_a3 = props4.staticGetContainer) === null || _a3 === void 0 ? void 0 : _a3.call(props4)) || ((_b = getPopupContainer.value) === null || _b === void 0 ? void 0 : _b.call(getPopupContainer)) || document.body;
+      },
       maxCount: props4.maxCount,
       onAllRemoved: props4.onAllRemoved
     });
@@ -60910,14 +60859,13 @@ var Drawer = defineComponent({
     });
     const wrapperStyle2 = computed(() => {
       const {
-        zIndex,
-        contentWrapperStyle
+        zIndex
       } = props4;
       const val = offsetStyle.value;
       return [{
         zIndex,
         transform: sPush.value ? pushTransform.value : void 0
-      }, _extends({}, contentWrapperStyle), val];
+      }, val];
     });
     const renderHeader = (prefixCls2) => {
       const {
@@ -61777,34 +61725,29 @@ var BackTop = defineComponent({
     });
     const floatButtonGroupContext = useInjectFloatButtonGroupContext();
     return () => {
-      const {
-        description,
-        type: type4,
-        shape,
-        tooltip,
-        badge
-      } = props4;
+      const defaultElement = createVNode("div", {
+        "class": `${prefixCls.value}-content`
+      }, [createVNode("div", {
+        "class": `${prefixCls.value}-icon`
+      }, [createVNode(VerticalAlignTopOutlined_default, null, null)])]);
       const floatButtonProps2 = _extends(_extends({}, attrs), {
-        shape: (floatButtonGroupContext === null || floatButtonGroupContext === void 0 ? void 0 : floatButtonGroupContext.shape.value) || shape,
+        shape: (floatButtonGroupContext === null || floatButtonGroupContext === void 0 ? void 0 : floatButtonGroupContext.shape.value) || props4.shape,
         onClick: scrollToTop,
         class: {
           [`${prefixCls.value}`]: true,
           [`${attrs.class}`]: attrs.class,
           [`${prefixCls.value}-rtl`]: direction.value === "rtl"
-        },
-        description,
-        type: type4,
-        tooltip,
-        badge
+        }
       });
       const transitionProps = getTransitionProps("fade");
       return wrapSSR(createVNode(Transition, transitionProps, {
         default: () => [withDirectives(createVNode(FloatButton_default, _objectSpread2(_objectSpread2({}, floatButtonProps2), {}, {
           "ref": domRef
         }), {
-          icon: () => {
+          icon: () => createVNode(VerticalAlignTopOutlined_default, null, null),
+          default: () => {
             var _a2;
-            return ((_a2 = slots.icon) === null || _a2 === void 0 ? void 0 : _a2.call(slots)) || createVNode(VerticalAlignTopOutlined_default, null, null);
+            return ((_a2 = slots.default) === null || _a2 === void 0 ? void 0 : _a2.call(slots)) || defaultElement;
           }
         }), [[vShow, state.visible]])]
       }));
@@ -64761,6 +64704,9 @@ var ImageInternal = defineComponent({
     const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible.value, {
       value: previewVisible,
       onChange: onPreviewVisibleChange
+    });
+    watch(isShowPreview, (val, preVal) => {
+      onPreviewVisibleChange(val, preVal);
     });
     const status = ref(isCustomPlaceholder.value ? "loading" : "normal");
     watch(() => props4.src, () => {
@@ -94053,7 +93999,6 @@ var AjaxUploader_default = defineComponent({
           "type": "file",
           "ref": fileInput,
           "onClick": (e3) => e3.stopPropagation(),
-          "onCancel": (e3) => e3.stopPropagation(),
           "key": uid2.value,
           "style": {
             display: "none"

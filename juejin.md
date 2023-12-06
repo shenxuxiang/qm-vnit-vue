@@ -1,6 +1,6 @@
 # 前端 UI 组件库打包和发布（VUE）
 
-前段时间写了一个关于 React UI 组件库的打包详解，同时也发布了一个 [qm-vnit](http://aitweb.top/qm-vnit) 组件库。好巧不巧的是，组件库刚搞完不到一个星期，就开始了新需求要求使用 Vue 3 进行开发，基于这个契机我就又搞了一个 [qm-vnit-vue](http://aitweb.top/qm-vnit-vue) Vue Ui 组件库。接下来我就开始介绍 Vue Ui 组件库的打包步骤。
+前段时间写了一个关于 React UI 组件库的打包详解，同时也发布了一个 [qm-vnit](http://aitweb.top/qm-vnit/) 组件库。好巧不巧的是，组件库刚搞完不到一个星期，就开始了新需求要求使用 Vue 3 进行开发，基于这个契机我就又搞了一个 [qm-vnit-vue](http://aitweb.top/qm-vnit-vue/) Vue Ui 组件库。接下来我就开始介绍 Vue Ui 组件库的打包步骤。
 
 ## 组件库开发注意事项
 

@@ -1,3 +1,6 @@
+import type { TweenAttrNames } from './tween';
+import tween from './tween';
+
 export function getType(data: any) {
   return Object.prototype.toString.call(data).slice(8, -1);
 }
@@ -206,4 +209,28 @@ export function delay(time: number, value?: any) {
   return new Promise((resolve) => {
     setTimeout(() => resolve(value), time);
   });
+}
+
+/**
+ * 页面，元素容器（voerflow 不是 visible）的滚动（动画）
+ * @param position       终点位置
+ * @param timingFunction 动画曲线
+ * @param times          动画执行的次数
+ * @param container      目标元素
+ */
+export function scrollToPosition(
+  position: number,
+  timingFunction: TweenAttrNames = 'linear',
+  times = 50,
+  container: HTMLElement = document.documentElement,
+) {
+  execAnimation(0);
+
+  function execAnimation(count: number) {
+    const scrollTop = container.scrollTop;
+    let pos = tween[timingFunction](count, scrollTop, position - scrollTop, times);
+    container.scrollTop = pos;
+    if (pos === position || count >= times) return;
+    requestAnimationFrame(() => execAnimation(count + 1));
+  }
 }
