@@ -1,7 +1,7 @@
 {
   "name": "qm-vnit-vue",
   "private": false,
-  "version": "0.1.7",
+  "version": "0.2.0",
   "type": "module",
   "main": "./lib/index.js",
   "module": "./es/index.js",
