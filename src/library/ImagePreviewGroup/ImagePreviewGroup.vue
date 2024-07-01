@@ -53,7 +53,7 @@ function handlePreview(index: number) {
 </script>
 
 <template>
-  <ul class="qm-vnit-image-group" :class="$attrs.class" :style="$attrs.style">
+  <ul class="qm-vnit-image-group" v-bind="$attrs">
     <template v-if="options">
       <li
         v-for="(item, index) in options"
