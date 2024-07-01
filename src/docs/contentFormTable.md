@@ -1,4 +1,4 @@
-# ContentFormPage 表格页面
+# ContentFormTable 表格页面
 
 提供数据查询、表格展示、分页的完整功能。
 
@@ -10,11 +10,29 @@
 
 ## 开发者注意事项
 
-- 开发者只需要传递一个获取表格数据的方法(requestDataSource)即可使用。
+- 开发者只需要传递一个获取表格数据的方法(queryTableList)即可使用。
 
 - 开发者可以通过给组件传递 customResponse 方法来对后端接口返回的 response 进行修改，从而满足组件需要的数据格式（参考 [API](/docs/contentFormTable.html#API) 部分）。
 
 - 默认情况下组件会在页面初始化时进行数据查询，如果要关闭此功能，可以给组件传递 `immediate: false`。
+
+
+## 更新内容
+
+- 新版本不再提供导出下载功能，但保留导出接口。导出文件的下载需用户自己实现；
+
+- 将原先的 "beforeQueryAction" 属性替换成 "validateFields"；
+
+- 类名与样式将透传给 ContentFormTable 组件的根节点，其他属性将传递给 Table 组件；
+
+- 新增了 customTableSorter 方法，用来对表格排序字段的格式化；默认是 "[{ field: string, order: 'ascend' | 'descend' }]"
+
+- 新增了样式属性和style属性；
+
+- 添加了 ref 可获取组件的实例对象，该实例对象上绑定了如下属性：
+  * form 获取表单实例；
+  * forceUpdate() 强制更新表单内容，返回一个 Promise 实例；
+  * getQueryData() 获取当前查询的表单数据，这个方法和 form.getFieldsValue() 是由区别的，getQueryData() 返回的数据是格式化之后的数据。
 
 ## 代码演示
 
@@ -53,16 +71,20 @@
 | bordered          | 与 Table 组件的 bordered 一致  | boolean | false |
 | immediate         | 是否允许在组件初始化时就可以请求表格数据 | boolean | true |
 | scroll            | 与 Table 组件的 scroll 一致  | object | - |
-| style             | 传递给组件根节点的样式 | CSSProperties，string | - |
-| class             | 传递给组件根节点的类名 | string，string[]，object | - |
 | paginationSize    | 与 Pagination 组件的 size 一致 | "default"，"small" | "default" |
 | tableSize         | 与 Table 组件的 size 一致 | "small"，"middle"，"large" | "default" |
 | rowSelection      | 与 Table 组件的 rowSelection 一致 | TableProps["rowSelection"] | - |
-| beforeQueryAction | 在正式请求表格数据之前，会触发 beforeQueryAction 行为，返回 false 将中断请求 | function(query) {} | - |
+| validateFields    | 提供对表单数据进行验证的机会，返回 false 将不会发送 "queryTableList" 请求 | function(query) {} | - |
 | queryTableList    | 获取表格数据 | function(query) {} | - |
 | customResponse    | 当接口返回的 res 无法直接满足组件需要时，使用该方法可以对 res 进行进一步处理以满足组件需要 | function(data) {} | function (data: any) { return { tableList: data.list, total: data.total } } |
 | showTotal         | 与 Pagination 组件的 showTotal 一致 | function(total) {} | function(total: number) { return `共${total}条数据` } |
 | exportTableList   | 导出表格数据 | function(query) {} | - |
+| style             | 传递给组件根节点的样式 | CSSProperties，string | - |
+| class             | 传递给组件根节点的类名 | string，string[]，object | - |
+| tableStyle        | 传递 Table 组件的样式 | CSSProperties，string | - |
+| tableClass        | 传递 Table 组件的类名 | string，string[]，object | - |
+| headerStyle       | 传递表单组件的样式 | CSSProperties，string | - |
+| headerClass       | 传递表单组件的类名 | string，string[]，object | - |
 
 ## ContentFormTable 事件
 

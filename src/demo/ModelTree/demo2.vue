@@ -15,14 +15,15 @@ const treeData = ref([
   {
     sid: '1-1',
     title: '1-1',
-    // 当前节点上不展示 checkbox，所以无法展示选中状态
-    checkable: false,
+    // 不可选
+    disabled: true,
     children: [
       {
         sid: '1-1-1',
         parentSid: '1-1',
         name: '1-1-1',
-        checkable: false,
+        // 不可选
+        disabled: true,
         children: [
           {
             sid: '1-1-1-1',
@@ -51,7 +52,8 @@ const treeData = ref([
   {
     sid: '1-2',
     name: '1-2',
-    checkable: false,
+    // 不可选
+    disabled: true,
     children: [
       {
         sid: '1-2-1',
@@ -62,7 +64,8 @@ const treeData = ref([
         sid: '1-2-2',
         parentSid: '1-2',
         name: '1-2-2',
-        checkable: false,
+        // 不可选
+        disabled: true,
         children: [
           {
             sid: '1-2-2-1',
@@ -80,7 +83,7 @@ const treeData = ref([
   },
 ]);
 
-function computedTreeData(sourceList: any[]): TreeData {
+function formatTreeData(sourceList: any[]): TreeData {
   return (
     sourceList?.map((item) => {
       const { sid, parentSid, name, children, ...props } = item;
@@ -88,7 +91,7 @@ function computedTreeData(sourceList: any[]): TreeData {
         key: sid,
         title: name,
         parentKey: parentSid,
-        children: children ? computedTreeData(children) : undefined,
+        children: children ? formatTreeData(children) : undefined,
         ...props,
       };
     }) ?? []
@@ -107,9 +110,10 @@ watch(selectedKeys, () => {
     v-model:selectedKeys="selectedKeys"
     v-model:expandedKeys="expandedKeys"
     showLine
-    :computedTreeData="computedTreeData"
-    :treeData="treeData"
-    :checkable="false"
+    multiple
     :bordered="false"
+    :checkable="false"
+    :treeData="treeData"
+    :formatTreeData="formatTreeData"
   />
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ModelTree } from '@/library';
-import type { TreeData } from '@/library/ModelTree';
 import { ref } from 'vue';
+import { ModelTree } from '@/library';
+
 const checkedKeys = ref(['1-1-1-1']);
 const expandedKeys = ref(['1-1', '1-1-1']);
 const treeData = ref([
@@ -77,28 +77,20 @@ const treeData = ref([
   },
 ]);
 
-function computedTreeData(sourceList: any[]): TreeData {
-  return (
-    sourceList?.map((item) => {
-      const { id, parentId, name, children, ...props } = item;
-      return {
-        key: id,
-        title: name,
-        parentKey: parentId,
-        children: children ? computedTreeData(children) : undefined,
-        ...props,
-      };
-    }) ?? []
-  );
-}
+const fieldNames = {
+  key: 'id',
+  title: 'name',
+  parentKey: 'parentId',
+};
 </script>
 
 <template>
   <ModelTree
     v-model:checkedKeys="checkedKeys"
     v-model:expandedKeys="expandedKeys"
-    :treeData="treeData"
-    :computedTreeData="computedTreeData"
+    multiple
     :bordered="false"
+    :treeData="treeData"
+    :fieldNames="fieldNames"
   />
 </template>

@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { delay } from '@/utils';
 import { ContentFormHeader } from '@/library';
+import dayjs from 'dayjs';
 
 const queryList = ref([
   {
@@ -12,6 +13,7 @@ const queryList = ref([
       // 每当查询名称表单字段的值发生变化时，重置 时间查询 表单项
       formModels.time = null;
     },
+    initialValue: 'hello world',
   },
   {
     name: 'time',
@@ -23,6 +25,7 @@ const queryList = ref([
     dataFormat: (value: any) => {
       return { time: value.startOf().format('YYYY-MM-DD') };
     },
+    initialValue: dayjs('2024-07-01'),
   },
   {
     name: 'type',
@@ -33,6 +36,7 @@ const queryList = ref([
       { value: '2', label: 'BBB' },
       { value: '3', label: 'CCC' },
     ],
+    initialValue: '1',
   },
   {
     name: 'timeRange',
@@ -47,6 +51,7 @@ const queryList = ref([
         endTime: value[1].endOf().format('YYYY-MM-DD'),
       };
     },
+    initialValue: [dayjs().startOf('week'), dayjs().endOf('week')],
   },
 ]);
 

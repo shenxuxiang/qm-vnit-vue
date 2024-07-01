@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed, watchEffect, shallowRef } from 'vue';
+import { ref, reactive, onMounted, computed, watchEffect, shallowRef, toRaw } from 'vue';
 import { UpOutlined, DownOutlined } from '@ant-design/icons-vue';
 import { Form, Button, Row, Col } from 'ant-design-vue';
 import RenderItem from './RenderItem.vue';
@@ -41,7 +41,8 @@ const props = withDefaults(defineProps<ContentFormHeadProps>(), {
   hideResetButton: false,
   hideExportButton: true,
   submitButtonText: '提交',
-}); // 定义每个 Col 元素的宽度
+});
+// 定义每个 Col 元素的宽度
 enum ColSpanEnum {
   xxl = 6,
   xl = 8,
@@ -104,8 +105,8 @@ const buttonGroupOffset = computed(() => {
 function initialFormModal() {
   return props.queryList.reduce(
     (memo, item) => {
-      const { dataIndex, name = dataIndex, initialValue } = item;
-      memo[name!] = initialValue || null;
+      const { dataIndex, name = dataIndex!, initialValue } = item;
+      memo[name] = toRaw(initialValue) || null;
       return memo;
     },
     {} as { [propName: string]: string | number | Array<any> },

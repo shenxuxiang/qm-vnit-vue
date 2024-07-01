@@ -24,7 +24,5 @@
 
 | propName | description                      | type                     | default value |
 | -------- | :------------------------------- | :----------------------- | :------------ |
-| name     | 图标的名称                       | string                   | -             |
-| class    | 类名                             | string，string[]，object | -             |
-| style    | 样式                             | string，CSSProperties    | -             |
-| ...      | 其他属性都将直接传递给组件根节点 | any                      | -             |
+| name | 图标的名称 | string | - |
+| 其他 | 其他属性都将直接透传递给Icon组件的根节点 | - | - |

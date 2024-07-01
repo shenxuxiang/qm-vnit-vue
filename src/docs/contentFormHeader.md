@@ -17,9 +17,23 @@
 
 - 在不传入 cols 参数的情况下，ContentFormHead 会根据屏幕的宽度自动调节（一行可以放置几列）
 
+## 更新内容
+
+- onReset 回调函数将返回一个 Promise 实例；
+- onSubmit 回调函数将返回一个 Promise 实例；
+- onExport回调函数将返回一个 Promise 实例；
+- 新增提交按钮、导出按钮、重置按钮用户反馈交互，防止用户持续提交动作；
+- 将原本内置的导出文件功能删除，新版本中开发者通过 exportTableList(query) 方法自定义导出文件；
+- 组件内部逻辑优化，组件性能有所提升；
+- 组件样式微调；
+- 添加了 ref 可获取组件的实例对象，该实例对象上绑定了如下属性：
+  * form 是表单实例；
+  * getCurrentFormData 用于获取格式化后的表单数据；
+
+
 ## 代码演示
 
-::: info 案例一
+::: info 案例一(指定表单查询默认值)
 <Demo1/>
 <<< @/demo/ContentFormHeader/demo1.vue{10-13,22-24,43-48}
 :::
@@ -43,20 +57,16 @@
 
 | propName         | description                  | type      | default value |
 | ---------------- | :--------------------------- | :-------- | :------------ |
-| cols             | 要展示的列数                 | number    | -             |
-| queryList        | 查询表单项集合               | QueryList | -             |
-| showExport       | 是否展示导出按钮             | boolean   | -             |
-| defaultExpand    | 是否默认展开所有查询你表单项 | boolean   | true          |
-| submitButtonText | 查询表单项按钮的文本         | string    | 提交          |
-| hideResetButton  | 是否隐藏重置表单项按钮       | string    | false         |
+| cols             | 要展示的列数 | number | - |
+| queryList        | 查询表单项集合 | QueryList | - |
+| showExport       | 是否展示导出按钮 | boolean | - |
+| defaultExpand    | 是否默认展开所有查询你表单项 | boolean | true |
+| submitButtonText | 查询表单项按钮的文本 | string | 提交 |
+| hideResetButton  | 是否隐藏重置表单项按钮 | string | false |
+| submit           | 表单提交事件 | `(values：any) => Promise<any>` | - |
+| reset            | 表单重置事件 | `(values：any) => Promise<any>` | - |
+| export           | 表单导出事件 | `(values：any) => Promise<any>` | - |
 
-## ContentFormHeader 事件
-
-| eventName | description  | callback             |
-| --------- | :----------- | :------------------- |
-| submit    | 表单提交事件 | function (values) {} |
-| reset     | 表单重置事件 | function (values) {} |
-| export    | 表单导出事件 | function (values) {} |
 
 ## QueryList
 

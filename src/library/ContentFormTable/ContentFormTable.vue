@@ -5,7 +5,7 @@ import ContentFormHeader from '../ContentFormHeader';
 import { Table, Pagination } from 'ant-design-vue';
 import type { TableProps } from 'ant-design-vue';
 import { isArray, isEmpty } from '@/utils';
-import type { VNode } from 'vue';
+import type { VNode, CSSProperties } from 'vue';
 import './ContentFormTable.less';
 
 // 获取数组项的类型
@@ -53,6 +53,12 @@ type ContentFormTableProps = {
   customResponse?: (data: { code: number; data: any; msg: string }) => { total: number; tableList: any[] };
   // 允许用户自定义 tableSorter
   customTableSorter?: (data: SorterList) => any;
+  class?: string | string[] | object;
+  tableClass?: string | string[] | object;
+  headerClass?: string | string[] | object;
+  style?: CSSProperties | string;
+  tableStyle?: CSSProperties | string;
+  headerStyle?: CSSProperties | string;
 };
 
 const props = withDefaults(defineProps<ContentFormTableProps>(), {
@@ -78,7 +84,7 @@ const loading = ref(false);
 const sorter = shallowRef<SorterList>([]);
 const combinationColumns = computed(computedColumns);
 const searchCondition = ref(initialSearchCondition());
-const contentHeaderRef = ref<InstanceType<typeof ContentFormHeader>>();
+const contentHeaderRef = shallowRef<InstanceType<typeof ContentFormHeader>>();
 const tableResource = reactive({
   total: 0,
   pageNum: 1,
@@ -225,11 +231,14 @@ defineExpose(expose);
 </script>
 
 <template>
-  <section class="qm-content-form-table">
+  <!-- eslint-disable-next-line -->
+  <section class="qm-content-form-table" :class="class" :style="style">
     <template v-if="combinationColumns.queryList.length">
       <ContentFormHeader
         ref="contentHeaderRef"
         :cols="cols"
+        :class="headerClass"
+        :style="headerStyle"
         :reset="handleReset"
         :export="handleExport"
         :submit="handleSubmit"
@@ -243,7 +252,7 @@ defineExpose(expose);
       </ContentFormHeader>
     </template>
 
-    <div class="qm-content-form-table-body">
+    <div class="qm-content-form-table-body" :class="tableClass" :style="tableStyle">
       <div class="qm-content-form-table-body-head">
         <p style="margin-left: 16px">查询表格</p>
         <slot name="extra"></slot>

@@ -30,7 +30,6 @@
 
 | propName | description                          | type                  | default value |
 | -------- | :----------------------------------- | :-------------------- | :------------ |
-| class    | 该类名将作用于图片元素的外层 li 节点 | string                | -             |
-| bordered | 图片是否含有边框                     | boolean               | -             |
-| options  | 图片的集合                           | string[]              | -             |
-| style    | 改样式将作用于图片元素的外层 li 节点 | string，CSSProperties | -             |
+| bordered | 图片是否含有边框 | boolean | - |
+| options | 图片的集合 | string[] | - |
+| 其他 | 其他属性将直接透传给ImagePreviewGroup组件的根节点 | - | - |
