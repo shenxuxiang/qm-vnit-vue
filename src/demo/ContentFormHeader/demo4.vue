@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { delay } from '@/utils';
 import { Button } from 'ant-design-vue';
 import { ContentFormHeader } from '@/library';
 
+const headerRef = ref<InstanceType<typeof ContentFormHeader>>();
 const queryList = ref([
   {
     name: 'name',
@@ -11,19 +13,25 @@ const queryList = ref([
   },
 ]);
 
-function handleSubmit(values: any) {
+async function handleSubmit(values: any) {
   console.log(values);
+  return delay(1000, null);
 }
 
-function handleReset(values: any) {
+async function handleReset(values: any) {
   console.log(values);
+  return delay(1000, null);
+}
+
+function handleClick() {
+  console.log(headerRef.value!.getCurrentFormData());
 }
 </script>
 
 <template>
-  <ContentFormHeader :queryList="queryList" hideResetButton @submit="handleSubmit" @reset="handleReset">
+  <ContentFormHeader ref="headerRef" :queryList="queryList" hideResetButton :submit="handleSubmit" :reset="handleReset">
     <template #insertNode>
-      <Button style="margin-left: 8px">自定义按钮</Button>
+      <Button style="margin-left: 8px" @click="handleClick">自定义按钮</Button>
     </template>
   </ContentFormHeader>
 </template>

@@ -1,10 +1,11 @@
-import { defineComponent, ref, reactive, onMounted, watch, computed, openBlock, createElementBlock, createVNode, unref, withCtx, normalizeStyle, Fragment, renderList, withDirectives, createBlock, vShow, createElementVNode, createTextVNode, toDisplayString, createCommentVNode, renderSlot } from 'vue';
+import { defineComponent, reactive, ref, onMounted, watchEffect, computed, openBlock, createElementBlock, createVNode, unref, withCtx, normalizeStyle, Fragment, renderList, withDirectives, createBlock, vShow, createElementVNode, createTextVNode, toDisplayString, createCommentVNode, renderSlot } from 'vue';
 import UpOutlined from '@ant-design/icons-vue/UpOutlined';
 import DownOutlined from '@ant-design/icons-vue/DownOutlined';
 import { Form, Row, Col, Button } from 'ant-design-vue';
-import RenderFormItem from './RenderFormItem.js';
+import './RenderItem.vue.js';
 import { isEmpty } from '../utils/index.js';
 import './ContentFormHeader.css';
+import script$1 from './RenderItem.vue2.js';
 
 const _hoisted_1 = { style: { "display": "flex", "justify-content": "flex-end", "align-items": "flex-start" } };
 // 定义每个 Col 元素的宽度
@@ -17,7 +18,6 @@ var ColSpanEnum;
     ColSpanEnum[ColSpanEnum["sm"] = 12] = "sm";
     ColSpanEnum[ColSpanEnum["xs"] = 12] = "xs";
 })(ColSpanEnum || (ColSpanEnum = {}));
-// 容器节点对象
 var script = /*#__PURE__*/ defineComponent({
     ...{ name: 'ContentFormHeader' },
     __name: 'ContentFormHeader',
@@ -27,40 +27,45 @@ var script = /*#__PURE__*/ defineComponent({
         showExport: { type: Boolean, required: false, default: false },
         defaultExpand: { type: Boolean, required: false, default: true },
         submitButtonText: { type: String, required: false, default: '提交' },
-        hideResetButton: { type: Boolean, required: false, default: false }
+        hideResetButton: { type: Boolean, required: false, default: false },
+        submit: { type: Function, required: false },
+        export: { type: Function, required: false },
+        reset: { type: Function, required: false }
     },
-    emits: ['submit', 'reset', 'export'],
-    setup(__props, { emit }) {
+    setup(__props, { expose: __expose }) {
         const props = __props;
         const { useForm, Item: FormItem } = Form;
-        const containerRef = ref();
-        // 一行几列
-        // eslint-disable-next-line
-        const colsNumber = ref(props?.cols ?? 4);
-        // 每列占多少个 span
-        // eslint-disable-next-line
-        const colSpan = ref(24 / (props?.cols ?? 4));
-        // 表单数据
+        /**
+         * @param formModel    表单数据
+         * @param colsNumber   一行可以展示几列
+         * @param containerRef 容器节点对象
+         * @param colSpan      每列占多少个 span，一行共 24 个 span
+         * @param expand       表单是否展开
+         * @param form         表单对象
+         */
         const formModel = reactive(initialFormModal());
-        // 表单对象
-        const form = useForm(formModel);
-        // 是否展开
-        // eslint-disable-next-line
+        const colsNumber = ref(props?.cols ?? 4);
+        const containerRef = ref();
+        const colSpan = ref(24 / colsNumber.value);
         const expand = ref(props.defaultExpand);
+        const form = useForm(formModel);
+        const submitLoading = ref(false);
+        const exportLoading = ref(false);
+        const resetLoading = ref(false);
         onMounted(() => {
             if (typeof props.cols === 'undefined')
                 computedColSpan();
         });
-        watch(() => props.cols, () => {
+        watchEffect(() => {
             if (props.cols) {
                 colsNumber.value = props.cols;
                 colSpan.value = 24 / props.cols;
             }
         });
-        // 一共多少行
+        // 计算共多少行
         const rowsNumber = computed(() => Math.ceil((props.queryList.length + 1) / colsNumber.value));
         // 最后一列（提交、收起按钮所在的列）的 offset
-        const lastFormItemOffset = computed(() => {
+        const buttonGroupOffset = computed(() => {
             const total = props.queryList.length;
             const cols = colsNumber.value;
             const reset = total % cols;
@@ -105,31 +110,40 @@ var script = /*#__PURE__*/ defineComponent({
             const result = { ...formModel };
             props.queryList.forEach((item) => {
                 const { dataIndex, name = dataIndex, dataFormat } = item;
+                const fieldValue = result[name];
                 // 如果值为 null、undefined 则删除该数据
                 // eslint-disable-next-line
-                if (result[name] == null) {
+                if (fieldValue == null) {
                     delete result[name];
                 }
                 else if (typeof dataFormat === 'function') {
                     delete result[name];
                     // 先判断表单项是否有值，如果有值则进行数据格式话操作。
-                    !isEmpty(formModel[name]) && Object.assign(result, dataFormat(formModel[name]));
+                    !isEmpty(fieldValue) && Object.assign(result, dataFormat(formModel[name]));
                 }
             });
             return result;
         }
         function handleSubmit() {
-            form.validate().then(() => {
-                emit('submit', formModelsFormat());
-            });
+            submitLoading.value = true;
+            props?.submit?.(formModelsFormat())
+                .finally(() => submitLoading.value = false);
         }
         function handleReset() {
             form.resetFields();
-            emit('reset', formModelsFormat());
+            resetLoading.value = true;
+            props?.reset?.(formModelsFormat())
+                .finally(() => resetLoading.value = false);
         }
         function handleExport() {
-            emit('export', formModelsFormat());
+            exportLoading.value = true;
+            props?.export?.(formModelsFormat())
+                .finally(() => exportLoading.value = false);
         }
+        __expose({
+            form,
+            getCurrentFormData: formModelsFormat,
+        });
         return (_ctx, _cache) => {
             return (openBlock(), createElementBlock("div", {
                 ref_key: "containerRef",
@@ -154,18 +168,18 @@ var script = /*#__PURE__*/ defineComponent({
                                                 label: item.title
                                             }, {
                                                 default: withCtx(() => [
-                                                    createVNode(unref(RenderFormItem), {
+                                                    createVNode(script$1, {
                                                         value: formModel[item.name || item.dataIndex],
                                                         "onUpdate:value": ($event) => ((formModel[item.name || item.dataIndex]) = $event),
+                                                        form: unref(form),
                                                         title: item.title,
                                                         watch: item.watch,
-                                                        formModel: formModel,
                                                         options: item.options,
                                                         formType: item.formType,
                                                         component: item.component,
                                                         properties: item.properties,
                                                         placeholder: item.placeholder
-                                                    }, null, 8 /* PROPS */, ["value", "onUpdate:value", "title", "watch", "formModel", "options", "formType", "component", "properties", "placeholder"])
+                                                    }, null, 8 /* PROPS */, ["value", "onUpdate:value", "form", "title", "watch", "options", "formType", "component", "properties", "placeholder"])
                                                 ]),
                                                 _: 2 /* DYNAMIC */
                                             }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["name", "label"])
@@ -176,7 +190,7 @@ var script = /*#__PURE__*/ defineComponent({
                                     ]);
                                 }), 128 /* KEYED_FRAGMENT */)),
                                 createVNode(unref(Col), {
-                                    offset: lastFormItemOffset.value * colSpan.value,
+                                    offset: buttonGroupOffset.value * colSpan.value,
                                     span: colSpan.value
                                 }, {
                                     default: withCtx(() => [
@@ -185,36 +199,39 @@ var script = /*#__PURE__*/ defineComponent({
                                                 createElementVNode("div", _hoisted_1, [
                                                     createVNode(unref(Button), {
                                                         type: "primary",
-                                                        onClick: handleSubmit
+                                                        onClick: handleSubmit,
+                                                        loading: submitLoading.value
                                                     }, {
                                                         default: withCtx(() => [
                                                             createTextVNode(toDisplayString(_ctx.submitButtonText), 1 /* TEXT */)
                                                         ]),
                                                         _: 1 /* STABLE */
-                                                    }),
+                                                    }, 8 /* PROPS */, ["loading"]),
                                                     (!_ctx.hideResetButton)
                                                         ? (openBlock(), createBlock(unref(Button), {
                                                             key: 0,
-                                                            style: { "margin-left": "8px" },
-                                                            onClick: handleReset
+                                                            onClick: handleReset,
+                                                            loading: resetLoading.value,
+                                                            style: { "margin-left": "8px" }
                                                         }, {
                                                             default: withCtx(() => [
                                                                 createTextVNode(" 重置 ")
                                                             ]),
                                                             _: 1 /* STABLE */
-                                                        }))
+                                                        }, 8 /* PROPS */, ["loading"]))
                                                         : createCommentVNode("v-if", true),
                                                     (_ctx.showExport)
                                                         ? (openBlock(), createBlock(unref(Button), {
                                                             key: 1,
-                                                            style: { "margin-left": "8px" },
-                                                            onClick: handleExport
+                                                            onClick: handleExport,
+                                                            loading: exportLoading.value,
+                                                            style: { "margin-left": "8px" }
                                                         }, {
                                                             default: withCtx(() => [
                                                                 createTextVNode(" 导出 ")
                                                             ]),
                                                             _: 1 /* STABLE */
-                                                        }))
+                                                        }, 8 /* PROPS */, ["loading"]))
                                                         : createCommentVNode("v-if", true),
                                                     renderSlot(_ctx.$slots, "insertNode"),
                                                     (_ctx.queryList.length >= colsNumber.value)

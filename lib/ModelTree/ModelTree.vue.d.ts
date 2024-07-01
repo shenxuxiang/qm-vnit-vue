@@ -7,12 +7,12 @@ type TreeDataItem = NonNullable<TreeProps['treeData']>[0] & {
 export type TreeData = TreeDataItem[];
 declare function getParentKeys(key: string | number): (string | number)[];
 declare const _default: import("vue").DefineComponent<{
+    disabled: {
+        type: import("vue").PropType<boolean>;
+    };
     placeholder: {
         type: import("vue").PropType<string>;
         default: string;
-    };
-    disabled: {
-        type: import("vue").PropType<boolean>;
     };
     bordered: {
         type: import("vue").PropType<boolean>;
@@ -50,12 +50,12 @@ declare const _default: import("vue").DefineComponent<{
     "update:expandedKeys": (value: string[] | number[]) => void;
     "update:selectedKeys": (value: string[] | number[]) => void;
 }, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+    disabled: {
+        type: import("vue").PropType<boolean>;
+    };
     placeholder: {
         type: import("vue").PropType<string>;
         default: string;
-    };
-    disabled: {
-        type: import("vue").PropType<boolean>;
     };
     bordered: {
         type: import("vue").PropType<boolean>;

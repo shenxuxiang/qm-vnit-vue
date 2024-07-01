@@ -1,10 +1,10 @@
 import { defineComponent, ref, watch, openBlock, createBlock, Transition, withCtx, withDirectives, createElementVNode, createCommentVNode, unref, withModifiers, createVNode, createElementBlock, normalizeClass, vShow } from 'vue';
-import { throttle, getViewportSize } from '../utils/index.js';
 import getTransformProperties from '../utils/getTransformProperties.js';
+import { throttle, getViewportSize } from '../utils/index.js';
 import './ToolBar.vue.js';
 import './Slider.vue.js';
-import '../Icon/index.js';
 import './PreviewImage.css';
+import '../Icon/index.js';
 import script$1 from './ToolBar.vue2.js';
 import '../Icon/Icon.vue2.js';
 import script$2 from '../Icon/Icon.vue.js';
@@ -24,15 +24,21 @@ var script = /*#__PURE__*/ defineComponent({
     emits: ["update:index", "close"],
     setup(__props, { emit }) {
         const props = __props;
-        // 开关，表示用户正在拖拽图片（当为true时，图片将跟随用户鼠标进行移动）
+        /**
+         * @param _isMoveing        开关，表示用户是否正在拖拽图片（当为true时，图片将跟随用户鼠标进行移动）
+         * @param _originPoint      原始点位
+         * @param _mouseOriginPoint 鼠标指针起始位置
+         */
         let _isMoveing = false;
-        // 鼠标指针起始位置
-        const _mouseOriginPoint = { x: 0, y: 0 };
-        // 原始点位
         const _originPoint = { x: 0, y: 0 };
+        const _mouseOriginPoint = { x: 0, y: 0 };
+        /**
+         * @param imgRef    图片 dom 实例对象
+         * @param imgXRef   图片的容器
+         * @param indicator 指示器（当前展示的是第几张图片）
+         */
         const imgRef = ref();
         const imgXRef = ref();
-        // 指示器（当前展示的是第几张图片）
         const indicator = ref(0);
         // 当组件展示时，不让页面滚动。
         watch(() => props.open, () => {
@@ -43,6 +49,7 @@ var script = /*#__PURE__*/ defineComponent({
                 document.documentElement.style.overflow = '';
             }
         });
+        // 当 props.index 更新时，及时更新 indicator
         watch(() => props.index, () => {
             if (props.index === indicator.value)
                 return;

@@ -1,21 +1,11 @@
 <script setup lang="ts">
+import { ref, reactive, onMounted, computed, watchEffect, shallowRef } from 'vue';
 import { UpOutlined, DownOutlined } from '@ant-design/icons-vue';
-import { ref, reactive, onMounted, computed, watch } from 'vue';
 import { Form, Button, Row, Col } from 'ant-design-vue';
-import RenderFormItem from './RenderFormItem';
+import RenderItem from './RenderItem.vue';
 import { isEmpty } from '@/utils';
 import './ContentFormHeader.less';
 import type { VNode } from 'vue';
-
-const props = withDefaults(defineProps<ContentFormHeadProps>(), {
-  showExport: false,
-  defaultExpand: true,
-  hideResetButton: false,
-  submitButtonText: '提交',
-});
-const emit = defineEmits(['submit', 'reset', 'export']);
-defineOptions({ name: 'ContentFormHeader' });
-const { useForm, Item: FormItem } = Form;
 
 export type Cols = 2 | 3 | 4 | 6 | 8 | 12 | 24;
 
@@ -40,9 +30,18 @@ type ContentFormHeadProps = {
   defaultExpand?: boolean;
   submitButtonText?: string;
   hideResetButton?: boolean;
+  submit?: (value: any) => Promise<any>;
+  export?: (value: any) => Promise<any>;
+  reset?: (value: any) => Promise<any>;
 };
 
-// 定义每个 Col 元素的宽度
+const props = withDefaults(defineProps<ContentFormHeadProps>(), {
+  showExport: false,
+  defaultExpand: true,
+  hideResetButton: false,
+  hideExportButton: true,
+  submitButtonText: '提交',
+}); // 定义每个 Col 元素的宽度
 enum ColSpanEnum {
   xxl = 6,
   xl = 8,
@@ -52,40 +51,44 @@ enum ColSpanEnum {
   xs = 12,
 }
 
-// 容器节点对象
-const containerRef = ref<HTMLDivElement>();
-// 一行几列
-// eslint-disable-next-line
-const colsNumber = ref<Cols>(props?.cols ?? 4);
-// 每列占多少个 span
-// eslint-disable-next-line
-const colSpan = ref(24 / (props?.cols ?? 4));
-// 表单数据
-const formModel = reactive(initialFormModal());
-// 表单对象
+const { useForm, Item: FormItem } = Form;
+
+defineOptions({ name: 'ContentFormHeader' });
+
+/**
+ * @param containerRef 容器节点对象
+ * @param formModel    表单数据
+ * @param colsNumber   一行可以展示几列
+ * @param colSpan      每列占多少个 span，一行共 24 个 span
+ * @param expand       表单是否展开
+ * @param form         表单对象
+ */
+const containerRef = shallowRef<HTMLDivElement>();
+const formModel = reactive(initialFormModal()); // eslint-disable-line
+const colsNumber = ref<Cols>(props?.cols ?? 4); // eslint-disable-line
+const colSpan = ref(24 / colsNumber.value); // eslint-disable-line
+const expand = ref(props.defaultExpand); // eslint-disable-line
 const form = useForm(formModel);
-// 是否展开
-// eslint-disable-next-line
-const expand = ref(props.defaultExpand);
+
+const submitLoading = ref(false);
+const exportLoading = ref(false);
+const resetLoading = ref(false);
 
 onMounted(() => {
   if (typeof props.cols === 'undefined') computedColSpan();
 });
 
-watch(
-  () => props.cols,
-  () => {
-    if (props.cols) {
-      colsNumber.value = props.cols;
-      colSpan.value = 24 / props.cols;
-    }
-  },
-);
+watchEffect(() => {
+  if (props.cols) {
+    colsNumber.value = props.cols;
+    colSpan.value = 24 / props.cols;
+  }
+});
 
-// 一共多少行
+// 计算共多少行
 const rowsNumber = computed(() => Math.ceil((props.queryList.length + 1) / colsNumber.value));
 // 最后一列（提交、收起按钮所在的列）的 offset
-const lastFormItemOffset = computed(() => {
+const buttonGroupOffset = computed(() => {
   const total = props.queryList.length;
   const cols = colsNumber.value;
   const reset = total % cols;
@@ -132,33 +135,40 @@ function formModelsFormat() {
   const result = { ...formModel };
   props.queryList.forEach((item) => {
     const { dataIndex, name = dataIndex, dataFormat } = item;
+    const fieldValue = result[name!];
     // 如果值为 null、undefined 则删除该数据
     // eslint-disable-next-line
-    if (result[name!] == null) {
+    if (fieldValue == null) {
       delete result[name!];
     } else if (typeof dataFormat === 'function') {
       delete result[name!];
       // 先判断表单项是否有值，如果有值则进行数据格式话操作。
-      !isEmpty(formModel[name!]) && Object.assign(result, dataFormat(formModel[name!]));
+      !isEmpty(fieldValue) && Object.assign(result, dataFormat(formModel[name!]));
     }
   });
   return result;
 }
 
 function handleSubmit() {
-  form.validate().then(() => {
-    emit('submit', formModelsFormat());
-  });
+  submitLoading.value = true;
+  props?.submit?.(formModelsFormat()).finally(() => (submitLoading.value = false));
 }
 
 function handleReset() {
   form.resetFields();
-  emit('reset', formModelsFormat());
+  resetLoading.value = true;
+  props?.reset?.(formModelsFormat()).finally(() => (resetLoading.value = false));
 }
 
 function handleExport() {
-  emit('export', formModelsFormat());
+  exportLoading.value = true;
+  props?.export?.(formModelsFormat()).finally(() => (exportLoading.value = false));
 }
+
+defineExpose({
+  form,
+  getCurrentFormData: formModelsFormat,
+});
 </script>
 
 <template>
@@ -168,11 +178,11 @@ function handleExport() {
         <template v-for="(item, index) in queryList" :key="item.name || item.dataIndex">
           <Col v-show="expand || (!expand && index + 1 < colsNumber)" :span="colSpan">
             <FormItem :name="item.name || item.dataIndex" :label="item.title">
-              <RenderFormItem
+              <RenderItem
                 v-model:value="formModel[item.name || item.dataIndex!]"
+                :form="form"
                 :title="item.title"
                 :watch="item.watch"
-                :formModel="formModel"
                 :options="item.options"
                 :formType="item.formType"
                 :component="item.component"
@@ -183,19 +193,21 @@ function handleExport() {
           </Col>
         </template>
 
-        <Col :offset="lastFormItemOffset * colSpan" :span="colSpan">
+        <Col :offset="buttonGroupOffset * colSpan" :span="colSpan">
           <FormItem>
             <div style="display: flex; justify-content: flex-end; align-items: flex-start">
-              <Button type="primary" @click="handleSubmit">
+              <Button type="primary" :loading="submitLoading" @click="handleSubmit">
                 {{ submitButtonText }}
               </Button>
 
-              <Button v-if="!hideResetButton" style="margin-left: 8px" @click="handleReset"> 重置 </Button>
+              <Button v-if="!hideResetButton" :loading="resetLoading" style="margin-left: 8px" @click="handleReset">
+                重置
+              </Button>
 
-              <Button v-if="showExport" style="margin-left: 8px" @click="handleExport"> 导出 </Button>
-
+              <Button v-if="showExport" :loading="exportLoading" style="margin-left: 8px" @click="handleExport">
+                导出
+              </Button>
               <slot name="insertNode" />
-
               <Button v-if="queryList.length >= colsNumber" type="link" @click="expand = !expand">
                 {{ expand ? '收起' : '展开' }}
                 <UpOutlined v-if="expand" />

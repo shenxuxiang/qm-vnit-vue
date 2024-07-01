@@ -64,3 +64,10 @@ export declare function delay(time: number, value?: any): Promise<unknown>;
  * @param container      目标元素
  */
 export declare function scrollToPosition(position: number, timingFunction?: TweenAttrNames, times?: number, container?: HTMLElement): void;
+/**
+ * 检测当前 element 是否是目标元素
+ * @param element   要查询的目标元素
+ * @param selector  CSS 选择器
+ * @returns
+ */
+export declare function elementMatches(element: Element, selector: string): any;

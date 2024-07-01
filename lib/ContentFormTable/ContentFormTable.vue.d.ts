@@ -1,6 +1,6 @@
 import type { QueryList, Cols } from '../ContentFormHeader';
 import type { TableProps } from 'ant-design-vue';
-import type { VNode, CSSProperties } from 'vue';
+import type { VNode } from 'vue';
 import './ContentFormTable.less';
 type ReturnColumn<T> = T extends Array<infer E> ? E : never;
 type TableColumns = TableProps['columns'];
@@ -8,19 +8,14 @@ type TableColumn = ReturnColumn<TableColumns>;
 export type Columns = Array<TableColumn & QueryList[0] & {
     visibleInTable?: boolean;
 }>;
-declare function forceUpdate(): void;
+type SorterList = Array<{
+    field: string;
+    order: 'ascend' | 'descend';
+}>;
 declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     bordered: {
         type: import("vue").PropType<boolean>;
         default: boolean;
-    };
-    class: {
-        type: import("vue").PropType<string | string[] | {
-            [propName: string]: string;
-        }>;
-    };
-    style: {
-        type: import("vue").PropType<string | CSSProperties>;
     };
     cols: {
         type: import("vue").PropType<Cols>;
@@ -54,16 +49,13 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
         type: import("vue").PropType<boolean>;
         default: boolean;
     };
-    exportFileName: {
-        type: import("vue").PropType<string>;
-    };
     paginationSize: {
         type: import("vue").PropType<"default" | "small">;
     };
     tableSize: {
         type: import("vue").PropType<"small" | "middle" | "large">;
     };
-    beforeQueryAction: {
+    validateFields: {
         type: import("vue").PropType<(query: any) => boolean>;
     };
     queryTableList: {
@@ -80,17 +72,42 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
         type: import("vue").PropType<(query: any) => Promise<any>>;
     };
     customResponse: {
-        type: import("vue").PropType<(data: any) => {
+        type: import("vue").PropType<(data: {
+            code: number;
+            data: any;
+            msg: string;
+        }) => {
             total: number;
             tableList: any[];
         }>;
-        default: ({ data }: any) => {
+        default: ({ data }: {
+            code: number;
+            data: any;
+            msg: string;
+        }) => {
             tableList: any;
             total: any;
         };
     };
+    customTableSorter: {
+        type: import("vue").PropType<(data: SorterList) => any>;
+    };
 }, {
-    forceUpdate: typeof forceUpdate;
+    form: {
+        modelRef: import("ant-design-vue/es/form/useForm").Props | import("vue").Ref<import("ant-design-vue/es/form/useForm").Props>;
+        rulesRef: import("ant-design-vue/es/form/useForm").Props | import("vue").Ref<import("ant-design-vue/es/form/useForm").Props>;
+        initialModel: import("ant-design-vue/es/form/useForm").Props;
+        validateInfos: import("ant-design-vue/es/form/useForm").validateInfos;
+        resetFields: (newValues?: import("ant-design-vue/es/form/useForm").Props | undefined) => void;
+        validate: <T = any>(names?: (string | string[]) | undefined, option?: import("ant-design-vue/es/form/useForm").validateOptions | undefined) => Promise<T>;
+        validateField: (name: string, value: any, rules: Record<string, unknown>[], option?: import("ant-design-vue/es/form/useForm").validateOptions | undefined) => Promise<import("ant-design-vue/es/form/interface").RuleError[]>;
+        mergeValidateInfo: (items: import("ant-design-vue/es/form/useForm").ValidateInfo | import("ant-design-vue/es/form/useForm").ValidateInfo[]) => import("ant-design-vue/es/form/useForm").ValidateInfo;
+        clearValidate: (names?: (string | string[]) | undefined) => void;
+    } | undefined;
+    forceUpdate: () => Promise<void>;
+    getQueryData: () => {
+        [x: string]: string | number | any[];
+    } | undefined;
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
     paginationChange: (pageNum: number, pageSize: number) => void;
 }, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
@@ -98,14 +115,6 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
         type: import("vue").PropType<boolean>;
         default: boolean;
     };
-    class: {
-        type: import("vue").PropType<string | string[] | {
-            [propName: string]: string;
-        }>;
-    };
-    style: {
-        type: import("vue").PropType<string | CSSProperties>;
-    };
     cols: {
         type: import("vue").PropType<Cols>;
     };
@@ -138,16 +147,13 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
         type: import("vue").PropType<boolean>;
         default: boolean;
     };
-    exportFileName: {
-        type: import("vue").PropType<string>;
-    };
     paginationSize: {
         type: import("vue").PropType<"default" | "small">;
     };
     tableSize: {
         type: import("vue").PropType<"small" | "middle" | "large">;
     };
-    beforeQueryAction: {
+    validateFields: {
         type: import("vue").PropType<(query: any) => boolean>;
     };
     queryTableList: {
@@ -164,14 +170,25 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
         type: import("vue").PropType<(query: any) => Promise<any>>;
     };
     customResponse: {
-        type: import("vue").PropType<(data: any) => {
+        type: import("vue").PropType<(data: {
+            code: number;
+            data: any;
+            msg: string;
+        }) => {
             total: number;
             tableList: any[];
         }>;
-        default: ({ data }: any) => {
+        default: ({ data }: {
+            code: number;
+            data: any;
+            msg: string;
+        }) => {
             tableList: any;
             total: any;
         };
+    };
+    customTableSorter: {
+        type: import("vue").PropType<(data: SorterList) => any>;
     };
 }>> & {
     onPaginationChange?: ((pageNum: number, pageSize: number) => any) | undefined;
@@ -181,7 +198,11 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     showTotal: (total: number) => string | VNode<import("vue").RendererNode, import("vue").RendererElement, {
         [key: string]: any;
     }>;
-    customResponse: (data: any) => {
+    customResponse: (data: {
+        code: number;
+        data: any;
+        msg: string;
+    }) => {
         total: number;
         tableList: any[];
     };

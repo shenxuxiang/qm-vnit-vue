@@ -51,6 +51,10 @@ function handleSubmit(values: any) {
 function handleReset(values: any) {
   console.log(values);
 }
+
+function customTableSorter(sorterList: any[]) {
+  return sorterList.map((item) => ({ field: item.field, direction: item.order === 'ascend' ? true : false }));
+}
 </script>
 
 <template>
@@ -58,6 +62,7 @@ function handleReset(values: any) {
     rowKey="id"
     :columns="columns"
     :queryTableList="handleQueryTableList"
+    :customTableSorter="customTableSorter"
     @submit="handleSubmit"
     @reset="handleReset"
   />

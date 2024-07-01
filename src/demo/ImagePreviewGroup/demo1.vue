@@ -11,7 +11,9 @@ setTimeout(() => imgs.value.push(img4), 5000);
 </script>
 
 <template>
-  <ImagePreviewGroup :bordered="false" style="margin: 0; width: 200px; height: 200px">
-    <Image v-for="img in imgs" :key="img" :src="img" />
+  <ImagePreviewGroup :bordered="false">
+    <template v-for="img in imgs" :key="img">
+      <Image :src="img" style="margin: 0; width: 200px; height: 200px" class="sxx" />
+    </template>
   </ImagePreviewGroup>
 </template>

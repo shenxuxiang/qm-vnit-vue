@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { throttle, getViewportSize } from '@/utils';
 import getTransformProperties from '@/utils/getTransformProperties';
+import { throttle, getViewportSize } from '@/utils';
 import ToolBar from './ToolBar.vue';
 import Slider from './Slider.vue';
 import { ref, watch } from 'vue';
-import Icon from '../Icon';
 import './PreviewImage.less';
+import Icon from '../Icon';
 
 export type PreviewImageProps = {
   imgs: Array<string>;
@@ -28,16 +28,22 @@ const emit = defineEmits<PreviewImageEvents>();
 
 defineOptions({ name: 'PreviewImage', inheritAttrs: false });
 
-// 开关，表示用户正在拖拽图片（当为true时，图片将跟随用户鼠标进行移动）
+/**
+ * @param _isMoveing        开关，表示用户是否正在拖拽图片（当为true时，图片将跟随用户鼠标进行移动）
+ * @param _originPoint      原始点位
+ * @param _mouseOriginPoint 鼠标指针起始位置
+ */
 let _isMoveing = false;
-// 鼠标指针起始位置
-const _mouseOriginPoint = { x: 0, y: 0 };
-// 原始点位
 const _originPoint = { x: 0, y: 0 };
+const _mouseOriginPoint = { x: 0, y: 0 };
 
+/**
+ * @param imgRef    图片 dom 实例对象
+ * @param imgXRef   图片的容器
+ * @param indicator 指示器（当前展示的是第几张图片）
+ */
 const imgRef = ref<HTMLImageElement>();
 const imgXRef = ref<HTMLDivElement>();
-// 指示器（当前展示的是第几张图片）
 const indicator = ref(0);
 
 // 当组件展示时，不让页面滚动。
@@ -52,6 +58,7 @@ watch(
   },
 );
 
+// 当 props.index 更新时，及时更新 indicator
 watch(
   () => props.index,
   () => {
