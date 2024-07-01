@@ -139,6 +139,10 @@ export default defineConfig({
           text: '数据选项',
           items: [{ text: 'ModelTree 模型树', link: '/docs/modelTree' }],
         },
+        {
+          text: '导航',
+          items: [{ text: 'NavigationBar 导航栏', link: '/docs/navigationBar' }],
+        },
       ],
       '/preview/': [
         {

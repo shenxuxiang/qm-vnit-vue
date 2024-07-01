@@ -1,6 +1,7 @@
 export { default as ImagePreviewGroup } from './ImagePreviewGroup';
 export { default as ContentFormHeader } from './ContentFormHeader';
 export { default as ContentFormTable } from './ContentFormTable';
+export { default as NavigationBar } from './NavigationBar';
 export { default as PreviewImage } from './PreviewImage';
 export { default as UploadImage } from './UploadImage';
 export { default as UploadVideo } from './UploadVideo';

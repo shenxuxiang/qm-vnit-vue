@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { h, ref } from 'vue';
+import { h, ref, toRaw } from 'vue';
+import { delay } from '@/utils';
 import { Checkbox } from 'ant-design-vue';
 import { ContentFormHeader } from '@/library';
 
@@ -29,20 +30,29 @@ const queryList = ref([
     name: 'type',
     title: '类型查询',
     // component: () => h(Checkbox.Group, { options: [{ label :'A', value: 1 }, { label: 'B', value: 2 }] })
-    component: () =>
-      h(Checkbox.Group, null, () => [h(Checkbox, { value: '1' }, () => 'A'), h(Checkbox, { value: '2' }, () => 'B')]),
+    component() {
+      return h(Checkbox.Group, null, () => [
+        h(Checkbox, { value: '1' }, () => 'A'),
+        h(Checkbox, { value: '2' }, () => 'B'),
+      ]);
+    },
+    dataFormat(value: any) {
+      return { type: toRaw(value) };
+    },
   },
 ]);
 
-function handleSubmit(values: any) {
+async function handleSubmit(values: any) {
   console.log(values);
+  return delay(1000, null);
 }
 
-function handleReset(values: any) {
+async function handleReset(values: any) {
   console.log(values);
+  return delay(1000, null);
 }
 </script>
 
 <template>
-  <ContentFormHeader :queryList="queryList" @submit="handleSubmit" @reset="handleReset" />
+  <ContentFormHeader :queryList="queryList" :submit="handleSubmit" :reset="handleReset" />
 </template>

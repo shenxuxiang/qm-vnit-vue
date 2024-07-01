@@ -8,7 +8,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
         type: import("vue").PropType<boolean>;
     };
     status: {
-        type: import("vue").PropType<"error" | "loading" | "done" | "remove">;
+        type: import("vue").PropType<"done" | "loading" | "error" | "remove">;
         default: string;
     };
     url: {
@@ -55,7 +55,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
         type: import("vue").PropType<boolean>;
     };
     status: {
-        type: import("vue").PropType<"error" | "loading" | "done" | "remove">;
+        type: import("vue").PropType<"done" | "loading" | "error" | "remove">;
         default: string;
     };
     url: {
@@ -94,7 +94,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     onRemove?: ((uid: string) => any) | undefined;
     onSuccess?: ((uid: string, res: any) => any) | undefined;
 }, {
-    status: "error" | "loading" | "done" | "remove";
+    status: "done" | "loading" | "error" | "remove";
     percent: number;
     method: string;
 }, {}>, {

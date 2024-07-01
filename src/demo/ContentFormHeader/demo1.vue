@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { delay } from '@/utils';
 import { ContentFormHeader } from '@/library';
 
 const queryList = ref([
@@ -49,15 +50,28 @@ const queryList = ref([
   },
 ]);
 
-function handleSubmit(values: any) {
+async function handleSubmit(values: any) {
   console.log(values);
+  return delay(1000, null);
 }
 
-function handleReset(values: any) {
+async function handleReset(values: any) {
   console.log(values);
+  return delay(1000, null);
+}
+
+async function handleExport(values: any) {
+  console.log(values);
+  return delay(1000, null);
 }
 </script>
 
 <template>
-  <ContentFormHeader :queryList="queryList" :defaultExpand="false" @submit="handleSubmit" @reset="handleReset" />
+  <ContentFormHeader
+    :queryList="queryList"
+    :defaultExpand="false"
+    :submit="handleSubmit"
+    :reset="handleReset"
+    :export="handleExport"
+  />
 </template>

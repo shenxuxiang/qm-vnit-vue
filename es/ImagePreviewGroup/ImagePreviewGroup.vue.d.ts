@@ -1,13 +1,14 @@
-import './ImagePreviewGroup.less';
 import type { CSSProperties, VNode } from 'vue';
+import './ImagePreviewGroup.less';
 export type ImageGroupSlots = {
     default: () => Array<VNode>;
 };
 export type ImageGroupProps = {
-    class?: string;
+    style?: CSSProperties;
+    imageClass?: string;
     bordered?: boolean;
     options?: string[];
-    style?: string | CSSProperties;
+    class?: string;
 };
 declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     options: {
@@ -21,7 +22,10 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
         type: import("vue").PropType<string>;
     };
     style: {
-        type: import("vue").PropType<string | CSSProperties>;
+        type: import("vue").PropType<CSSProperties>;
+    };
+    imageClass: {
+        type: import("vue").PropType<string>;
     };
 }, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     options: {
@@ -35,7 +39,10 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
         type: import("vue").PropType<string>;
     };
     style: {
-        type: import("vue").PropType<string | CSSProperties>;
+        type: import("vue").PropType<CSSProperties>;
+    };
+    imageClass: {
+        type: import("vue").PropType<string>;
     };
 }>>, {
     bordered: boolean;

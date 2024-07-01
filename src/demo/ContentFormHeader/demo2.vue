@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { delay } from '@/utils';
 import { Button } from 'ant-design-vue';
 import { ContentFormHeader } from '@/library';
 import type { Cols } from '@/library/ContentFormHeader';
 
+const headerRef = ref<InstanceType<typeof ContentFormHeader>>();
 const cols = ref<Cols>(2);
 const queryList = ref([
   {
@@ -17,6 +19,11 @@ const queryList = ref([
     formType: 'datePicker',
     properties: {
       style: { width: '100%' },
+    },
+    dataFormat(value: any) {
+      return {
+        time: value.startOf('day').format('YYYY-MM-DD'),
+      };
     },
   },
   {
@@ -36,19 +43,32 @@ const queryList = ref([
     properties: {
       style: { width: '100%' },
     },
+    dataFormat(values: any) {
+      return {
+        startTime: values[0].startOf('day').format('YYYY-MM-DD'),
+        endTime: values[1].endOf('day').format('YYYY-MM-DD'),
+      };
+    },
   },
 ]);
 
-function handleSubmit(values: any) {
+async function handleSubmit(values: any) {
   console.log(values);
+  return delay(1000, null);
 }
 
-function handleReset(values: any) {
+async function handleReset(values: any) {
   console.log(values);
+  return delay(1000, null);
 }
 
-function handleExport(values: any) {
+async function handleExport(values: any) {
   console.log(values);
+  return delay(1000, null);
+}
+
+function getCurrentFormData() {
+  console.log(headerRef.value!.getCurrentFormData());
 }
 </script>
 
@@ -57,16 +77,18 @@ function handleExport(values: any) {
     <Button :type="cols === 2 ? 'primary' : 'default'" @click="cols = 2">2</Button>
     <Button :type="cols === 3 ? 'primary' : 'default'" @click="cols = 3">3</Button>
   </Button.Group>
+  <Button @click="getCurrentFormData">获取表单信息</Button>
 
   <div :style="{ overflow: 'auto', marginTop: '20px' }">
-    <div :style="{ width: '1000px' }">
+    <div :style="{ width: '1300px' }">
       <ContentFormHeader
+        ref="headerRef"
         showExport
         :cols="cols"
         :queryList="queryList"
-        @reset="handleReset"
-        @export="handleExport"
-        @submit="handleSubmit"
+        :reset="handleReset"
+        :export="handleExport"
+        :submit="handleSubmit"
       />
     </div>
   </div>

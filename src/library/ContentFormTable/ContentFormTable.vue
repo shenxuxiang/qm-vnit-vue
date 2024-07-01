@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { reactive, ref, computed, onBeforeMount, shallowRef } from 'vue';
 import type { QueryList, Cols } from '../ContentFormHeader';
-import { reactive, ref, watch, computed, toRef } from 'vue';
 import ContentFormHeader from '../ContentFormHeader';
 import { Table, Pagination } from 'ant-design-vue';
 import type { TableProps } from 'ant-design-vue';
-import { downloadFile, isArray } from '@/utils';
-import type { VNode, CSSProperties } from 'vue';
+import { isArray, isEmpty } from '@/utils';
+import type { VNode } from 'vue';
 import './ContentFormTable.less';
 
 // 获取数组项的类型
@@ -20,11 +20,14 @@ export type Columns = Array<
   TableColumn &
     QueryList[0] & {
       visibleInTable?: boolean;
-      // dataFormat?: (value: any) => { [propName: string]: any };
     }
 >;
 
-type Sorter = Array<{ field: string; direction: boolean }>;
+type SorterList = Array<{ field: string; order: 'ascend' | 'descend' }>;
+
+type ContentFormTableEmits = {
+  paginationChange: [pageNum: number, pageSize: number];
+};
 
 type ContentFormTableProps = {
   cols?: Cols;
@@ -34,54 +37,57 @@ type ContentFormTableProps = {
   // 是否允许在组件初始化时就可以请求表格数据，默认为 true
   immediate?: boolean;
   showExport?: boolean;
-  exportFileName?: string;
   submitButtonText?: string;
   scroll?: TableProps['scroll'];
-  style?: CSSProperties | string;
   paginationSize?: 'default' | 'small';
   tableSize?: 'small' | 'middle' | 'large';
+  // 对表单进行验证，在正式请求表格数据之前会触发。返回 false 表示验证失败，终止请求。
+  validateFields?: (query: any) => boolean;
   rowSelection?: TableProps['rowSelection'];
-  // 在正式请求表格数据之前，会触发 beforeQueryAction 行为，返回 false 将中断请求。
-  beforeQueryAction?: (query: any) => boolean;
   // 获取表格数据
   queryTableList: (query: any) => Promise<any>;
   showTotal?: (total: number) => VNode | string;
   // 导出表格数据
   exportTableList?: (query: any) => Promise<any>;
-  class?: string | string[] | { [propName: string]: string };
-  // 允许用户可以自定义 response，以便组件统一处理。
-  customResponse?: (data: any) => { total: number; tableList: any[] };
+  // 允许用户自定义 response
+  customResponse?: (data: { code: number; data: any; msg: string }) => { total: number; tableList: any[] };
+  // 允许用户自定义 tableSorter
+  customTableSorter?: (data: SorterList) => any;
 };
-
-type ContentFormTableEvents = (e: 'paginationChange', pageNum: number, pageSize: number) => void;
 
 const props = withDefaults(defineProps<ContentFormTableProps>(), {
   bordered: true,
   immediate: true,
   showTotal: (total: number) => `共${total}条数据`,
-  customResponse: ({ data }: any) => ({ tableList: data.list, total: data.total }),
+  customResponse: ({ data }: { code: number; data: any; msg: string }) => ({ tableList: data.list, total: data.total }),
 });
-const emit = defineEmits<ContentFormTableEvents>();
+
+const emits = defineEmits<ContentFormTableEmits>();
+
 defineOptions({ name: 'ContentFormTable', inheritAttrs: false });
-const className = toRef(props, 'class');
-// 合成 columns: { queryList, tableColumns }
+
+/**
+ * @param loading            数据加载状态
+ * @param sorter             表格排序字段
+ * @param combinationColumns 根据 props.columns 分别计算出 ContentFormHeader、ContentFormTable 组件的 queryList 和 columns
+ * @param searchCondition    表格查询条件
+ * @param contentHeaderRef   ContentFormHeader 组件实例
+ * @param tableResource      表格数据
+ */
+const loading = ref(false);
+const sorter = shallowRef<SorterList>([]);
 const combinationColumns = computed(computedColumns);
-// 查询条件
-const searchCondition = ref(computedInitialSearchCondition());
+const searchCondition = ref(initialSearchCondition());
+const contentHeaderRef = ref<InstanceType<typeof ContentFormHeader>>();
 const tableResource = reactive({
   total: 0,
   pageNum: 1,
   pageSize: 10,
   tableList: [] as any[],
 });
-const loading = ref(false);
-// 排序
-let sorter = ref<Sorter>([]);
 
-// eslint-disable-next-line
-watch([() => tableResource.pageNum, () => tableResource.pageSize, sorter, searchCondition], getTableList, {
-  immediate: props.immediate,
-});
+// 请求表格数据，immediate 表示是否立即请求，false 表示只有当用户触发查询操作时再请求。
+onBeforeMount(() => props.immediate && getTableList());
 
 // 计算 queryList、tableColumns
 function computedColumns() {
@@ -107,22 +113,24 @@ function computedColumns() {
       });
     }
 
-    if (visibleInTable === true) {
-      newTableColumns.push(item);
-    }
+    if (visibleInTable === true) newTableColumns.push(item);
   });
 
   return { queryList: newQueryList, tableColumns: newTableColumns };
 }
 
-// 初始化 searchCondition
-function computedInitialSearchCondition() {
+/**
+ * 初始化表格查询条件（ searchCondition ）
+ * 注意，computedColumns 函数一定要在本函数之前执行。
+ * 否则，就会出现一个暂时性死区，导致系统异常。
+ */
+function initialSearchCondition() {
   const result: { [propName: string]: any } = {};
+
   combinationColumns.value.queryList.forEach((item) => {
     const { dataIndex, name = dataIndex, dataFormat, initialValue } = item;
     if (initialValue) {
       if (typeof dataFormat === 'function') {
-        delete result[name!];
         Object.assign(result, dataFormat(initialValue));
       } else {
         result[name!] = initialValue;
@@ -133,84 +141,101 @@ function computedInitialSearchCondition() {
   return result;
 }
 
-// 获取表格相关资源
-function getTableList() {
+/**
+ * 发送请求，获取表格相关资源
+ * 只要 props.validateFields() 函数不返回 false，就认定表单验证成功，否则就是失败。
+ * 失败不发送请求。
+ */
+async function getTableList() {
   const params = {
     ...searchCondition.value,
-    pageSize: tableResource.pageSize,
     pageNum: tableResource.pageNum,
-    order: sorter.value,
+    pageSize: tableResource.pageSize,
+    order: isEmpty(sorter.value) ? null : sorter.value,
   };
 
-  if (props.beforeQueryAction?.(params) ?? true) {
+  if (props.validateFields?.(params) !== false) {
     loading.value = true;
-    props
-      .queryTableList(params)
-      .then((res: any) => Object.assign(tableResource, props.customResponse(res)))
-      .finally(() => (loading.value = false));
+    try {
+      const resp = await props.queryTableList(params);
+      Object.assign(tableResource, props.customResponse(resp));
+    } finally {
+      loading.value = false;
+    }
+  } else {
+    throw Error('查询条件验证未通过！');
   }
 }
 
 // 提交
-function handleSubmit(values: any) {
+async function handleSubmit(values: any) {
   searchCondition.value = values;
   Object.assign(tableResource, { pageSize: 10, pageNum: 1 });
+  return getTableList();
 }
 
 // 重置
-function handleReset(values: any) {
+async function handleReset(values: any) {
   searchCondition.value = values;
   Object.assign(tableResource, { pageSize: 10, pageNum: 1 });
+  return getTableList();
 }
 
 // 导出
-function handleExport(values: any) {
-  props?.exportTableList?.(values)?.then((res: any) => {
-    const { data } = res;
-    downloadFile(props?.exportFileName ?? '_default_file', data);
-  });
+async function handleExport(values: any) {
+  if (props.validateFields?.(values) !== false) {
+    return props?.exportTableList?.(values);
+  } else {
+    return Promise.reject('查询条件验证未通过！');
+  }
 }
 
 // 分页
 function handlePaginationChange(pageNum: number, pageSize: number) {
   Object.assign(tableResource, { pageSize, pageNum });
-  emit('paginationChange', pageNum, pageSize);
+  emits('paginationChange', pageNum, pageSize);
+  getTableList();
 }
 
 // 表格排序
 function handleTableChange() {
   const sort = arguments[2];
-  const result: Sorter = [];
+  const result: SorterList = [];
   if (isArray(sort)) {
     sort.forEach((item: any) => {
       const { field, order } = item;
-      order && result.push({ field, direction: order === 'ascend' });
+      order && result.push({ field, order });
     });
   } else {
-    sort.order && result.push({ field: sort.field, direction: sort.order === 'ascend' });
+    sort.order && result.push({ field: sort.field, order: sort.order });
   }
 
-  sorter.value = result;
-}
-// 强制更新数据
-function forceUpdate() {
+  sorter.value = props.customTableSorter?.(result) ?? result;
   getTableList();
 }
 
-defineExpose({ forceUpdate });
+// 导出内容
+const expose = {
+  form: contentHeaderRef!.value?.form,
+  forceUpdate: async () => getTableList(),
+  getQueryData: () => contentHeaderRef.value?.getCurrentFormData?.(),
+};
+Object.defineProperty(expose, 'form', { get: () => contentHeaderRef.value!.form });
+defineExpose(expose);
 </script>
 
 <template>
-  <section :class="['qm-content-form-table', className]" :style="style">
+  <section class="qm-content-form-table">
     <template v-if="combinationColumns.queryList.length">
       <ContentFormHeader
+        ref="contentHeaderRef"
         :cols="cols"
+        :reset="handleReset"
+        :export="handleExport"
+        :submit="handleSubmit"
         :showExport="showExport"
         :submitButtonText="submitButtonText"
         :queryList="combinationColumns.queryList"
-        @reset="handleReset"
-        @export="handleExport"
-        @submit="handleSubmit"
       >
         <template #insertNode>
           <slot name="insertHeadNode" />
@@ -242,11 +267,11 @@ defineExpose({ forceUpdate });
         </template>
       </Table>
       <Pagination
-        :pageSize="tableResource.pageSize"
-        :current="tableResource.pageNum"
-        :total="tableResource.total"
-        :showTotal="showTotal"
         :size="paginationSize"
+        :showTotal="showTotal"
+        :total="tableResource.total"
+        :current="tableResource.pageNum"
+        :pageSize="tableResource.pageSize"
         class="qm-content-form-table-pagination"
         @change="handlePaginationChange"
       />

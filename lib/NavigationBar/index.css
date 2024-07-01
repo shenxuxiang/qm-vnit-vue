@@ -1,0 +1,121 @@
+.qm-navbar {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  border-bottom: 1px solid #f2f2f2;
+  box-sizing: border-box;
+}
+.qm-navbar-content {
+  position: relative;
+  flex: 1;
+  margin-left: 20px;
+  line-height: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+.qm-navbar-content.qm-navbar-content-left-shadow::before,
+.qm-navbar-content.qm-navbar-content-right-shadow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 32px;
+  height: 100%;
+  z-index: -1;
+}
+.qm-navbar-content.qm-navbar-content-left-shadow::before {
+  left: 0;
+  box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.08);
+}
+.qm-navbar-content.qm-navbar-content-right-shadow::after {
+  right: 0;
+  box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.08);
+}
+.qm-navbar-content-list {
+  display: inline-block;
+  list-style: none;
+  font-size: 14px;
+  line-height: 1;
+  margin: 5px 0 0;
+  padding: 0;
+  white-space: nowrap;
+  transition: transform 0.5s ease;
+}
+.qm-navbar-content-list-item {
+  display: inline-block;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+.qm-navbar-content-list-item:hover {
+  background: #eee;
+  color: #1a72fe;
+}
+.qm-navbar-content-list-item.active {
+  background: #eee;
+  color: #1a72fe;
+  text-shadow: 0 0 0.25px currentcolor;
+}
+.qm-navbar-content-list-item + .qm-navbar-content-list-item {
+  margin-left: 20px;
+}
+.qm-navbar-item-close-icon,
+.qm-navbar-toolbar-others-dropdown-item-close-icon {
+  font-size: 12px;
+  margin-left: 6px;
+}
+.qm-navbar-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80px;
+  flex-shrink: 0;
+  padding: 0 20px;
+}
+.qm-navbar-toolbar-others {
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+.qm-navbar-toolbar-others:hover {
+  color: #1a72fe;
+}
+.qm-navbar-toolbar-others.hide {
+  opacity: 0;
+  visibility: hidden;
+}
+.qm-navbar-toolbar-others-dropdown-item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.qm-navbar-toolbar-others-dropdown-item .qm-navbar-toolbar-others-dropdown-item-title {
+  width: 100px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.qm-navbar-toolbar-appstore {
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
+  transition: all 1s ease 0s;
+}
+.qm-navbar-toolbar-appstore:hover {
+  color: #1a72fe;
+  transform: rotate(360deg);
+  transition: all 1s ease 0.1s;
+}
+.qm-navbar-indicator {
+  height: 2px;
+  background: #1a72fe;
+  width: 50px;
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  transition: transform 0.3s ease;
+}

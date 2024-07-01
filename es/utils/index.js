@@ -10,7 +10,7 @@ import _sliceInstanceProperty from '@babel/runtime-corejs3/core-js-stable/instan
 import _concatInstanceProperty from '@babel/runtime-corejs3/core-js-stable/instance/concat';
 import _Object$keys from '@babel/runtime-corejs3/core-js-stable/object/keys';
 import _Object$getOwnPropertySymbols from '@babel/runtime-corejs3/core-js-stable/object/get-own-property-symbols';
-import _URL from '@babel/runtime-corejs3/core-js-stable/url';
+import '@babel/runtime-corejs3/core-js-stable/url';
 import _setTimeout from '@babel/runtime-corejs3/core-js-stable/set-timeout';
 import '@babel/runtime-corejs3/core-js-stable/promise';
 
@@ -38,24 +38,32 @@ function isEmpty(data) {
   }
 }
 /**
- * 下载文件
- * @param fileName 指定文件下载后的文件名
- * @param data     文件资源（blob）
- * @param extName  文件后缀
+ * 防抖
+ * @param func        防抖的方法
+ * @param delay       防抖的时间间隔
+ * @param immediately 是否立即执行 func
+ * @returns
  */
-function downloadFile(fileName, data) {
-  var extName = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '.xlsx';
-  var blob = data instanceof Blob ? data : new Blob([data]);
-  var eLink = document.createElement('a');
-  // <a/> 上的 download 属性用于重命名一个需要下载的文件
-  eLink.download = /\.([a-zA-Z]+)$/i.test(fileName) ? fileName : fileName + extName;
-  eLink.style.display = 'none';
-  eLink.href = _URL.createObjectURL(blob);
-  document.body.appendChild(eLink);
-  eLink.click();
-  // 释放 URL 对象
-  _URL.revokeObjectURL(eLink.href);
-  document.body.removeChild(eLink);
+function debounce(func, delay) {
+  var immediately = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  var interval = null;
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    if (immediately) {
+      if (!interval) func.apply(void 0, args);
+      interval && clearTimeout(interval);
+      interval = _setTimeout(function () {
+        return interval = null;
+      }, delay);
+    } else {
+      clearTimeout(interval);
+      interval = _setTimeout(function () {
+        return func.apply(void 0, args);
+      }, delay);
+    }
+  };
 }
 /**
  * 节流
@@ -95,5 +103,28 @@ function getViewportSize() {
     height: height
   };
 }
+/**
+ * 检测当前 element 是否是目标元素
+ * @param element   要查询的目标元素
+ * @param selector  CSS 选择器
+ * @returns
+ */
+function elementMatches(element, selector) {
+  if (typeof element.matches === 'function') {
+    return element.matches(selector);
+  } else if (typeof element.mozMatchesSelector === 'function') {
+    var _element$mozMatchesSe;
+    return (_element$mozMatchesSe = element.mozMatchesSelector) === null || _element$mozMatchesSe === void 0 ? void 0 : _element$mozMatchesSe.call(element, selector);
+  } else if (typeof element.webkitMatchesSelector === 'function') {
+    return element.webkitMatchesSelector(selector);
+  } else {
+    var matches = document.querySelectorAll(selector);
+    var length = matches.length;
+    while (length--) {
+      if (matches[length] === element) return true;
+    }
+    return false;
+  }
+}
 
-export { downloadFile, getType, getViewportSize, isArray, isEmpty, throttle };
+export { debounce, elementMatches, getType, getViewportSize, isArray, isEmpty, throttle };

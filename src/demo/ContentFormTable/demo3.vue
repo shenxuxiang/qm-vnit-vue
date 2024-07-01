@@ -27,7 +27,7 @@ const columns = ref([
 ]);
 
 // 提供验证表单的机会，返回 true 表示表示验证通过
-function handleBefore(query: any) {
+function validateFields(query: any) {
   console.log(query);
   if (!query.userName) {
     message.warning('查询名称不能为空');
@@ -68,17 +68,7 @@ function handleCustomResponse(response: any) {
 
 function handleExportTableList(query: any) {
   console.log(query);
-  return new Promise((resolve) => {
-    const text = 'hello world';
-    const uInt8Array = new Uint8Array(text.length);
-    for (let i = 0; i < text.length; i++) {
-      uInt8Array[i] = text.charCodeAt(i);
-    }
-    const blob = new Blob([uInt8Array], { type: 'text/plain' });
-
-    // 将 blob 作为下载的文件内容。通过接口下载文件时，可以指定 responseType 为 blob
-    resolve({ data: blob });
-  });
+  return Promise.resolve();
 }
 </script>
 
@@ -87,12 +77,11 @@ function handleExportTableList(query: any) {
     showExport
     rowKey="id"
     submitButtonText="点击查询"
-    exportFileName="hello.txt"
     :immediate="false"
     :columns="columns"
+    :validateFields="validateFields"
     :queryTableList="handleQueryTableList"
     :customResponse="handleCustomResponse"
     :exportTableList="handleExportTableList"
-    :beforeQueryAction="handleBefore"
   />
 </template>

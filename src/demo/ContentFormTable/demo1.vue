@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { ContentFormTable } from '@/library';
+import { Button } from 'ant-design-vue';
+
+const tableRef = ref<InstanceType<typeof ContentFormTable>>();
 
 const columns = ref([
   {
@@ -35,8 +38,18 @@ function handleQueryTableList(query: any) {
     }, 1000);
   });
 }
+
+function handleClick() {
+  console.log(tableRef.value!.form);
+  console.log(tableRef.value!.getQueryData());
+  console.log(tableRef.value!.forceUpdate());
+}
 </script>
 
 <template>
-  <ContentFormTable rowKey="id" :columns="columns" :queryTableList="handleQueryTableList" />
+  <ContentFormTable ref="tableRef" rowKey="id" :columns="columns" :queryTableList="handleQueryTableList">
+    <template #extra>
+      <Button @click="handleClick">获取查询表单数据</Button>
+    </template>
+  </ContentFormTable>
 </template>

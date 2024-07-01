@@ -1,4 +1,4 @@
-import { defineComponent, ref, onMounted, openBlock, createElementBlock } from 'vue';
+import { defineComponent, ref, onMounted, onBeforeUnmount, openBlock, createElementBlock } from 'vue';
 import intersectionObserveImage from '../utils/intersectionObserveImage.js';
 import defaultImage from '../assets/defaultImage.svg.js';
 
@@ -14,9 +14,8 @@ var script = /*#__PURE__*/ defineComponent({
         // eslint-disable-next-line
         const imgSrc = ref(defaultImage);
         const imgRef = ref();
-        onMounted(() => {
-            intersectionObserveImage.addElement(imgRef.value, props.src);
-        });
+        onMounted(() => intersectionObserveImage.addElement(imgRef.value, props.src));
+        onBeforeUnmount(() => intersectionObserveImage.removeElement(imgRef.value));
         return (_ctx, _cache) => {
             return (openBlock(), createElementBlock("img", {
                 ref_key: "imgRef",
