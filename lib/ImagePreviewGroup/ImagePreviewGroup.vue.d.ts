@@ -1,14 +1,12 @@
-import type { CSSProperties, VNode } from 'vue';
 import './ImagePreviewGroup.less';
+import type { VNode } from 'vue';
 export type ImageGroupSlots = {
     default: () => Array<VNode>;
 };
 export type ImageGroupProps = {
-    style?: CSSProperties;
     imageClass?: string;
     bordered?: boolean;
     options?: string[];
-    class?: string;
 };
 declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     options: {
@@ -17,12 +15,6 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     bordered: {
         type: import("vue").PropType<boolean>;
         default: boolean;
-    };
-    class: {
-        type: import("vue").PropType<string>;
-    };
-    style: {
-        type: import("vue").PropType<CSSProperties>;
     };
     imageClass: {
         type: import("vue").PropType<string>;
@@ -34,12 +26,6 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     bordered: {
         type: import("vue").PropType<boolean>;
         default: boolean;
-    };
-    class: {
-        type: import("vue").PropType<string>;
-    };
-    style: {
-        type: import("vue").PropType<CSSProperties>;
     };
     imageClass: {
         type: import("vue").PropType<string>;

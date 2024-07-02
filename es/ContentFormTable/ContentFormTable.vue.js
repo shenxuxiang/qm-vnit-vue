@@ -1,4 +1,4 @@
-import { defineComponent, ref, shallowRef, computed, reactive, onBeforeMount, openBlock, createElementBlock, createBlock, unref, withCtx, renderSlot, createCommentVNode, createElementVNode, createVNode, mergeProps, normalizeProps, guardReactiveProps } from 'vue';
+import { defineComponent, ref, shallowRef, computed, reactive, onBeforeMount, openBlock, createElementBlock, Fragment, createCommentVNode, createElementVNode, normalizeClass, normalizeStyle, createBlock, unref, withCtx, renderSlot, createVNode, mergeProps, normalizeProps, guardReactiveProps } from 'vue';
 import '../ContentFormHeader/index.js';
 import { Table, Pagination } from 'ant-design-vue';
 import { isEmpty, isArray } from '../utils/index.js';
@@ -6,12 +6,10 @@ import './ContentFormTable.css';
 import '../ContentFormHeader/ContentFormHeader.vue2.js';
 import script$1 from '../ContentFormHeader/ContentFormHeader.vue.js';
 
-const _hoisted_1 = { class: "qm-content-form-table" };
-const _hoisted_2 = { class: "qm-content-form-table-body" };
-const _hoisted_3 = { class: "qm-content-form-table-body-head" };
-const _hoisted_4 = /*#__PURE__*/ createElementVNode("p", { style: { "margin-left": "16px" } }, "查询表格", -1 /* HOISTED */);
+const _hoisted_1 = { class: "qm-content-form-table-body-head" };
+const _hoisted_2 = /*#__PURE__*/ createElementVNode("p", { style: { "margin-left": "16px" } }, "查询表格", -1 /* HOISTED */);
 var script = /*#__PURE__*/ defineComponent({
-    ...{ name: 'ContentFormTable' },
+    ...{ name: 'ContentFormTable', inheritAttrs: false },
     __name: 'ContentFormTable',
     props: {
         cols: { type: null, required: false },
@@ -30,7 +28,13 @@ var script = /*#__PURE__*/ defineComponent({
         showTotal: { type: Function, required: false, default: (total) => `共${total}条数据` },
         exportTableList: { type: Function, required: false },
         customResponse: { type: Function, required: false, default: ({ data }) => ({ tableList: data.list, total: data.total }) },
-        customTableSorter: { type: Function, required: false }
+        customTableSorter: { type: Function, required: false },
+        class: { type: [String, Array, Object], required: false },
+        tableClass: { type: [String, Array, Object], required: false },
+        headerClass: { type: [String, Array, Object], required: false },
+        style: { type: null, required: false },
+        tableStyle: { type: null, required: false },
+        headerStyle: { type: null, required: false }
     },
     emits: ["paginationChange"],
     setup(__props, { expose: __expose, emit: emits }) {
@@ -47,7 +51,7 @@ var script = /*#__PURE__*/ defineComponent({
         const sorter = shallowRef([]);
         const combinationColumns = computed(computedColumns);
         const searchCondition = ref(initialSearchCondition());
-        const contentHeaderRef = ref();
+        const contentHeaderRef = shallowRef();
         const tableResource = reactive({
             total: 0,
             pageNum: 1,
@@ -180,58 +184,69 @@ var script = /*#__PURE__*/ defineComponent({
         Object.defineProperty(expose, 'form', { get: () => contentHeaderRef.value.form });
         __expose(expose);
         return (_ctx, _cache) => {
-            return (openBlock(), createElementBlock("section", _hoisted_1, [
-                (combinationColumns.value.queryList.length)
-                    ? (openBlock(), createBlock(unref(script$1), {
-                        key: 0,
-                        ref_key: "contentHeaderRef",
-                        ref: contentHeaderRef,
-                        cols: _ctx.cols,
-                        reset: handleReset,
-                        export: handleExport,
-                        submit: handleSubmit,
-                        showExport: _ctx.showExport,
-                        submitButtonText: _ctx.submitButtonText,
-                        queryList: combinationColumns.value.queryList
-                    }, {
-                        insertNode: withCtx(() => [
-                            renderSlot(_ctx.$slots, "insertHeadNode")
+            return (openBlock(), createElementBlock(Fragment, null, [
+                createCommentVNode(" eslint-disable-next-line "),
+                createElementVNode("section", {
+                    class: normalizeClass(["qm-content-form-table", _ctx.class]),
+                    style: normalizeStyle(_ctx.style)
+                }, [
+                    (combinationColumns.value.queryList.length)
+                        ? (openBlock(), createBlock(unref(script$1), {
+                            key: 0,
+                            ref_key: "contentHeaderRef",
+                            ref: contentHeaderRef,
+                            cols: _ctx.cols,
+                            class: normalizeClass(_ctx.headerClass),
+                            style: normalizeStyle(_ctx.headerStyle),
+                            reset: handleReset,
+                            export: handleExport,
+                            submit: handleSubmit,
+                            showExport: _ctx.showExport,
+                            submitButtonText: _ctx.submitButtonText,
+                            queryList: combinationColumns.value.queryList
+                        }, {
+                            insertNode: withCtx(() => [
+                                renderSlot(_ctx.$slots, "insertHeadNode")
+                            ]),
+                            _: 3 /* FORWARDED */
+                        }, 8 /* PROPS */, ["cols", "class", "style", "showExport", "submitButtonText", "queryList"]))
+                        : createCommentVNode("v-if", true),
+                    createElementVNode("div", {
+                        class: normalizeClass(["qm-content-form-table-body", _ctx.tableClass]),
+                        style: normalizeStyle(_ctx.tableStyle)
+                    }, [
+                        createElementVNode("div", _hoisted_1, [
+                            _hoisted_2,
+                            renderSlot(_ctx.$slots, "extra")
                         ]),
-                        _: 3 /* FORWARDED */
-                    }, 8 /* PROPS */, ["cols", "showExport", "submitButtonText", "queryList"]))
-                    : createCommentVNode("v-if", true),
-                createElementVNode("div", _hoisted_2, [
-                    createElementVNode("div", _hoisted_3, [
-                        _hoisted_4,
-                        renderSlot(_ctx.$slots, "extra")
-                    ]),
-                    createVNode(unref(Table), mergeProps({ bordered: "" }, _ctx.$attrs, {
-                        rowKey: _ctx.rowKey,
-                        scroll: _ctx.scroll,
-                        size: _ctx.tableSize,
-                        loading: loading.value,
-                        pagination: false,
-                        rowSelection: _ctx.rowSelection,
-                        dataSource: tableResource.tableList,
-                        columns: combinationColumns.value.tableColumns,
-                        onChange: handleTableChange
-                    }), {
-                        bodyCell: withCtx((bodyCellProps) => [
-                            renderSlot(_ctx.$slots, "bodyCell", normalizeProps(guardReactiveProps(bodyCellProps)))
-                        ]),
-                        _: 3 /* FORWARDED */
-                    }, 16 /* FULL_PROPS */, ["rowKey", "scroll", "size", "loading", "rowSelection", "dataSource", "columns"]),
-                    createVNode(unref(Pagination), {
-                        size: _ctx.paginationSize,
-                        showTotal: _ctx.showTotal,
-                        total: tableResource.total,
-                        current: tableResource.pageNum,
-                        pageSize: tableResource.pageSize,
-                        onChange: handlePaginationChange,
-                        class: "qm-content-form-table-pagination"
-                    }, null, 8 /* PROPS */, ["size", "showTotal", "total", "current", "pageSize"])
-                ])
-            ]));
+                        createVNode(unref(Table), mergeProps({ bordered: "" }, _ctx.$attrs, {
+                            rowKey: _ctx.rowKey,
+                            scroll: _ctx.scroll,
+                            size: _ctx.tableSize,
+                            loading: loading.value,
+                            pagination: false,
+                            rowSelection: _ctx.rowSelection,
+                            dataSource: tableResource.tableList,
+                            columns: combinationColumns.value.tableColumns,
+                            onChange: handleTableChange
+                        }), {
+                            bodyCell: withCtx((bodyCellProps) => [
+                                renderSlot(_ctx.$slots, "bodyCell", normalizeProps(guardReactiveProps(bodyCellProps)))
+                            ]),
+                            _: 3 /* FORWARDED */
+                        }, 16 /* FULL_PROPS */, ["rowKey", "scroll", "size", "loading", "rowSelection", "dataSource", "columns"]),
+                        createVNode(unref(Pagination), {
+                            size: _ctx.paginationSize,
+                            showTotal: _ctx.showTotal,
+                            total: tableResource.total,
+                            current: tableResource.pageNum,
+                            pageSize: tableResource.pageSize,
+                            class: "qm-content-form-table-pagination",
+                            onChange: handlePaginationChange
+                        }, null, 8 /* PROPS */, ["size", "showTotal", "total", "current", "pageSize"])
+                    ], 6 /* CLASS, STYLE */)
+                ], 6 /* CLASS, STYLE */)
+            ], 2112 /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */));
         };
     }
 });

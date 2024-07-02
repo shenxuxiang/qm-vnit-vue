@@ -1,4 +1,4 @@
-import { defineComponent, reactive, ref, onMounted, watchEffect, computed, openBlock, createElementBlock, createVNode, unref, withCtx, normalizeStyle, Fragment, renderList, withDirectives, createBlock, vShow, createElementVNode, createTextVNode, toDisplayString, createCommentVNode, renderSlot } from 'vue';
+import { defineComponent, shallowRef, reactive, ref, onMounted, watchEffect, computed, toRaw, openBlock, createElementBlock, createVNode, unref, withCtx, normalizeStyle, Fragment, renderList, withDirectives, createBlock, vShow, createElementVNode, createTextVNode, toDisplayString, createCommentVNode, renderSlot } from 'vue';
 import UpOutlined from '@ant-design/icons-vue/UpOutlined';
 import DownOutlined from '@ant-design/icons-vue/DownOutlined';
 import { Form, Row, Col, Button } from 'ant-design-vue';
@@ -8,7 +8,6 @@ import './ContentFormHeader.css';
 import script$1 from './RenderItem.vue2.js';
 
 const _hoisted_1 = { style: { "display": "flex", "justify-content": "flex-end", "align-items": "flex-start" } };
-// 定义每个 Col 元素的宽度
 var ColSpanEnum;
 (function (ColSpanEnum) {
     ColSpanEnum[ColSpanEnum["xxl"] = 6] = "xxl";
@@ -34,20 +33,21 @@ var script = /*#__PURE__*/ defineComponent({
     },
     setup(__props, { expose: __expose }) {
         const props = __props;
+        // 定义每个 Col 元素的宽度
         const { useForm, Item: FormItem } = Form;
         /**
+         * @param containerRef 容器节点对象
          * @param formModel    表单数据
          * @param colsNumber   一行可以展示几列
-         * @param containerRef 容器节点对象
          * @param colSpan      每列占多少个 span，一行共 24 个 span
          * @param expand       表单是否展开
          * @param form         表单对象
          */
-        const formModel = reactive(initialFormModal());
-        const colsNumber = ref(props?.cols ?? 4);
-        const containerRef = ref();
-        const colSpan = ref(24 / colsNumber.value);
-        const expand = ref(props.defaultExpand);
+        const containerRef = shallowRef();
+        const formModel = reactive(initialFormModal()); // eslint-disable-line
+        const colsNumber = ref(props?.cols ?? 4); // eslint-disable-line
+        const colSpan = ref(24 / colsNumber.value); // eslint-disable-line
+        const expand = ref(props.defaultExpand); // eslint-disable-line
         const form = useForm(formModel);
         const submitLoading = ref(false);
         const exportLoading = ref(false);
@@ -80,7 +80,7 @@ var script = /*#__PURE__*/ defineComponent({
         function initialFormModal() {
             return props.queryList.reduce((memo, item) => {
                 const { dataIndex, name = dataIndex, initialValue } = item;
-                memo[name] = initialValue || null;
+                memo[name] = toRaw(initialValue) || null;
                 return memo;
             }, {});
         }
@@ -126,19 +126,16 @@ var script = /*#__PURE__*/ defineComponent({
         }
         function handleSubmit() {
             submitLoading.value = true;
-            props?.submit?.(formModelsFormat())
-                .finally(() => submitLoading.value = false);
+            props?.submit?.(formModelsFormat()).finally(() => (submitLoading.value = false));
         }
         function handleReset() {
             form.resetFields();
             resetLoading.value = true;
-            props?.reset?.(formModelsFormat())
-                .finally(() => resetLoading.value = false);
+            props?.reset?.(formModelsFormat()).finally(() => (resetLoading.value = false));
         }
         function handleExport() {
             exportLoading.value = true;
-            props?.export?.(formModelsFormat())
-                .finally(() => exportLoading.value = false);
+            props?.export?.(formModelsFormat()).finally(() => (exportLoading.value = false));
         }
         __expose({
             form,
@@ -199,8 +196,8 @@ var script = /*#__PURE__*/ defineComponent({
                                                 createElementVNode("div", _hoisted_1, [
                                                     createVNode(unref(Button), {
                                                         type: "primary",
-                                                        onClick: handleSubmit,
-                                                        loading: submitLoading.value
+                                                        loading: submitLoading.value,
+                                                        onClick: handleSubmit
                                                     }, {
                                                         default: withCtx(() => [
                                                             createTextVNode(toDisplayString(_ctx.submitButtonText), 1 /* TEXT */)
@@ -210,9 +207,9 @@ var script = /*#__PURE__*/ defineComponent({
                                                     (!_ctx.hideResetButton)
                                                         ? (openBlock(), createBlock(unref(Button), {
                                                             key: 0,
-                                                            onClick: handleReset,
                                                             loading: resetLoading.value,
-                                                            style: { "margin-left": "8px" }
+                                                            style: { "margin-left": "8px" },
+                                                            onClick: handleReset
                                                         }, {
                                                             default: withCtx(() => [
                                                                 createTextVNode(" 重置 ")
@@ -223,9 +220,9 @@ var script = /*#__PURE__*/ defineComponent({
                                                     (_ctx.showExport)
                                                         ? (openBlock(), createBlock(unref(Button), {
                                                             key: 1,
-                                                            onClick: handleExport,
                                                             loading: exportLoading.value,
-                                                            style: { "margin-left": "8px" }
+                                                            style: { "margin-left": "8px" },
+                                                            onClick: handleExport
                                                         }, {
                                                             default: withCtx(() => [
                                                                 createTextVNode(" 导出 ")

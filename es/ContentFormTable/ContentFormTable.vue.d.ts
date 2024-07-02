@@ -1,6 +1,6 @@
 import type { QueryList, Cols } from '../ContentFormHeader';
 import type { TableProps } from 'ant-design-vue';
-import type { VNode } from 'vue';
+import type { VNode, CSSProperties } from 'vue';
 import './ContentFormTable.less';
 type ReturnColumn<T> = T extends Array<infer E> ? E : never;
 type TableColumns = TableProps['columns'];
@@ -16,6 +16,12 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     bordered: {
         type: import("vue").PropType<boolean>;
         default: boolean;
+    };
+    class: {
+        type: import("vue").PropType<string | object | string[]>;
+    };
+    style: {
+        type: import("vue").PropType<string | CSSProperties>;
     };
     cols: {
         type: import("vue").PropType<Cols>;
@@ -91,6 +97,18 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     };
     customTableSorter: {
         type: import("vue").PropType<(data: SorterList) => any>;
+    };
+    tableClass: {
+        type: import("vue").PropType<string | object | string[]>;
+    };
+    headerClass: {
+        type: import("vue").PropType<string | object | string[]>;
+    };
+    tableStyle: {
+        type: import("vue").PropType<string | CSSProperties>;
+    };
+    headerStyle: {
+        type: import("vue").PropType<string | CSSProperties>;
     };
 }, {
     form: {
@@ -115,6 +133,12 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
         type: import("vue").PropType<boolean>;
         default: boolean;
     };
+    class: {
+        type: import("vue").PropType<string | object | string[]>;
+    };
+    style: {
+        type: import("vue").PropType<string | CSSProperties>;
+    };
     cols: {
         type: import("vue").PropType<Cols>;
     };
@@ -189,6 +213,18 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     };
     customTableSorter: {
         type: import("vue").PropType<(data: SorterList) => any>;
+    };
+    tableClass: {
+        type: import("vue").PropType<string | object | string[]>;
+    };
+    headerClass: {
+        type: import("vue").PropType<string | object | string[]>;
+    };
+    tableStyle: {
+        type: import("vue").PropType<string | CSSProperties>;
+    };
+    headerStyle: {
+        type: import("vue").PropType<string | CSSProperties>;
     };
 }>> & {
     onPaginationChange?: ((pageNum: number, pageSize: number) => any) | undefined;

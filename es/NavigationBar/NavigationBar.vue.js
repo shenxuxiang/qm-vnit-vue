@@ -48,9 +48,9 @@ var script = /*#__PURE__*/ defineComponent({
         const onWindowResize = debounce(() => {
             renderKey.value = Math.random().toString(32).slice(2);
         }, 200);
-        onMounted(function () {
+        onMounted(() => {
             window.addEventListener('resize', onWindowResize, false);
-            watch([() => props.navBarList, renderKey], function () {
+            watch([() => props.navBarList, renderKey], () => {
                 const children = document.querySelectorAll('.qm-navbar-content-list-item');
                 navBarItemsClientRect = [];
                 for (let i = 0; i < children.length; i++) {
@@ -58,14 +58,14 @@ var script = /*#__PURE__*/ defineComponent({
                     navBarItemsClientRect.push({ offsetWidth, offsetLeft });
                 }
                 // navBar 长度
-                const navBarWidth = navBarContainerRef.value?.scrollWidth;
+                const navBarWidth = navBarContainerRef.value.scrollWidth;
                 // 当 navBar 的长度小于容器长度时，navBar 不可滑动。
-                nonSliding.value = navBarWidth <= navBarContainerRef.value?.offsetWidth;
+                nonSliding.value = navBarWidth <= navBarContainerRef.value.offsetWidth;
                 // 更新 toolbarRef 的长度。
                 toolbarRef.value.style.cssText = nonSliding.value ? 'width: 80px' : 'width: 110px';
                 // 注意，由于我们更新了 toolbarRef 长度，所以应该重新获取 navBarContainer 的长度；
                 // 这样计算出的 maximumOffsetDistance 才是正确的。
-                maximumOffsetDistance = navBarWidth - navBarContainerRef.value?.offsetWidth;
+                maximumOffsetDistance = navBarWidth - navBarContainerRef.value.offsetWidth;
                 updateIndicatorPosition();
                 if (nonSliding.value) {
                     translateX = 0;
@@ -89,14 +89,14 @@ var script = /*#__PURE__*/ defineComponent({
                     }
                 }
             }, { immediate: true, flush: 'post', deep: true });
-            watch([() => props.activeKey, renderKey], function () {
+            watch([() => props.activeKey, renderKey], () => {
                 updateIndicatorPosition();
                 if (nonSliding.value)
                     return;
                 updateNavBarPosition();
             }, { immediate: true, flush: 'post' });
         });
-        onBeforeUnmount(function () {
+        onBeforeUnmount(() => {
             window.removeEventListener('resize', onWindowResize, false);
         });
         function handleClickNavBar(event) {
@@ -113,7 +113,7 @@ var script = /*#__PURE__*/ defineComponent({
             const index = Number(element.getAttribute('data-indicator'));
             if (isDeleteAction) {
                 const navBarList = props.navBarList;
-                emits('delete', navBarList.filter(item => item.key !== key));
+                emits('delete', navBarList.filter((item) => item.key !== key));
                 // 如果删除的是当前选中的，则需要更新 activeKey。否则不需要更新。
                 if (props.activeKey === key) {
                     emits('change', index === navBarList.length - 1 ? navBarList[index - 1].key : navBarList[index + 1].key);
@@ -125,7 +125,7 @@ var script = /*#__PURE__*/ defineComponent({
         }
         // 当鼠标移入 <EllipsisOutlined /> 组件时触发
         function handleMouseEnterOthersIcon() {
-            const navBarContainerWidth = navBarContainerRef.value?.offsetWidth;
+            const navBarContainerWidth = navBarContainerRef.value.offsetWidth;
             const list = [];
             if (translateX <= 0) {
                 for (let i = 0; i < navBarItemsClientRect.length; i++) {
@@ -207,17 +207,17 @@ var script = /*#__PURE__*/ defineComponent({
         function handleDeleteDropdownMenuItem(event) {
             const key = event.currentTarget.getAttribute('data-key');
             if (key)
-                emits('delete', props.navBarList.filter(item => item.key !== key));
+                emits('delete', props.navBarList.filter((item) => item.key !== key));
         }
         // 更新指针的位置
         function updateIndicatorPosition() {
-            const index = props.navBarList.findIndex(item => item.key === props.activeKey);
+            const index = props.navBarList.findIndex((item) => item.key === props.activeKey);
             const { offsetLeft, offsetWidth } = navBarItemsClientRect[index];
             indicatorNodeRef.value.style.cssText = `width: ${offsetWidth}px; transform: translateX(${offsetLeft}px)`;
         }
         // 更新导航栏的位置
         function updateNavBarPosition() {
-            const navBarContainerWidth = navBarContainerRef.value?.offsetWidth;
+            const navBarContainerWidth = navBarContainerRef.value.offsetWidth;
             // 边界下标
             let boundaryIndex = 0;
             for (let i = 0; i < navBarItemsClientRect.length; i++) {
@@ -229,7 +229,7 @@ var script = /*#__PURE__*/ defineComponent({
             }
             // 边界距离
             const boundaryDistance = navBarItemsClientRect[boundaryIndex].offsetLeft;
-            const currentIndex = props.navBarList.findIndex(item => item.key === props.activeKey);
+            const currentIndex = props.navBarList.findIndex((item) => item.key === props.activeKey);
             if (currentIndex > boundaryIndex) {
                 let x = navBarItemsClientRect[currentIndex].offsetLeft - boundaryDistance;
                 if (x >= maximumOffsetDistance) {
@@ -254,23 +254,23 @@ var script = /*#__PURE__*/ defineComponent({
         return (_ctx, _cache) => {
             return (openBlock(), createElementBlock("section", _hoisted_1, [
                 createElementVNode("div", {
-                    class: "qm-navbar-content",
                     ref_key: "navBarContainerRef",
                     ref: navBarContainerRef,
+                    class: "qm-navbar-content",
                     onWheel: handleMouseWheel
                 }, [
                     createElementVNode("ul", {
-                        class: "qm-navbar-content-list",
-                        onClick: handleClickNavBar,
                         ref_key: "navBarRef",
-                        ref: navBarRef
+                        ref: navBarRef,
+                        class: "qm-navbar-content-list",
+                        onClick: handleClickNavBar
                     }, [
                         (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.navBarList, (item, index) => {
                             return (openBlock(), createElementBlock("li", {
+                                key: item.key,
                                 class: normalizeClass(["qm-navbar-content-list-item", { active: item.key === _ctx.activeKey }]),
                                 "data-indicator": index,
-                                "data-key": item.key,
-                                key: item.key
+                                "data-key": item.key
                             }, [
                                 createTextVNode(toDisplayString(item.label) + " ", 1 /* TEXT */),
                                 (index > 0)
@@ -282,16 +282,16 @@ var script = /*#__PURE__*/ defineComponent({
                             ], 10 /* CLASS, PROPS */, _hoisted_2));
                         }), 128 /* KEYED_FRAGMENT */)),
                         createElementVNode("li", {
-                            class: "qm-navbar-indicator",
                             ref_key: "indicatorNodeRef",
-                            ref: indicatorNodeRef
+                            ref: indicatorNodeRef,
+                            class: "qm-navbar-indicator"
                         }, null, 512 /* NEED_PATCH */)
                     ], 512 /* NEED_PATCH */)
                 ], 544 /* HYDRATE_EVENTS, NEED_PATCH */),
                 createElementVNode("div", {
-                    class: "qm-navbar-toolbar",
                     ref_key: "toolbarRef",
-                    ref: toolbarRef
+                    ref: toolbarRef,
+                    class: "qm-navbar-toolbar"
                 }, [
                     createVNode(unref(Dropdown), { placement: "bottom" }, {
                         overlay: withCtx(() => [
@@ -325,8 +325,8 @@ var script = /*#__PURE__*/ defineComponent({
                         ]),
                         default: withCtx(() => [
                             createVNode(unref(EllipsisOutlined), {
-                                onMouseenter: handleMouseEnterOthersIcon,
-                                class: normalizeClass(['qm-navbar-toolbar-others', { hide: nonSliding.value }])
+                                class: normalizeClass(['qm-navbar-toolbar-others', { hide: nonSliding.value }]),
+                                onMouseenter: handleMouseEnterOthersIcon
                             }, null, 8 /* PROPS */, ["class"])
                         ]),
                         _: 1 /* STABLE */

@@ -4,6 +4,12 @@ type TreeDataItem = NonNullable<TreeProps['treeData']>[0] & {
     parentKey: number | string;
     children?: TreeDataItem[];
 };
+type FieldNames = {
+    key?: string;
+    title?: string;
+    children?: string;
+    parentKey?: string;
+};
 export type TreeData = TreeDataItem[];
 declare function getParentKeys(key: string | number): (string | number)[];
 declare const _default: import("vue").DefineComponent<{
@@ -17,6 +23,12 @@ declare const _default: import("vue").DefineComponent<{
     bordered: {
         type: import("vue").PropType<boolean>;
         default: boolean;
+    };
+    fieldNames: {
+        type: import("vue").PropType<FieldNames>;
+    };
+    multiple: {
+        type: import("vue").PropType<boolean>;
     };
     checkable: {
         type: import("vue").PropType<boolean>;
@@ -39,8 +51,8 @@ declare const _default: import("vue").DefineComponent<{
         type: import("vue").PropType<boolean>;
         default: boolean;
     };
-    computedTreeData: {
-        type: import("vue").PropType<(treeData: any[]) => TreeData>;
+    formatTreeData: {
+        type: import("vue").PropType<(treeData: any) => TreeData>;
     };
 }, {
     getParentKeys: typeof getParentKeys;
@@ -61,6 +73,12 @@ declare const _default: import("vue").DefineComponent<{
         type: import("vue").PropType<boolean>;
         default: boolean;
     };
+    fieldNames: {
+        type: import("vue").PropType<FieldNames>;
+    };
+    multiple: {
+        type: import("vue").PropType<boolean>;
+    };
     checkable: {
         type: import("vue").PropType<boolean>;
         default: boolean;
@@ -82,8 +100,8 @@ declare const _default: import("vue").DefineComponent<{
         type: import("vue").PropType<boolean>;
         default: boolean;
     };
-    computedTreeData: {
-        type: import("vue").PropType<(treeData: any[]) => TreeData>;
+    formatTreeData: {
+        type: import("vue").PropType<(treeData: any) => TreeData>;
     };
 }>> & {
     "onUpdate:selectedKeys"?: ((value: string[] | number[]) => any) | undefined;

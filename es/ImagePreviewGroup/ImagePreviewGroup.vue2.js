@@ -1,4 +1,4 @@
-import { defineComponent, useSlots, ref, watch, h, computed, openBlock, createElementBlock, Fragment, createElementVNode, normalizeClass, normalizeStyle, renderList, createVNode, unref, createBlock, resolveDynamicComponent, createCommentVNode, Teleport } from 'vue';
+import { defineComponent, useSlots, ref, watch, h, computed, openBlock, createElementBlock, Fragment, createElementVNode, mergeProps, renderList, normalizeClass, createVNode, unref, createBlock, resolveDynamicComponent, createCommentVNode, Teleport } from 'vue';
 import '../PreviewImage/index.js';
 import './ImagePreviewGroup.css';
 import '../Image/index.js';
@@ -13,11 +13,9 @@ var script = /*#__PURE__*/ defineComponent({
     ...{ name: 'ImagePreviewGroup', inheritAttrs: false },
     __name: 'ImagePreviewGroup',
     props: {
-        style: { type: null, required: false },
         imageClass: { type: String, required: false },
         bordered: { type: Boolean, required: false, default: true },
-        options: { type: Array, required: false },
-        class: { type: String, required: false }
+        options: { type: Array, required: false }
     },
     setup(__props) {
         const props = __props;
@@ -31,7 +29,7 @@ var script = /*#__PURE__*/ defineComponent({
                 // 注意，slotsDefualt 返回的是一个数组，所以需要遍历，
                 // 判断第一层的所有节点的 type 是否是文档碎片（fragment）,如果是，则说明使用的 template 模板嵌套，此时应该取它的 children。
                 if (item.type === Symbol.for('v-fgt')) {
-                    item.children?.forEach?.(child => newChildren.push(h(child)));
+                    item.children?.forEach?.((child) => newChildren.push(h(child)));
                 }
             });
             children.value = newChildren;
@@ -50,10 +48,7 @@ var script = /*#__PURE__*/ defineComponent({
         }
         return (_ctx, _cache) => {
             return (openBlock(), createElementBlock(Fragment, null, [
-                createElementVNode("ul", {
-                    class: normalizeClass(["qm-vnit-image-group", _ctx.class]),
-                    style: normalizeStyle(_ctx.style)
-                }, [
+                createElementVNode("ul", mergeProps({ class: "qm-vnit-image-group" }, _ctx.$attrs), [
                     (_ctx.options)
                         ? (openBlock(true), createElementBlock(Fragment, { key: 0 }, renderList(_ctx.options, (item, index) => {
                             return (openBlock(), createElementBlock("li", {
@@ -80,7 +75,7 @@ var script = /*#__PURE__*/ defineComponent({
                                 ], 10 /* CLASS, PROPS */, _hoisted_2));
                             }), 128 /* KEYED_FRAGMENT */))
                             : createCommentVNode("v-if", true)
-                ], 6 /* CLASS, STYLE */),
+                ], 16 /* FULL_PROPS */),
                 (openBlock(), createBlock(Teleport, { to: "body" }, [
                     createVNode(unref(script$2), {
                         imgs: imgs.value,
